@@ -1,0 +1,57 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin:  'com.google.dagger.hilt.android'
+
+android {
+    compileSdk ProjectConfig.compileSdk
+
+    defaultConfig {
+        minSdk ProjectConfig.minSdk
+        targetSdk ProjectConfig.targetSdk
+        versionCode ProjectConfig.versionCode
+        versionName ProjectConfig.versionName
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles "consumer-rules.pro"
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion Compose.composeCompilerVersion
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        coreLibraryDesugaringEnabled true
+
+        sourceCompatibility JavaVersion.VERSION_18
+        targetCompatibility JavaVersion.VERSION_18
+    }
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_18.toString()
+    }
+}
+
+dependencies {
+
+    implementation libs.compose.ui
+    implementation libs.compose.ui.preview
+    implementation libs.dagger.hilt.navigation.compose
+    implementation libs.material
+    implementation libs.androidx.navigation.compose
+    implementation libs.androidx.activity.compose
+
+    testImplementation libs.junit
+    testImplementation libs.androidx.ui.test.junit4
+    androidTestImplementation  libs.junit
+    androidTestImplementation libs.androidx.ui.test.junit4
+
+    kapt libs.dagger.hilt.android.compiler
+    implementation libs.dagger.hilt.android
+}

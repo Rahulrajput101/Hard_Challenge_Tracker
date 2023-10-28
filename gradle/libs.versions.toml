@@ -1,0 +1,73 @@
+[versions]
+#Plugins
+androidGradlePlugin = "8.1.1"
+gradle = "8.0.2"
+kotlinAndroidPlugin = "1.8.22"
+hiltAndroidPlugin = "2.43.2"
+
+#libraries
+androidXCore = "1.9.0"
+activity-compose = "1.8.0"
+androidx-junit = "1.1.5"
+espresso-core = "3.5.1"
+junit = "4.13.2"
+kotlinGradlePlugin = "1.8.20"
+lifecycle-runtime-ktx = "2.6.2"
+bom = "2023.03.00"
+androidxNavigationCompose = "2.7.0"
+daggerHiltAndroid = "2.46.1"
+daggerHiltNavigationCompose = "1.0.0"
+androidxRoom = "2.5.2"
+androidxComposeUi = "1.5.0"
+appcompat = "1.6.1"
+material = "1.9.0"
+
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidXCore" }
+androidx-activity-compose = { group= "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
+androidx-espresso-core = { group = "androidx.test.espresso", name ="espresso-core", version.ref = "espresso-core" }
+compose-bom = { group = "androidx.compose",name ="compose-bom", version.ref = "bom"}
+compose-ui = { group = "androidx.compose.ui", name = "ui" }
+compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+compose-ui-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+compose-ui-material3 = { group = "androidx.compose.material3", name = "material3" }
+
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigationCompose" }
+
+dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHiltAndroid" }
+dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHiltAndroid" }
+dagger-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "daggerHiltNavigationCompose" }
+
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "androidxRoom" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "androidxRoom" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "androidxRoom" }
+
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-junit" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+
+androidx-ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4", version.ref = "androidxComposeUi" }
+
+androidx-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidxComposeUi" }
+androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", version.ref = "androidxComposeUi" }
+
+appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+
+[bundles]
+compose = [
+    "compose-ui",
+    "compose-ui-graphics",
+    "compose-ui-material3",
+    "compose-ui-preview"
+]
+
+[plugins]
+android-application = {id = "com.android.application",version.ref ="androidGradlePlugin"}
+android-library = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+android-kotlin = {id = "org.jetbrains.kotlin.android",version.ref = "kotlinAndroidPlugin"}
+hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "hiltAndroidPlugin" }
