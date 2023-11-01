@@ -15,12 +15,13 @@ kotlinGradlePlugin = "1.8.20"
 lifecycle-runtime-ktx = "2.6.2"
 bom = "2023.03.00"
 androidxNavigationCompose = "2.7.0"
-daggerHiltAndroid = "2.46.1"
+daggerHiltAndroid = "2.44"
 daggerHiltNavigationCompose = "1.0.0"
 androidxRoom = "2.5.2"
 androidxComposeUi = "1.5.0"
 appcompat = "1.6.1"
 material = "1.9.0"
+firebaseBom = "32.4.0"
 
 
 [libraries]
@@ -55,7 +56,11 @@ androidx-ui-test-manifest = { module = "androidx.compose.ui:ui-test-manifest", v
 
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 kotlin-gradle-plugin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlinGradlePlugin" }
-material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material"}
+
+firebase-bom = { group = "com.google.firebase" ,name = "firebase-bom",version.ref = "firebaseBom" }
+firebase-anayltics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
+firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx"}
 
 
 [bundles]

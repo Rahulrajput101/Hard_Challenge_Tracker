@@ -1,10 +1,10 @@
-@file:Suppress("DSL_SCOPE_VIOLATION")
 
 import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
-    id("dagger.hilt.android.plugin")
+    id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
     kotlin("kapt")
 }
 
@@ -67,9 +67,15 @@ dependencies {
     implementation(project(Modules.coreUi))
     implementation(project(Modules.onboardingPresentation))
     implementation(project(Modules.onboardingDomain))
+    implementation(project(Modules.loginData))
+    implementation(project(Modules.loginDomain))
+    implementation(project(Modules.loginPresentation))
     implementation(project(Modules.trackerPresentation))
     implementation(project(Modules.trackerDomain))
     implementation(project(Modules.trackerData))
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.anayltics)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -92,8 +98,4 @@ dependencies {
     kapt(libs.dagger.hilt.android.compiler)
     implementation(libs.dagger.hilt.navigation.compose)
 
-    // Room
-    implementation(libs.androidx.room.runtime)
-    kapt(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
 }

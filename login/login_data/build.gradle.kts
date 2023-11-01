@@ -1,6 +1,7 @@
 plugins {
     `android-library`
     `kotlin-android`
+    id("com.google.gms.google-services")
 }
 
 apply(from = "$rootDir/base-module.gradle")
@@ -11,7 +12,9 @@ android {
 
 dependencies {
     implementation(project(Modules.core))
-    implementation(project(Modules.trackerDomain))
+    implementation(project(Modules.loginDomain))
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth.ktx)
 
     // Room
     implementation(libs.androidx.room.runtime)
