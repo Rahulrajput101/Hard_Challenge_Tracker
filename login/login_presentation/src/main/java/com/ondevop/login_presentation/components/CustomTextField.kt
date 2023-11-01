@@ -1,4 +1,4 @@
-package com.ondevop.login_presentation.sign_in.components
+package com.ondevop.login_presentation.components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth

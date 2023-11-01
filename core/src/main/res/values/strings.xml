@@ -2,12 +2,14 @@
     <string name="app_name">75 Hard</string>
     <string name="proceed">Proceed with your </string>
     <string name="login_">LOGIN !</string>
+    <string name="sign_up_">Sign Up!</string>
     <string name="login">Login</string>
     <string name="sign_up">Sign Up</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
     <string name="already_have_account">Already have an account</string>
     <string name="do_not_have_account">Don\'t have an account? </string>
+    <string name="create_your_account">Create Your Account</string>
     <string name="create_account">Create Account</string>
     <string name="login_illustration">Login illustration</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.ondevop.login_presentation.sign_in
+package com.ondevop.login_presentation.sign_up
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -21,7 +21,6 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
@@ -35,17 +34,15 @@ import androidx.compose.ui.unit.sp
 import com.ondevop.core.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.login_presentation.components.CustomTextField
-import com.ondevop.login_presentation.components.FilledButton
-
 
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewSignIn(){
-    SignInScreen()
+    SignUpScreen()
 }
 
 @Composable
-fun SignInScreen() {
+fun SignUpScreen() {
 
     val spacing = LocalSpacing.current
 
@@ -63,7 +60,7 @@ fun SignInScreen() {
                     .fillMaxWidth()
             ) {
                 Text(
-                    text = stringResource(id = R.string.proceed),
+                    text = stringResource(id = R.string.create_your_account),
                     style = MaterialTheme.typography.headlineMedium,
                     fontFamily = FontFamily(
                         Font(
@@ -74,7 +71,7 @@ fun SignInScreen() {
                 )
                 Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
                 Text(
-                    text = stringResource(id = R.string.login_),
+                    text = stringResource(id = R.string.sign_up_),
                     style = MaterialTheme.typography.headlineLarge,
                     fontFamily = FontFamily(
                         Font(
@@ -104,7 +101,7 @@ fun SignInScreen() {
 
 
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
-            
+
             CustomTextField(
                 text = "" ,
                 onValueChange = {},
@@ -113,7 +110,7 @@ fun SignInScreen() {
                 modifier = Modifier.padding(4.dp)
             )
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
-            
+
             CustomTextField(
                 text ="" ,
                 onValueChange = {},
@@ -134,7 +131,7 @@ fun SignInScreen() {
                 containerColor = MaterialTheme.colorScheme.primary
             ) {
                 Text(
-                    text = stringResource(id = R.string.login),
+                    text = stringResource(id = R.string.create_account),
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 16.sp
                 )
@@ -146,11 +143,11 @@ fun SignInScreen() {
                 horizontalArrangement = Arrangement.Center
             ) {
                 Text(
-                    text = stringResource(id = R.string.do_not_have_account),
+                    text = stringResource(id = R.string.already_have_account),
                     style = MaterialTheme.typography.bodySmall
                 )
                 Text(
-                    text = stringResource(id = R.string.sign_up),
+                    text = stringResource(id = R.string.login),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Blue,
