@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.ondevop.a75hard.ui.theme._75HardTheme
+import com.ondevop.login_presentation.sign_in.SignInScreen
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -24,7 +25,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    SignInScreen()
                 }
             }
         }
