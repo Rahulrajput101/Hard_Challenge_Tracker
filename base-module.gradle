@@ -35,6 +35,8 @@ android {
 dependencies {
     kapt libs.dagger.hilt.android.compiler
     implementation libs.dagger.hilt.android
+    // Data Store
+    implementation(libs.androidx.datastore)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
