@@ -1,3 +1,8 @@
 package com.ondevop.login_presentation.sign_up
 
-sealed class SignUpEvent
+
+sealed class SignUpEvent{
+    object OnCreateClick: SignUpEvent()
+    data class UpdateEmail(val email: String) : SignUpEvent()
+    data class UpdatePassword(val password: String) : SignUpEvent()
+}

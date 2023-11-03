@@ -12,4 +12,5 @@
     <string name="create_your_account">Create Your Account</string>
     <string name="create_account">Create Account</string>
     <string name="login_illustration">Login illustration</string>
+    <string name="please_enter_all_the_fields">Please enter all the fields</string>
 </resources>

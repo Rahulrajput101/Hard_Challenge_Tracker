@@ -19,37 +19,56 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.login_presentation.components.CustomTextField
-import com.ondevop.login_presentation.components.FilledButton
+import com.plcoding.core.util.UiEvent
 
-
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewSignIn(){
-    SignInScreen(){}
-}
 
 @Composable
 fun SignInScreen(
-    navigateToSignUp :() -> Unit
+    snackbarHostState: SnackbarHostState,
+    navigateToSignUp: () -> Unit,
+    viewModel: SignInViewModel = hiltViewModel(),
+    navigateToTrackerHome: () -> Unit,
 ) {
 
     val spacing = LocalSpacing.current
+    val context = LocalContext.current
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                UiEvent.NavigateUp -> {
+                }
+                is UiEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(event.message.asString(context))
+                }
+
+                UiEvent.Success -> {
+                    navigateToTrackerHome()
+                }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -91,8 +110,7 @@ fun SignInScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(end = 20.dp)
-                ,
+                    .padding(end = 20.dp),
                 horizontalArrangement = Arrangement.End
             ) {
                 Image(
@@ -104,21 +122,28 @@ fun SignInScreen(
                 )
             }
 
-
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
-            
+
             CustomTextField(
-                text = "" ,
-                onValueChange = {},
+                text = state.email,
+                onValueChange = {
+                    viewModel.onEvent(
+                        SignInEvent.UpdateEmail(it)
+                    )
+                },
                 icon = Icons.Default.Email,
                 label = stringResource(id = R.string.email),
                 modifier = Modifier.padding(4.dp)
             )
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
-            
+
             CustomTextField(
-                text ="" ,
-                onValueChange = {},
+                text = state.password,
+                onValueChange = {
+                    viewModel.onEvent(
+                        SignInEvent.UpdatePassword(it)
+                    )
+                },
                 icon = Icons.Default.Lock,
                 label = stringResource(id = R.string.password),
                 modifier = Modifier.padding(4.dp)
@@ -127,7 +152,7 @@ fun SignInScreen(
             Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
             FloatingActionButton(
                 onClick = {
-                    {}
+                    viewModel.onEvent(SignInEvent.SignInClick)
                 },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
@@ -158,7 +183,6 @@ fun SignInScreen(
                     color = Color.Blue,
                     modifier = Modifier.clickable {
                         navigateToSignUp()
-
                     }
                 )
             }

@@ -19,10 +19,15 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -31,20 +36,42 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.login_presentation.components.CustomTextField
+import com.ondevop.login_presentation.sign_in.SignInViewModel
+import com.plcoding.core.util.UiEvent
 
-@Preview(showSystemUi = true)
-@Composable
-fun PreviewSignIn(){
-    SignUpScreen()
-}
+
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(
+    snackbarHostState: SnackbarHostState,
+    viewModel: SignUpViewModel = hiltViewModel(),
+    navigateToTrackerHome: () -> Unit,
+    navigateToSignIN: () -> Unit,
+) {
 
     val spacing = LocalSpacing.current
+    val context = LocalContext.current
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(key1 = Unit) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                UiEvent.NavigateUp -> {
+                }
+                is UiEvent.ShowSnackbar -> {
+                    snackbarHostState.showSnackbar(event.message.asString(context))
+                }
+
+                UiEvent.Success -> {
+                    navigateToTrackerHome()
+                }
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -103,8 +130,12 @@ fun SignUpScreen() {
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
             CustomTextField(
-                text = "" ,
-                onValueChange = {},
+                text = state.email ,
+                onValueChange = {
+                       viewModel.onEvent(
+                           SignUpEvent.UpdateEmail(it)
+                       )
+                },
                 icon = Icons.Default.Email,
                 label = stringResource(id = R.string.email),
                 modifier = Modifier.padding(4.dp)
@@ -112,8 +143,12 @@ fun SignUpScreen() {
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
 
             CustomTextField(
-                text ="" ,
-                onValueChange = {},
+                text = state.password,
+                onValueChange = {
+                    viewModel.onEvent(
+                        SignUpEvent.UpdatePassword(it)
+                    )
+                },
                 icon = Icons.Default.Lock,
                 label = stringResource(id = R.string.password),
                 modifier = Modifier.padding(4.dp)
@@ -122,7 +157,7 @@ fun SignUpScreen() {
             Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
             FloatingActionButton(
                 onClick = {
-                    {}
+                    viewModel.onEvent(SignUpEvent.OnCreateClick)
                 },
                 shape = RoundedCornerShape(8.dp),
                 modifier = Modifier
@@ -152,7 +187,7 @@ fun SignUpScreen() {
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Blue,
                     modifier = Modifier.clickable {
-
+                           navigateToSignIN()
                     }
                 )
             }

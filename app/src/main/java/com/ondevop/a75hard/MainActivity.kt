@@ -33,6 +33,7 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var preferences: Preferences
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,22 +52,34 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .padding(it),
                             navController = navController,
-                            startDestination = if(!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
+                            startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
                         ) {
-                           composable(Route.SignIn.route){
-                               SignInScreen(
-                                   navigateToSignUp = {
-                                       navController.navigate(Route.SignUp.route)
-                                   }
-                               )
-                           }
+                            composable(Route.SignIn.route) {
+                                SignInScreen(
+                                    snackbarHostState = snackbarHostState,
+                                    navigateToSignUp = {
+                                        navController.navigate(Route.SignUp.route)
+                                    },
+                                    navigateToTrackerHome = {
+                                        navController.navigate(Route.TrackerHome.route)
+                                    }
+                                )
+                            }
 
-                            composable(Route.SignUp.route){
-                               SignUpScreen()
-                           }
-                             composable(Route.TrackerHome.route){
+                            composable(Route.SignUp.route) {
+                                SignUpScreen(
+                                    snackbarHostState = snackbarHostState,
+                                    navigateToTrackerHome = {
+                                        navController.navigate(Route.TrackerHome.route)
+                                    },
+                                    navigateToSignIN = {
+                                        navController.navigateUp()
+                                    },
+                                )
+                            }
+                            composable(Route.TrackerHome.route) {
 
-                           }
+                            }
 
 
                         }

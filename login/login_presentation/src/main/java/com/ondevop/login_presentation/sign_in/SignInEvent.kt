@@ -1,6 +1,8 @@
 package com.ondevop.login_presentation.sign_in
 
 sealed class SignInEvent {
-    data class SignInClick(val signInState: SignInState) : SignInEvent()
-    object  SignUpClick : SignInEvent()
+    object SignInClick : SignInEvent()
+    data class UpdateEmail(val email: String) : SignInEvent()
+    data class UpdatePassword(val password: String) : SignInEvent()
+
 }
