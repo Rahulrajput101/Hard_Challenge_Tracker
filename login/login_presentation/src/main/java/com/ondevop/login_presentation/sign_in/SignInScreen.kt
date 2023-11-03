@@ -41,11 +41,13 @@ import com.ondevop.login_presentation.components.FilledButton
 @Preview(showSystemUi = true)
 @Composable
 fun PreviewSignIn(){
-    SignInScreen()
+    SignInScreen(){}
 }
 
 @Composable
-fun SignInScreen() {
+fun SignInScreen(
+    navigateToSignUp :() -> Unit
+) {
 
     val spacing = LocalSpacing.current
 
@@ -155,6 +157,7 @@ fun SignInScreen() {
                     fontWeight = FontWeight.SemiBold,
                     color = Color.Blue,
                     modifier = Modifier.clickable {
+                        navigateToSignUp()
 
                     }
                 )
