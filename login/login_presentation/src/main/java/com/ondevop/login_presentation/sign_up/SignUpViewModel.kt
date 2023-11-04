@@ -5,9 +5,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ondevop.core.R
 import com.ondevop.core.domain.prefernces.Preferences
-import com.ondevop.login_domain.use_case.SignUpWithEmailAndPassword
 import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core.uitl.UiText
+import com.ondevop.login_domain.use_case.SignUpWithEmailAndPassword
+import com.ondevop.login_domain.use_case.ValidateEmail
+import com.ondevop.login_domain.use_case.ValidatePassword
+import com.ondevop.login_domain.use_case.ValidateRepeatedPassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,8 +22,11 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     val signUpWithEmailAndPassword: SignUpWithEmailAndPassword,
-    val preferences: Preferences
-) :ViewModel() {
+    val validateEmail: ValidateEmail,
+    val validatePassword: ValidatePassword,
+    val validateRepeatedPassword: ValidateRepeatedPassword,
+    private val preferences: Preferences
+) : ViewModel() {
     private val _state = MutableStateFlow(SignUpState())
     val state = _state.asStateFlow()
 
@@ -30,11 +36,7 @@ class SignUpViewModel @Inject constructor(
         when (event) {
             is SignUpEvent.OnCreateClick -> {
                 viewModelScope.launch {
-                    if (state.value.email.isNotEmpty() && state.value.password.isNotEmpty()) {
-                        signIn()
-                    } else {
-                        _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.please_enter_all_the_fields)))
-                    }
+                  signUp()
                 }
             }
 
@@ -45,16 +47,39 @@ class SignUpViewModel @Inject constructor(
             is SignUpEvent.UpdatePassword -> {
                 _state.value = _state.value.copy(password = event.password)
             }
+
+            is SignUpEvent.UpdateRepeatedPassword -> {
+                _state.value = _state.value.copy(repeatedPassword = event.repeatedPassword)
+            }
         }
     }
 
-    private fun signIn() {
+    private fun signUp() {
+        val emailResult = validateEmail(state.value.email)
+        val passwordResult = validatePassword(state.value.password)
+        val repeatedPasswordResult = validateRepeatedPassword(state.value.password,state.value.repeatedPassword)
+
+        val hasError = listOf(
+            emailResult,
+            passwordResult,
+            repeatedPasswordResult
+        ).any { !it.successful }
+
+        if(hasError){
+            _state.value = _state.value.copy(
+                emailError = emailResult.errorMessage,
+                passwordError = passwordResult.errorMessage,
+                repeatedPasswordError = repeatedPasswordResult.errorMessage
+            )
+            return
+        }
+
         viewModelScope.launch {
             signUpWithEmailAndPassword(state.value.email, state.value.password)
                 .onSuccess {
-                    _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it)))
+                    _uiEvent.send(UiEvent.Success)
                     preferences.saveLoggedInfo(true)
-                    Log.d("MyTag","suvm: ${preferences.getLoggedInfo()}")
+                    Log.d("MyTag", "suvm: ${preferences.getLoggedInfo()}")
                     _uiEvent.send(UiEvent.Success)
                 }
                 .onFailure {

@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Search
@@ -19,8 +20,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.login_presentation.R
@@ -33,9 +36,9 @@ fun CustomTextField(
     modifier: Modifier = Modifier,
     onValueChange: (String) -> Unit,
     label : String,
+    keyboardType: KeyboardType,
 ){
     val spacing = LocalSpacing.current
-    
     Box(modifier = modifier){
 
         OutlinedTextField(
@@ -45,7 +48,6 @@ fun CustomTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .size(60.dp)
-
                 ,
             label = {
                 Text(
@@ -56,6 +58,9 @@ fun CustomTextField(
                         .align(Alignment.CenterStart)
                 )
             },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = keyboardType
+            )
 
         )
 

@@ -8,6 +8,8 @@ import com.ondevop.login_domain.use_case.SignUpWithEmailAndPassword
 import com.ondevop.core.R
 import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core.uitl.UiText
+import com.ondevop.login_domain.use_case.ValidateEmail
+import com.ondevop.login_domain.use_case.ValidatePassword
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,9 @@ import javax.inject.Inject
 @HiltViewModel
 class SignInViewModel @Inject constructor(
     val signInWithEmailPassword: SignUpWithEmailAndPassword,
-    val preferences: Preferences
+    val validateEmail: ValidateEmail,
+    val validatePassword: ValidatePassword,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignInState())
@@ -31,12 +35,7 @@ class SignInViewModel @Inject constructor(
         when (event) {
             is SignInEvent.SignInClick -> {
                 viewModelScope.launch {
-                    if (state.value.email.isNotEmpty() && state.value.password.isNotEmpty()) {
-                        signIn()
-                    } else {
-                        Log.d("MyTag","suvm: else")
-                      _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.please_enter_all_the_fields)))
-                    }
+                 signIn()
                 }
             }
 
@@ -51,6 +50,21 @@ class SignInViewModel @Inject constructor(
     }
 
     private fun signIn() {
+        val emailResult = validateEmail(state.value.email)
+        val passwordResult = validatePassword(state.value.password)
+        val hasError = listOf(
+            emailResult,
+            passwordResult,
+        ).any { !it.successful }
+
+        if(hasError){
+            _state.value = _state.value.copy(
+                emailError = emailResult.errorMessage,
+                passwordError = passwordResult.errorMessage,
+            )
+            return
+        }
+
         viewModelScope.launch {
             signInWithEmailPassword(state.value.email, state.value.password)
                 .onSuccess {

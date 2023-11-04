@@ -5,4 +5,5 @@ sealed class SignUpEvent{
     object OnCreateClick: SignUpEvent()
     data class UpdateEmail(val email: String) : SignUpEvent()
     data class UpdatePassword(val password: String) : SignUpEvent()
+    data class UpdateRepeatedPassword(val repeatedPassword: String) : SignUpEvent()
 }

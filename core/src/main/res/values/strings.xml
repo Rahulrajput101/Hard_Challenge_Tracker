@@ -7,6 +7,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="email">Email</string>
     <string name="password">Password</string>
+    <string name="repeat_password"> Repeat Password</string>
     <string name="already_have_account">Already have an account? </string>
     <string name="do_not_have_account">Don\'t have an account? </string>
     <string name="create_your_account">Create Your Account</string>
@@ -15,4 +16,7 @@
     <string name="please_enter_all_the_fields">Please enter all the fields</string>
     <string name="please_enter_the_email">Please enter the email</string>
     <string name="not_valid_email">This is not a valid email</string>
+    <string name="password_needs_to_contain_8_characters">The password needs to consists of at least 8 characters</string>
+    <string name="password_needs_to_contain_letter_and_digit">This Password needs to contains of letter and digit</string>
+    <string name="password_do_not_match">Password don\'t match</string>
 </resources>

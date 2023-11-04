@@ -13,7 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
@@ -33,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -77,6 +80,7 @@ fun SignInScreen(
     ) {
         Column(
             modifier = Modifier.fillMaxSize()
+                .verticalScroll(rememberScrollState())
         ) {
 
             Column(
@@ -133,8 +137,16 @@ fun SignInScreen(
                 },
                 icon = Icons.Default.Email,
                 label = stringResource(id = R.string.email),
+                keyboardType = KeyboardType.Email,
                 modifier = Modifier.padding(4.dp)
             )
+            if(state.emailError != null){
+                Text(
+                    text = state.emailError!!.asString(context),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
             Spacer(modifier = Modifier.height(spacing.spaceSmall))
 
             CustomTextField(
@@ -146,8 +158,16 @@ fun SignInScreen(
                 },
                 icon = Icons.Default.Lock,
                 label = stringResource(id = R.string.password),
+                keyboardType = KeyboardType.Password,
                 modifier = Modifier.padding(4.dp)
             )
+            if(state.passwordError != null){
+                Text(
+                    text = state.passwordError!!.asString(context),
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodySmall
+                )
+            }
 
             Spacer(modifier = Modifier.height(spacing.spaceExtraLarge))
             FloatingActionButton(
