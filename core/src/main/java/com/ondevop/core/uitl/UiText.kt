@@ -1,4 +1,4 @@
-package com.plcoding.core.util
+package com.ondevop.core.uitl
 
 import android.content.Context
 sealed class UiText {

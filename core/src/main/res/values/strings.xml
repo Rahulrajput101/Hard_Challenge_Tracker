@@ -13,4 +13,6 @@
     <string name="create_account">Create Account</string>
     <string name="login_illustration">Login illustration</string>
     <string name="please_enter_all_the_fields">Please enter all the fields</string>
+    <string name="please_enter_the_email">Please enter the email</string>
+    <string name="not_valid_email">This is not a valid email</string>
 </resources>

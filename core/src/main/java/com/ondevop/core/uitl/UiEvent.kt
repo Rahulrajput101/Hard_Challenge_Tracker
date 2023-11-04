@@ -1,4 +1,4 @@
-package com.plcoding.core.util
+package com.ondevop.core.uitl
 
 sealed class UiEvent {
 

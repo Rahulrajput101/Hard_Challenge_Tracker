@@ -39,7 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.login_presentation.components.CustomTextField
-import com.plcoding.core.util.UiEvent
+import com.ondevop.core.uitl.UiEvent
 
 
 @Composable

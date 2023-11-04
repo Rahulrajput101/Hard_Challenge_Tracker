@@ -6,10 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.ondevop.core.R
 import com.ondevop.core.domain.prefernces.Preferences
 import com.ondevop.login_domain.use_case.SignUpWithEmailAndPassword
-import com.ondevop.login_presentation.sign_in.SignInEvent
-import com.ondevop.login_presentation.sign_in.SignInState
-import com.plcoding.core.util.UiEvent
-import com.plcoding.core.util.UiText
+import com.ondevop.core.uitl.UiEvent
+import com.ondevop.core.uitl.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
