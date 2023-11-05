@@ -3,6 +3,8 @@ package com.ondevop.login_presentation.sign_up
 import com.ondevop.core.uitl.UiText
 
 data class SignUpState(
+    val name: String ="",
+    val profileUri: String? ="",
     val email: String ="",
     val emailError: UiText? = null,
     val password: String ="",

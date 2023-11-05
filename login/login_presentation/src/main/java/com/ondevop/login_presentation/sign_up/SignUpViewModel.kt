@@ -36,7 +36,11 @@ class SignUpViewModel @Inject constructor(
         when (event) {
             is SignUpEvent.OnCreateClick -> {
                 viewModelScope.launch {
-                  signUp()
+                    if(state.value.name.isNotBlank()){
+                        signUp()
+                    }else{
+                        _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(R.string.please_enter_your_name)))
+                    }
                 }
             }
 
@@ -50,6 +54,13 @@ class SignUpViewModel @Inject constructor(
 
             is SignUpEvent.UpdateRepeatedPassword -> {
                 _state.value = _state.value.copy(repeatedPassword = event.repeatedPassword)
+            }
+
+            is SignUpEvent.UpdateName -> {
+                _state.value = _state.value.copy(name = event.name)
+            }
+            is SignUpEvent.UpdateProfileUir -> {
+                _state.value = _state.value.copy(profileUri = event.profileUri)
             }
         }
     }
@@ -75,7 +86,7 @@ class SignUpViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            signUpWithEmailAndPassword(state.value.email, state.value.password)
+            signUpWithEmailAndPassword(state.value.email, state.value.password,state.value.name,state.value.profileUri)
                 .onSuccess {
                     _uiEvent.send(UiEvent.Success)
                     preferences.saveLoggedInfo(true)

@@ -23,6 +23,7 @@ appcompat = "1.6.1"
 material = "1.9.0"
 firebaseBom = "32.4.0"
 androidxDatastore = "1.0.0"
+coilKtCompose = "2.4.0"
 
 
 [libraries]
@@ -64,6 +65,7 @@ firebase-anayltics = { group = "com.google.firebase", name = "firebase-analytics
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx"}
 
 androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore" }
+coil-compose= {group = "io.coil-kt", name ="coil-compose", version.ref = "coilKtCompose"}
 
 
 [bundles]

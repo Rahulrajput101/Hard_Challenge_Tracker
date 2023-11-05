@@ -1,6 +1,11 @@
 package com.ondevop.login_presentation.sign_up
 
+import android.net.Uri
+import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.clickable
@@ -21,6 +26,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -29,6 +35,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -45,6 +55,7 @@ import com.ondevop.core.R
 import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core.uitl.UiText
 import com.ondevop.core_ui.LocalSpacing
+import com.ondevop.core_ui.composables.CircularImage
 import com.ondevop.login_presentation.components.CustomTextField
 
 
@@ -59,6 +70,11 @@ fun SignUpScreen(
     val spacing = LocalSpacing.current
     val context = LocalContext.current
     val state by viewModel.state.collectAsState()
+
+    var selectImageUir by remember{
+        mutableStateOf<Uri?>(null)
+    }
+
 
     LaunchedEffect(key1 = Unit) {
         viewModel.uiEvent.collect { event ->
@@ -77,6 +93,13 @@ fun SignUpScreen(
             }
         }
     }
+    
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {uri ->  
+            selectImageUir = uri
+        }
+    )
 
     Box(
         modifier = Modifier
@@ -95,7 +118,7 @@ fun SignUpScreen(
             ) {
                 Text(
                     text = stringResource(id = R.string.create_your_account),
-                    style = MaterialTheme.typography.headlineMedium,
+                    style = MaterialTheme.typography.headlineSmall,
                     fontFamily = FontFamily(
                         Font(
                             R.font.rubik_medium,
@@ -106,7 +129,7 @@ fun SignUpScreen(
                 Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
                 Text(
                     text = stringResource(id = R.string.sign_up_),
-                    style = MaterialTheme.typography.headlineLarge,
+                    style = MaterialTheme.typography.headlineMedium,
                     fontFamily = FontFamily(
                         Font(
                             R.font.rubik_medium,
@@ -119,19 +142,36 @@ fun SignUpScreen(
             Spacer(modifier = Modifier.width(spacing.spaceMedium))
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(end = 20.dp),
-                horizontalArrangement = Arrangement.End
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painter = painterResource(id = R.drawable.human_login),
-                    contentDescription = stringResource(id = R.string.login_illustration),
-                    modifier = Modifier
-                        .size(250.dp) // Adjust the height as needed
-                        .fillMaxWidth()
+                CircularImage(
+                    imageUri = selectImageUir,
+                    onClick = {
+                        singlePhotoPickerLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly
+                            )
+                        )
+                    }
                 )
             }
 
+
+            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+
+            CustomTextField(
+                text = state.name,
+                onValueChange = {
+                    viewModel.onEvent(
+                        SignUpEvent.UpdateName(it)
+                    )
+                },
+                icon = Icons.Default.Person,
+                label = stringResource(id = R.string.name),
+                keyboardType = KeyboardType.Text,
+                modifier = Modifier.padding(4.dp)
+            )
 
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
 

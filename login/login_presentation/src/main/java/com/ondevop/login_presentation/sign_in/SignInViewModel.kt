@@ -8,6 +8,7 @@ import com.ondevop.login_domain.use_case.SignUpWithEmailAndPassword
 import com.ondevop.core.R
 import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core.uitl.UiText
+import com.ondevop.login_domain.use_case.SignInWithEmailAndPassword
 import com.ondevop.login_domain.use_case.ValidateEmail
 import com.ondevop.login_domain.use_case.ValidatePassword
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignInViewModel @Inject constructor(
-    val signInWithEmailPassword: SignUpWithEmailAndPassword,
+    val signInWithEmailPassword: SignInWithEmailAndPassword,
     val validateEmail: ValidateEmail,
     val validatePassword: ValidatePassword,
     private val preferences: Preferences
@@ -34,9 +35,7 @@ class SignInViewModel @Inject constructor(
     fun onEvent(event: SignInEvent) {
         when (event) {
             is SignInEvent.SignInClick -> {
-                viewModelScope.launch {
                  signIn()
-                }
             }
 
             is SignInEvent.UpdateEmail -> {
@@ -71,7 +70,6 @@ class SignInViewModel @Inject constructor(
                     _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it)))
                     preferences.saveLoggedInfo(true)
                     _uiEvent.send(UiEvent.Success)
-                    Log.d("MyTag","suvm: ${preferences.getLoggedInfo()}")
                 }
                 .onFailure {
                     _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
