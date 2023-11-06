@@ -2,12 +2,15 @@ package com.ondevop.login_data.repository
 
 import android.app.Application
 import androidx.core.net.toUri
+import com.google.firebase.FirebaseException
+import com.google.firebase.FirebaseExceptionMapper
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthEmailException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.ondevop.login_domain.UserInfo
 import com.ondevop.login_domain.repository.AuthRepository
 import kotlinx.coroutines.tasks.await
 
@@ -18,11 +21,16 @@ class AuthRepositoryImp(
 ) : AuthRepository {
 
 
-    override suspend fun loginWithEmailPassword(email: String, password: String): Result<String> {
+    override suspend fun loginWithEmailPassword(email: String, password: String): Result<com.ondevop.login_domain.UserInfo> {
         return try {
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             if (result.user != null) {
-                Result.success("Login successful")
+                val user = result.user!!
+
+                Result.success(UserInfo(
+                    userName = user.displayName ?: "",
+                    profileUri = user.photoUrl
+                ))
             } else {
                 Result.failure(Exception("Login Failed "))
             }
@@ -30,7 +38,15 @@ class AuthRepositoryImp(
             Result.failure(Exception("User does not exist"))
         } catch (e: FirebaseAuthInvalidCredentialsException) {
             Result.failure(Exception("Invalid email or password"))
+        }  catch (e: FirebaseException) {
+            val errorCode = e.localizedMessage  // Get the error message and parse the error code from it.
+           if (errorCode!!.contains("INVALID_LOGIN_CREDENTIALS")) {
+                Result.failure(Exception("Invalid Email or Password"))
+            } else {
+               Result.failure(Exception(e.localizedMessage))
+            }
         } catch (e: Exception) {
+            e.printStackTrace()
             Result.failure(e)
         }
 

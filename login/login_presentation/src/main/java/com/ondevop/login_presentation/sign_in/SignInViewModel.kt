@@ -67,8 +67,12 @@ class SignInViewModel @Inject constructor(
         viewModelScope.launch {
             signInWithEmailPassword(state.value.email, state.value.password)
                 .onSuccess {
-                    _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it)))
+                    _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.userName)))
                     preferences.saveLoggedInfo(true)
+                    preferences.saveUserName(it.userName)
+                    val profileUri = it.profileUri.toString()
+                    preferences.saveProfileUri(profileUri)
+                    Log.d("MyTag","sivm: ${it.userName}, ${it.profileUri}")
                     _uiEvent.send(UiEvent.Success)
                 }
                 .onFailure {

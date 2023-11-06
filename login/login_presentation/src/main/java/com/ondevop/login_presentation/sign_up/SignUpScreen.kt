@@ -98,6 +98,7 @@ fun SignUpScreen(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {uri ->  
             selectImageUir = uri
+            Log.d("MyTag","SuS: $uri")
         }
     )
 
@@ -173,7 +174,7 @@ fun SignUpScreen(
                 modifier = Modifier.padding(4.dp)
             )
 
-            Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            Spacer(modifier = Modifier.height(spacing.spaceSmall))
 
             CustomTextField(
                 text = state.email,

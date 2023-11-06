@@ -7,6 +7,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -59,19 +60,12 @@ fun CircularImage(
             )
             .clickable { onClick() }
         ) {
-        Image(
-            painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current).data(data = imageUri)
-                    .apply<ImageRequest.Builder>(block = fun ImageRequest.Builder.() {
-                        crossfade(R.drawable.profile__circle)
-                        fallback(R.drawable.profile__circle)
-                    }).build()
-            ),
-            contentDescription = stringResource(id = R.string.avatar), // Provide a meaningful content description
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color.Transparent),
-            contentScale = ContentScale.FillBounds
+
+        AsyncImage(
+            model = imageUri,
+            contentDescription = null,
+            modifier = Modifier.fillMaxWidth(),
+            contentScale = ContentScale.Crop
         )
 
     }

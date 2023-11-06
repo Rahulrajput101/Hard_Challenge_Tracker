@@ -89,7 +89,11 @@ class SignUpViewModel @Inject constructor(
             signUpWithEmailAndPassword(state.value.email, state.value.password,state.value.name,state.value.profileUri)
                 .onSuccess {
                     _uiEvent.send(UiEvent.Success)
-                    preferences.saveLoggedInfo(true)
+                    preferences.apply {
+                        saveLoggedInfo(true)
+                        saveUserName(state.value.name)
+                        saveProfileUri(state.value.profileUri.toString())
+                    }
                     Log.d("MyTag", "suvm: ${preferences.getLoggedInfo()}")
                     _uiEvent.send(UiEvent.Success)
                 }
