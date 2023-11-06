@@ -1,6 +1,6 @@
 package com.ondevop.login_domain.use_case
 
-import com.ondevop.login_domain.UserInfo
+import com.ondevop.login_domain.model.UserInfo
 import com.ondevop.login_domain.repository.AuthRepository
 import javax.inject.Inject
 

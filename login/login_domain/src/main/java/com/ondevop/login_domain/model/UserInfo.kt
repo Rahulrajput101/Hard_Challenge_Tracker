@@ -1,4 +1,4 @@
-package com.ondevop.login_domain
+package com.ondevop.login_domain.model
 
 import android.net.Uri
 

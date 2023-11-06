@@ -1,6 +1,6 @@
 package com.ondevop.login_domain.repository
 
-import com.ondevop.login_domain.UserInfo
+import com.ondevop.login_domain.model.UserInfo
 
 interface AuthRepository {
     suspend fun loginWithEmailPassword(email: String, password: String): Result<UserInfo>

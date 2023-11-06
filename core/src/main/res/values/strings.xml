@@ -22,4 +22,6 @@
     <string name="password_needs_to_contain_8_characters">The password needs to consists of at least 8 characters</string>
     <string name="password_needs_to_contain_letter_and_digit">This Password needs to contains of letter and digit</string>
     <string name="password_do_not_match">Password don\'t match</string>
+    <string name="or">OR</string>
+    <string name="google">Google</string>
 </resources>

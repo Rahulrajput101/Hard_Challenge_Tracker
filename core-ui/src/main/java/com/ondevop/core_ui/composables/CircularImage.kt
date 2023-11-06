@@ -61,12 +61,20 @@ fun CircularImage(
             .clickable { onClick() }
         ) {
 
-        AsyncImage(
-            model = imageUri,
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth(),
-            contentScale = ContentScale.Crop
-        )
+        if(imageUri != null){
+            AsyncImage(
+                model = imageUri,
+                contentDescription = null,
+                modifier = Modifier.fillMaxWidth(),
+                contentScale = ContentScale.Crop
+            )
+        }else{
+            Image(
+                painter = painterResource(id = R.drawable.profile__circle),
+                contentDescription = null
+            )
+        }
+
 
     }
 

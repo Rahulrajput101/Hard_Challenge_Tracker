@@ -22,6 +22,7 @@ androidxComposeUi = "1.5.0"
 appcompat = "1.6.1"
 material = "1.9.0"
 firebaseBom = "32.4.0"
+googleAuth ="20.7.0"
 androidxDatastore = "1.0.0"
 coilKtCompose = "2.4.0"
 
@@ -63,6 +64,9 @@ material = { group = "com.google.android.material", name = "material", version.r
 firebase-bom = { group = "com.google.firebase" ,name = "firebase-bom",version.ref = "firebaseBom" }
 firebase-anayltics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 firebase-auth-ktx = { group = "com.google.firebase", name = "firebase-auth-ktx"}
+
+google-auth = {group = "com.google.android.gms", name = "play-services-auth",version.ref ="googleAuth"}
+
 
 androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore" }
 coil-compose= {group = "io.coil-kt", name ="coil-compose", version.ref = "coilKtCompose"}

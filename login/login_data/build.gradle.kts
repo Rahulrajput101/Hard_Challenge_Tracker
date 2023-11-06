@@ -15,6 +15,7 @@ dependencies {
     implementation(project(Modules.loginDomain))
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)
+    implementation(libs.google.auth)
 
     // Room
     implementation(libs.androidx.room.runtime)

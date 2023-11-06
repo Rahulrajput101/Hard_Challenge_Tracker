@@ -1,6 +1,7 @@
 package com.ondevop.login_presentation.sign_in
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -19,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material3.Button
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
@@ -28,6 +30,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -43,6 +47,7 @@ import com.ondevop.core.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.login_presentation.components.CustomTextField
 import com.ondevop.core.uitl.UiEvent
+import com.ondevop.login_presentation.components.RoundedButton
 
 
 @Composable
@@ -79,7 +84,8 @@ fun SignInScreen(
             .padding(20.dp)
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
 
@@ -206,6 +212,41 @@ fun SignInScreen(
                     }
                 )
             }
+
+            Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ){
+                Text(
+                    text = stringResource(id = R.string.or),
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.SemiBold
+                )
+            }
+
+            Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Column {
+                    RoundedButton(
+                        text = "G",
+                        onClick = {
+
+                        }
+                    )
+                    Text(
+                        text = stringResource(id = R.string.google),
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
+                        modifier = Modifier.padding(start = 3.dp)
+                    )
+                }
+
+            }
+
         }
     }
 
