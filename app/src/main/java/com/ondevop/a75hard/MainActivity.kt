@@ -18,6 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.ondevop.a75hard.navigation.Route
 import com.ondevop.a75hard.ui.theme._75HardTheme
 import com.ondevop.core.domain.prefernces.Preferences
@@ -33,6 +34,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var preferences: Preferences
+
+    @Inject
+    lateinit var googleSignInClient: GoogleSignInClient
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,7 +66,8 @@ class MainActivity : ComponentActivity() {
                                     },
                                     navigateToTrackerHome = {
                                         navController.navigate(Route.TrackerHome.route)
-                                    }
+                                    },
+                                    googleSignInClient = googleSignInClient
                                 )
                             }
 

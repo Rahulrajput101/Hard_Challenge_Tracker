@@ -1,6 +1,7 @@
 plugins {
     `android-library`
     `kotlin-android`
+    id("com.google.gms.google-services")
 }
 
 apply(from = "$rootDir/compose-module.gradle")
@@ -14,5 +15,6 @@ dependencies {
     implementation(project(Modules.coreUi))
     implementation(project(Modules.loginDomain))
     implementation(libs.coil.compose)
+    implementation(libs.google.auth)
 
 }

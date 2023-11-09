@@ -1,6 +1,9 @@
 package di
 
 import android.app.Application
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.ondevop.a75hard.EmailValidatorImp
 import com.ondevop.core.data.prefrences.DefaultPreferences
 import com.ondevop.core.data.prefrences.dataStore
@@ -27,5 +30,16 @@ object AppModule {
     @Singleton
     fun provideEmailValidator() : EmailValidator{
        return EmailValidatorImp()
+    }
+
+    @Singleton
+    @Provides
+    fun provideGoogleSignClient(app: Application) : GoogleSignInClient {
+        return GoogleSignIn.getClient(
+            app,
+            GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .build()
+        )
     }
 }

@@ -1,5 +1,10 @@
 package com.ondevop.login_presentation.sign_in
 
+import android.app.Activity
+import android.service.autofill.UserData
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,6 +48,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.common.api.ApiException
 import com.ondevop.core.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.login_presentation.components.CustomTextField
@@ -56,7 +64,9 @@ fun SignInScreen(
     navigateToSignUp: () -> Unit,
     viewModel: SignInViewModel = hiltViewModel(),
     navigateToTrackerHome: () -> Unit,
+    googleSignInClient: GoogleSignInClient
 ) {
+
 
     val spacing = LocalSpacing.current
     val context = LocalContext.current
@@ -77,6 +87,47 @@ fun SignInScreen(
             }
         }
     }
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+            try {
+                val account = task.getResult(ApiException::class.java)
+                if (account != null) {
+                    val userData = account.id?.let {
+                        Log.d("MyTag","tovs: im ${account.photoUrl}")
+                        Log.d("MyTag","tovs: im ${account.displayName}")
+                        UserData(
+                            userName = account.displayName,
+                            profilePictureUrl = account.photoUrl.toString(),
+                        )
+
+                    }
+                    if(userData != null){
+                        viewModel.onEvent(SignInEvent.SaveUserdata(userData))
+                    }
+
+                } else {
+                    // Handle sign-in failure
+                    viewModel.onEvent(SignInEvent.SignInUnsuccessful("Failed to sign in"))
+                }
+            } catch (e: ApiException) {
+                viewModel.onEvent(SignInEvent.SignInUnsuccessful("$e"))
+            }
+        } else if (result.resultCode == Activity.RESULT_CANCELED) {
+            // Sign-in was canceled
+            viewModel.onEvent(SignInEvent.SignInUnsuccessful("Sign-in canceled"))
+            // Sign-in was canceled
+        } else {
+            // Handle other result codes or errors, if needed
+            viewModel.onEvent(SignInEvent.SignInUnsuccessful("Sign-in failed with error code ${result.resultCode}"))
+        }
+    }
+
+
+
 
     Box(
         modifier = Modifier
@@ -234,7 +285,7 @@ fun SignInScreen(
                     RoundedButton(
                         text = "G",
                         onClick = {
-
+                         launcher.launch(googleSignInClient.signInIntent)
                         }
                     )
                     Text(

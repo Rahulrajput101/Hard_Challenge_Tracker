@@ -1,8 +1,13 @@
 package com.ondevop.login_presentation.sign_in
 
+import android.app.Instrumentation.ActivityResult
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.common.api.ApiException
 import com.ondevop.core.domain.prefernces.Preferences
 import com.ondevop.login_domain.use_case.SignUpWithEmailAndPassword
 import com.ondevop.core.R
@@ -24,7 +29,8 @@ class SignInViewModel @Inject constructor(
     val signInWithEmailPassword: SignInWithEmailAndPassword,
     val validateEmail: ValidateEmail,
     val validatePassword: ValidatePassword,
-    private val preferences: Preferences
+    private val preferences: Preferences,
+    private val googleSignInClient: GoogleSignInClient
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignInState())
@@ -35,7 +41,7 @@ class SignInViewModel @Inject constructor(
     fun onEvent(event: SignInEvent) {
         when (event) {
             is SignInEvent.SignInClick -> {
-                 signIn()
+                signIn()
             }
 
             is SignInEvent.UpdateEmail -> {
@@ -44,6 +50,20 @@ class SignInViewModel @Inject constructor(
 
             is SignInEvent.UpdatePassword -> {
                 _state.value = _state.value.copy(password = event.password)
+            }
+
+            is SignInEvent.SignInUnsuccessful -> {
+                viewModelScope.launch {
+                    _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(event.errorMessage)))
+                }
+            }
+
+            is SignInEvent.SaveUserdata -> {
+                viewModelScope.launch {
+                    preferences.saveUserName(event.userData.userName ?: "")
+                    preferences.saveProfileUri(event.userData.profilePictureUrl.toString())
+                    _uiEvent.send(UiEvent.Success)
+                }
             }
         }
     }
@@ -72,7 +92,6 @@ class SignInViewModel @Inject constructor(
                     preferences.saveUserName(it.userName)
                     val profileUri = it.profileUri.toString()
                     preferences.saveProfileUri(profileUri)
-                    Log.d("MyTag","sivm: ${it.userName}, ${it.profileUri}")
                     _uiEvent.send(UiEvent.Success)
                 }
                 .onFailure {

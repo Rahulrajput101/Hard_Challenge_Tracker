@@ -100,4 +100,6 @@ dependencies {
     kapt(libs.dagger.hilt.android.compiler)
     implementation(libs.dagger.hilt.navigation.compose)
 
+    implementation(libs.google.auth)
+
 }
