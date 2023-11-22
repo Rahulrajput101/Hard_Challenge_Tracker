@@ -17,6 +17,12 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import com.ondevop.core_ui.Dimensions
 import com.ondevop.core_ui.LocalSpacing
+import com.ondevop.core_ui.Pink40
+import com.ondevop.core_ui.Pink80
+import com.ondevop.core_ui.Purple40
+import com.ondevop.core_ui.Purple80
+import com.ondevop.core_ui.PurpleGrey40
+import com.ondevop.core_ui.PurpleGrey80
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,

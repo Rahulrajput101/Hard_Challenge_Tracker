@@ -28,4 +28,8 @@
     <string name="greeting_text">We wish you have a good day!</string>
     <string name="days">Days</string>
     <string name="your_goal">Your Goal</string>
+    <string name="drink_water">Drink Water</string>
+    <string name="daily_goal_water">Daily goal is to drink 4L water</string>
+    <string name="drink_1l">Drink 1L</string>
+    <string name="drink_track">0/4</string>
 </resources>
