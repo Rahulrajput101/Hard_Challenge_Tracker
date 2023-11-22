@@ -180,6 +180,9 @@ fun SignInScreen(
                     modifier = Modifier
                         .size(250.dp) // Adjust the height as needed
                         .fillMaxWidth()
+                        .clickable {
+                            navigateToTrackerHome()
+                        }
                 )
             }
 

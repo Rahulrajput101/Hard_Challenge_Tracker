@@ -24,6 +24,7 @@ import com.ondevop.a75hard.ui.theme._75HardTheme
 import com.ondevop.core.domain.prefernces.Preferences
 import com.ondevop.login_presentation.sign_in.SignInScreen
 import com.ondevop.login_presentation.sign_up.SignUpScreen
+import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -83,7 +84,7 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(Route.TrackerHome.route) {
-
+                                        TrackerOverViewScreen()
                             }
 
 

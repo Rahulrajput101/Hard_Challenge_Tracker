@@ -60,20 +60,15 @@ fun CustomTextField(
             },
             keyboardOptions = KeyboardOptions(
                 keyboardType = keyboardType
-            )
-
+            ),
+            trailingIcon = {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = stringResource(id = com.ondevop.core.R.string.email)
+                )
+            }
 
         )
-
-        IconButton(
-            onClick = { },
-            modifier = Modifier.align(Alignment.CenterEnd)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = stringResource(id = com.ondevop.core.R.string.email)
-            )
-        }
 
     }
 
