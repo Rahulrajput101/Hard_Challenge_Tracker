@@ -12,3 +12,7 @@ val Pink40 = Color(0xFF7D5260)
 
 //
 val WaterBlue = Color(0xFF27B7FF)
+val WorkoutRed = Color(0xFFFF7878)
+val ReadTeal = Color(0xFF43B8B1)
+val foodGreen = Color(0xFF5EA83B)
+val pictureViolet = Color(0xFFB867F8)

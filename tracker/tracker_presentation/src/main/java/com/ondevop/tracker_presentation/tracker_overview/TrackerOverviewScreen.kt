@@ -12,8 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core_ui.LocalSpacing
+import com.ondevop.tracker_presentation.tracker_overview.component.DietCardView
+import com.ondevop.tracker_presentation.tracker_overview.component.PictureCardView
+import com.ondevop.tracker_presentation.tracker_overview.component.ReadingCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.TrackerHeader
 import com.ondevop.tracker_presentation.tracker_overview.component.WaterCardView
+import com.ondevop.tracker_presentation.tracker_overview.component.WorkoutCardView
 
 @Composable
 fun TrackerOverViewScreen(
@@ -44,6 +48,53 @@ fun TrackerOverViewScreen(
                onCardClick = {
 
                })
+
+           WorkoutCardView(
+               modifier = Modifier.padding(
+                   horizontal = spacing.spaceMedium,
+               ),
+               totalWorkout = 0,
+               workoutGoal = 2,
+               workoutTime = "45min",
+               onCardClick = {
+
+               },
+               onWorkoutClick = {
+
+               })
+
+           ReadingCardView(
+               modifier = Modifier.padding(
+                   horizontal = spacing.spaceMedium,
+               ),
+               onCardClick = {
+
+               },
+               onReadClick = {
+
+               }
+           )
+
+           PictureCardView(
+               modifier = Modifier.padding(
+                   horizontal = spacing.spaceMedium,
+               ),
+               onCardClick = {
+
+               },
+               onTakePictureClick = {
+
+               }
+           )
+
+           DietCardView(
+               modifier = Modifier.padding(
+                   horizontal = spacing.spaceMedium,
+               ),
+               onCardClick = {
+
+               }
+           )
        }
 
 

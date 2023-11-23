@@ -32,4 +32,16 @@
     <string name="daily_goal_water">Daily goal is to drink 4L water</string>
     <string name="drink_1l">Drink 1L</string>
     <string name="drink_track">0/4</string>
+    <string name="workout_track">0/2</string>
+    <string name="workout">Workout</string>
+    <string name="daily_goal_workout">Exercise twice daily for 45 minutes each</string>
+    <string name="log_workout">Log workout</string>
+    <string name="log_read">Log Read</string>
+    <string name="read">Reading</string>
+    <string name= "daily_goal_reading"> Daily goal is to read 10 pages</string>
+    <string name="click_picture">Click picture</string>
+    <string name="daily_photo_goal">Take a progress picture every day</string>
+    <string name="take_photo">Take photo</string>
+    <string name="healthy_diet">Healthy diet</string>
+    <string name="daily_goal_healthy_diet">Follow any nutrition plan designed for your goals, with zero alcohol and no cheat meals.</string>
 </resources>
