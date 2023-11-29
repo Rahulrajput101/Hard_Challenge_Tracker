@@ -5,7 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TrackedChallengeEntity(
-    @PrimaryKey val id: Int? = null,
+    @PrimaryKey(autoGenerate = true)
+    var id : Long? = null,
     val waterIntake: Int,
     val workedOut: Int,
     val read: Boolean,
