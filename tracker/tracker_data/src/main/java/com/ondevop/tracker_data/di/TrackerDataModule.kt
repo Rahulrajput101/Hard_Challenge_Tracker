@@ -2,7 +2,10 @@ package com.ondevop.tracker_data.di
 
 import android.app.Application
 import androidx.room.Room
+import com.ondevop.tracker_data.local.TrackerDao
 import com.ondevop.tracker_data.local.TrackerDatabase
+import com.ondevop.tracker_data.repository.TrackerRepositoryImp
+import com.ondevop.tracker_domain.repository.TrackerRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +24,14 @@ object TrackerDataModule {
             TrackerDatabase::class.java,
             TrackerDatabase.DATABASE_NAME
         ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideTrackedChallengeRepository(
+        trackerDao: TrackerDao
+    ) : TrackerRepository{
+        return TrackerRepositoryImp(trackerDao)
     }
 
 }
