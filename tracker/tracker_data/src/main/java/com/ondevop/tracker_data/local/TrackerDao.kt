@@ -15,6 +15,9 @@ interface TrackerDao {
     @Delete
     fun removeTrackedChallenge( trackedChallengeEntity: TrackedChallengeEntity)
 
+    @Query("select * from TrackedChallengeEntity WHERE date = :date")
+    fun getTrackedDataForDate(date: Long) : Flow<TrackedChallengeEntity>
+
     @Query("select * from TrackedChallengeEntity order by date desc")
     fun getAllTrackedChallenge() : Flow<List<TrackedChallengeEntity>>
 

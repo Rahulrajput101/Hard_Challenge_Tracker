@@ -1,5 +1,7 @@
 package com.ondevop.tracker_domain.model
 
+import java.time.LocalDate
+
 data class TrackedChallenge(
     val id: Long? = null,
     val waterIntake: Int,
@@ -7,5 +9,5 @@ data class TrackedChallenge(
     val read: Boolean,
     val imageUri: String? = null,
     val dayCount : Int,
-    val date: Long = System.currentTimeMillis()
+    val date: LocalDate
 )

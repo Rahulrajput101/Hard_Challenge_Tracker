@@ -2,6 +2,7 @@ package com.ondevop.tracker_data.mapper
 
 import com.ondevop.tracker_data.local.TrackedChallengeEntity
 import com.ondevop.tracker_domain.model.TrackedChallenge
+import java.time.LocalDate
 
 fun TrackedChallengeEntity.toTrackedChallenge() : TrackedChallenge {
     return TrackedChallenge(
@@ -11,7 +12,7 @@ fun TrackedChallengeEntity.toTrackedChallenge() : TrackedChallenge {
         read = read,
         imageUri = imageUri,
         dayCount = dayCount,
-        date = date
+        date = convertLongToLocalDate(date)
     )
 }
 
@@ -23,6 +24,13 @@ fun TrackedChallenge.toTrackedChallengeEntity() : TrackedChallengeEntity {
         read = read,
         imageUri = imageUri,
         dayCount = dayCount,
-        date = date
+        date = covertLocalDateToLong(date)
     )
+}
+fun convertLongToLocalDate(longValue: Long): LocalDate {
+    return LocalDate.ofEpochDay(longValue)
+}
+
+fun covertLocalDateToLong(localDate: LocalDate): Long{
+    return localDate.toEpochDay()
 }

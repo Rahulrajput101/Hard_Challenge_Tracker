@@ -12,5 +12,5 @@ data class TrackedChallengeEntity(
     val read: Boolean,
     val imageUri: String? = null,
     val dayCount : Int,
-    val date: Long = System.currentTimeMillis()
+    val date: Long
 )
