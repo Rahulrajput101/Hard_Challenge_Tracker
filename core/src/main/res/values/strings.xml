@@ -31,8 +31,8 @@
     <string name="drink_water">Drink Water</string>
     <string name="daily_goal_water">Daily goal is to drink 4L water</string>
     <string name="drink_1l">Drink 1L</string>
-    <string name="drink_track">0/4</string>
-    <string name="workout_track">0/2</string>
+    <string name="drink_track">%d/4</string>
+    <string name="workout_track">%d/2</string>
     <string name="workout">Workout</string>
     <string name="daily_goal_workout">Exercise twice daily for 45 minutes each</string>
     <string name="log_workout">Log workout</string>

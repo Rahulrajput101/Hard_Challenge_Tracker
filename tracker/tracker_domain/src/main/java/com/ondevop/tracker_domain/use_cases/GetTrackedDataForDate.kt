@@ -8,7 +8,7 @@ import java.time.LocalDate
 class GetTrackedDataForDate(
     private val repository: TrackerRepository
 ) {
-    operator fun invoke(date: LocalDate) : Flow<TrackedChallenge> {
+    operator fun invoke(date: LocalDate) : Flow<TrackedChallenge?> {
         return repository.getTrackedDataForDate(date)
     }
 }

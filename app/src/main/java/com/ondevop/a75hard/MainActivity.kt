@@ -57,7 +57,8 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .padding(it),
                             navController = navController,
-                            startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
+                          //  startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
+                            startDestination =  Route.TrackerHome.route
                         ) {
                             composable(Route.SignIn.route) {
                                 SignInScreen(

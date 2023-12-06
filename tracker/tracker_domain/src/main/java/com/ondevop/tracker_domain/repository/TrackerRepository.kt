@@ -8,7 +8,7 @@ interface TrackerRepository {
 
     suspend fun upsertTrackedChallenge(trackedChallenge: TrackedChallenge) : Long
 
-    fun getTrackedDataForDate(date: LocalDate): Flow<TrackedChallenge>
+    fun getTrackedDataForDate(date: LocalDate): Flow<TrackedChallenge?>
 
     fun getAllTrackedChallenge() : Flow<List<TrackedChallenge>>
 

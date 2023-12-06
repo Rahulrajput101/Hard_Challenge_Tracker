@@ -29,9 +29,9 @@ object TrackerDataModule {
     @Provides
     @Singleton
     fun provideTrackedChallengeRepository(
-        trackerDao: TrackerDao
+        trackerDatabase: TrackerDatabase
     ) : TrackerRepository{
-        return TrackerRepositoryImp(trackerDao)
+        return TrackerRepositoryImp(trackerDatabase.trackerDao)
     }
 
 }

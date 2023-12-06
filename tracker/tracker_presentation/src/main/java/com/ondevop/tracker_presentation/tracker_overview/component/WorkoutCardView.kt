@@ -62,7 +62,9 @@ fun WorkoutCardView(
                     .padding(vertical = 6.dp, horizontal = 18.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.workout_track),
+                    text = stringResource(id = R.string.workout_track,
+                        totalWorkout
+                    ),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,

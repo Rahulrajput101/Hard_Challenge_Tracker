@@ -1,5 +1,6 @@
 package com.ondevop.tracker_presentation.tracker_overview
 
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,13 +26,14 @@ fun TrackerOverViewScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val spacing = LocalSpacing.current
-
+    Log.d("tovs","${state.waterIntake}")
    LazyColumn(
        modifier = Modifier
            .fillMaxWidth()
            .padding(bottom = spacing.spaceMedium)
    ){
        item {
+
            TrackerHeader(
                state = state
            )
@@ -40,10 +42,12 @@ fun TrackerOverViewScreen(
                modifier = Modifier.padding(
                    horizontal = spacing.spaceMedium,
                ),
-               drinkWater = 2,
-               waterGoal = 3,
+               drinkWater = state.waterIntake,
+               waterGoal = state.drinkGoal,
                onDrinkClick = {
-
+                 if (state.waterIntake < state.drinkGoal){
+                     viewModel.onEvent(TrackerOverviewEvent.OnDrinkClick)
+                 }
                },
                onCardClick = {
 
@@ -53,14 +57,16 @@ fun TrackerOverViewScreen(
                modifier = Modifier.padding(
                    horizontal = spacing.spaceMedium,
                ),
-               totalWorkout = 0,
-               workoutGoal = 2,
+               totalWorkout = state.workedOut,
+               workoutGoal = state.workoutGoal,
                workoutTime = "45min",
                onCardClick = {
 
                },
                onWorkoutClick = {
-
+                   if(state.workedOut < state.workoutGoal){
+                       viewModel.onEvent(TrackerOverviewEvent.OnWorkoutClick)
+                   }
                })
 
            ReadingCardView(
@@ -71,7 +77,7 @@ fun TrackerOverViewScreen(
 
                },
                onReadClick = {
-
+                 viewModel.onEvent(TrackerOverviewEvent.OnReadClick(true))
                }
            )
 
@@ -83,7 +89,7 @@ fun TrackerOverViewScreen(
 
                },
                onTakePictureClick = {
-
+               //   viewModel.onEvent(TrackerOverviewEvent.OnPhotoClick())
                }
            )
 

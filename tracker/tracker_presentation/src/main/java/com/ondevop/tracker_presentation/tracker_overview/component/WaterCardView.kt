@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.sp
 import com.ondevop.core.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.core_ui.WaterBlue
+import com.ondevop.tracker_presentation.tracker_overview.TrackerOverviewEvent
 
 @Preview(
     showSystemUi = false
@@ -74,7 +75,7 @@ fun WaterCardView(
             cardColor = WaterBlue,
             hasImage = true,
             onButtonClick = {
-                onCardClick
+                onDrinkClick()
             },
             onCardClick = {
 
@@ -93,7 +94,9 @@ fun WaterCardView(
                     .padding(vertical = 6.dp, horizontal = 18.dp)
             ) {
                 Text(
-                    text = stringResource(id = R.string.drink_track),
+                    text = stringResource(id = R.string.drink_track,
+                        drinkWater
+                    ),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.White,
