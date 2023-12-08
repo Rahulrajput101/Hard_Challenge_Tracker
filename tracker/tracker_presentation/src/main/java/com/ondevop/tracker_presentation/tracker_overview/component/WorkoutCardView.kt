@@ -20,14 +20,14 @@ import androidx.compose.ui.unit.sp
 import com.ondevop.core.R
 import com.ondevop.core_ui.WaterBlue
 import com.ondevop.core_ui.WorkoutRed
+import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewState
 
 @Composable
 fun WorkoutCardView(
-    totalWorkout: Int,
-    workoutGoal: Int,
-    workoutTime: String,
+    state : TrackerOverViewState,
     onCardClick: () -> Unit,
-    onWorkoutClick:() ->Unit,
+    hasButton : Boolean,
+    onWorkoutClick:() ->Boolean,
     modifier: Modifier = Modifier
 ){
     Box(
@@ -36,14 +36,16 @@ fun WorkoutCardView(
             .height(160.dp),
     ) {
         CustomCardView(
+            state = state,
             backgroundImage = R.drawable.workout_svg,
             heading = R.string.workout,
             subHeading = R.string.daily_goal_workout ,
             buttonText = R.string.log_workout,
             cardColor = WorkoutRed,
             hasImage = true,
+            hasButton = hasButton,
             onButtonClick = {
-                onCardClick()
+                onWorkoutClick()
             },
             onCardClick = {
 
@@ -63,7 +65,7 @@ fun WorkoutCardView(
             ) {
                 Text(
                     text = stringResource(id = R.string.workout_track,
-                        totalWorkout
+                        state.workedOut
                     ),
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,

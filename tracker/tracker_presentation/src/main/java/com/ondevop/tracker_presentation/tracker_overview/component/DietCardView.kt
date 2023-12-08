@@ -9,9 +9,11 @@ import androidx.compose.ui.unit.dp
 import com.ondevop.core.R
 import com.ondevop.core_ui.foodGreen
 import com.ondevop.core_ui.pictureViolet
+import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewState
 
 @Composable
 fun DietCardView(
+    state: TrackerOverViewState,
     onCardClick: () -> Unit,
     modifier: Modifier = Modifier
 ){
@@ -21,6 +23,7 @@ fun DietCardView(
             .height(160.dp),
     ) {
         CustomCardView(
+            state = state,
             backgroundImage =  R.drawable.diet_svg,
             heading = R.string.healthy_diet,
             subHeading = R.string.daily_goal_healthy_diet,
@@ -29,7 +32,7 @@ fun DietCardView(
             hasImage = true,
             hasButton = false,
             onButtonClick = {
-
+                false
             },
             onCardClick = {
                 onCardClick()
