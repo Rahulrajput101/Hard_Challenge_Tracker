@@ -26,7 +26,6 @@ fun GreetingSection(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
-            .fillMaxWidth()
             .padding(
                 horizontal = spacing.spaceSmall,
                 vertical = spacing.spaceMedium
@@ -42,7 +41,7 @@ fun GreetingSection(
                     name
                 ),
                 color =MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.headlineLarge
+                style = MaterialTheme.typography.headlineMedium
             )
 
             Text(
@@ -50,7 +49,7 @@ fun GreetingSection(
                     id = R.string.greeting_text
                 ),
                 color =MaterialTheme.colorScheme.onPrimary,
-                style = MaterialTheme.typography.bodyLarge,
+                style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Light
             )
         }

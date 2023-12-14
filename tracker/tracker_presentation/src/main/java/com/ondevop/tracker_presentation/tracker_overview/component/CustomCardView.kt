@@ -143,7 +143,6 @@ fun CustomCardView(
                                 .background(cardColor)
                                 .clickable {
                                     buttonClicked.value = onButtonClick()
-                                    Log.d("ccv","value is ${buttonClicked.value}")
                                 }
                                 .padding(vertical = 8.dp, horizontal = 18.dp),
                         ) {

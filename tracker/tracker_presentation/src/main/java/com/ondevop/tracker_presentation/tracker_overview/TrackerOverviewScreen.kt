@@ -1,6 +1,9 @@
 package com.ondevop.tracker_presentation.tracker_overview
 
 import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -10,6 +13,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.tracker_presentation.tracker_overview.component.DietCardView
@@ -25,7 +29,15 @@ fun TrackerOverViewScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val spacing = LocalSpacing.current
-    Log.d("tovs", "${state.waterIntake}")
+    val context = LocalContext.current
+
+    val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.PickVisualMedia(),
+        onResult = {uri ->
+             viewModel.onEvent(TrackerOverviewEvent.OnPhotoClick(uri.toString()))
+        }
+    )
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,7 +106,10 @@ fun TrackerOverViewScreen(
                 },
                 hasButton =state.imageUri.isNullOrEmpty(),
                 onTakePictureClick = {
-                    //   viewModel.onEvent(TrackerOverviewEvent.OnPhotoClick())
+                   singlePhotoPickerLauncher.launch(
+                       PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                   )
+                    Log.d("pcv"," ${state.imageUri != null}")
                    return@PictureCardView state.imageUri != null
                 }
             )

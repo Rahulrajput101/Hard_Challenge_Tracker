@@ -1,5 +1,7 @@
 package com.ondevop.tracker_presentation.tracker_overview.component
 
+import android.graphics.BitmapFactory
+import android.net.Uri
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +21,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.ondevop.core_ui.LocalSpacing
+import com.ondevop.core_ui.composables.CircularImage
 import com.ondevop.tracker_presentation.R
 import com.ondevop.tracker_presentation.component.UnitDisplay
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewState
@@ -34,6 +38,7 @@ fun TrackerHeader(
     val animateDaysCount = animateIntAsState(
         targetValue = state.totalDays, label = ""
     )
+
 
     Column(
         modifier = modifier
@@ -52,8 +57,20 @@ fun TrackerHeader(
                 end = spacing.spaceMedium
             )
     ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            GreetingSection()
+            CircularImage(
+                modifier = Modifier,
+                imageUri = state.imageUri?.toUri(),
+                size = 60.dp
+            ) {
 
-        GreetingSection()
+            }
+        }
         Spacer(modifier = Modifier.height(spacing.spaceSmall))
         Row(
             modifier = Modifier.fillMaxWidth(),

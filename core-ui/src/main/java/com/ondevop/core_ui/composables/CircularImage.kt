@@ -1,6 +1,10 @@
 package com.ondevop.core_ui.composables
 
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.graphics.BitmapFactory
 import android.net.Uri
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -22,11 +26,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import coil.compose.rememberImagePainter
 import androidx.core.net.toUri
+import coil.Coil
 import coil.compose.AsyncImage
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import coil.size.Scale
+import coil.transform.CircleCropTransformation
 import com.ondevop.core.R
 import com.ondevop.core_ui.LocalSpacing
 
@@ -38,14 +47,16 @@ fun CircularImagePreview() {
 
 @Composable
 fun CircularImage(
+    modifier: Modifier = Modifier,
     imageUri: Uri?,
     size: Dp = 120.dp,
     onClick :() -> Unit
 ) {
+
     val spacing = LocalSpacing.current
 
     Box(
-        modifier = Modifier
+        modifier = modifier
             .padding(
                 top = spacing.spaceExtraSmall,
                 bottom = spacing.spaceExtraSmall,
@@ -62,12 +73,31 @@ fun CircularImage(
         ) {
 
         if(imageUri != null){
-            AsyncImage(
-                model = imageUri,
+//            Image(
+//                painter = // Adjust scale as needed
+//                rememberAsyncImagePainter(
+//                    ImageRequest.Builder(LocalContext.current).data(data = imageUri)
+//                        .apply<ImageRequest.Builder>(block = fun ImageRequest.Builder.() {
+//                            scale(Scale.FILL)  // Adjust scale as needed
+//                        }).build()
+//                ),
+//                contentDescription = null,
+//                contentScale = ContentScale.Crop, // or other ContentScale options
+//                modifier = Modifier.fillMaxWidth()
+//            )
+            Image(
+                painter = rememberImagePainter(
+                    data = imageUri,
+                    builder = {
+                        // Add a unique key to force Coil to fetch a new image
+                        crossfade(true)
+                        transformations(CircleCropTransformation())
+                    }
+                ),
                 contentDescription = null,
-                modifier = Modifier.fillMaxWidth(),
-                contentScale = ContentScale.Crop
+                modifier = Modifier.fillMaxSize()
             )
+
         }else{
             Image(
                 painter = painterResource(id = R.drawable.profile__circle),
@@ -77,6 +107,7 @@ fun CircularImage(
 
 
     }
+
 
 
 }
