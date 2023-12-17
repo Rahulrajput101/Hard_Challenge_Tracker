@@ -109,7 +109,7 @@ fun TrackerOverViewScreen(
                    singlePhotoPickerLauncher.launch(
                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                    )
-                    Log.d("pcv"," ${state.imageUri != null}")
+
                    return@PictureCardView state.imageUri != null
                 }
             )
