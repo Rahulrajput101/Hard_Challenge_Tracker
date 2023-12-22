@@ -1,4 +1,4 @@
-package com.ondevop.tracker_domain.model
+package com.ondevop.core.domain.model
 
 import java.time.LocalDate
 

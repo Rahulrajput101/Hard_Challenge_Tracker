@@ -1,7 +1,7 @@
 package com.ondevop.core.data.mapper
 
 import com.ondevop.core.data.local.entity.TrackedChallengeEntity
-import com.ondevop.tracker_domain.model.TrackedChallenge
+import com.ondevop.core.domain.model.TrackedChallenge
 import java.time.LocalDate
 
 fun TrackedChallengeEntity.toTrackedChallenge() : TrackedChallenge {

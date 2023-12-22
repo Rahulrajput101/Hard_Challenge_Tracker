@@ -1,10 +1,10 @@
-package com.ondevop.tracker_data.repository
+package com.ondevop.core.data.repository
 
 import com.ondevop.core.data.local.dao.TrackerDao
 import com.ondevop.core.data.mapper.toTrackedChallenge
 import com.ondevop.core.data.mapper.toTrackedChallengeEntity
-import com.ondevop.tracker_domain.model.TrackedChallenge
-import com.ondevop.tracker_domain.repository.TrackerRepository
+import com.ondevop.core.domain.model.TrackedChallenge
+import com.ondevop.core.domain.repository.TrackerRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.LocalDate

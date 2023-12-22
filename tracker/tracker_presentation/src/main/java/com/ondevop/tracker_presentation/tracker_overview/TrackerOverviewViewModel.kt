@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.ondevop.core.domain.use_cases.SaveImage
 import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core.uitl.UiText
-import com.ondevop.tracker_domain.model.TrackedChallenge
+import com.ondevop.core.domain.model.TrackedChallenge
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

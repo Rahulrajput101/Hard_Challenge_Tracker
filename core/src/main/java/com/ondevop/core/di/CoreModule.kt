@@ -1,8 +1,12 @@
 package com.ondevop.core.di
 
 import android.app.Application
+import androidx.room.Room
+import com.ondevop.core.data.local.TrackerDatabase
 import com.ondevop.core.data.repository.SaveImageRepositoryImp
+import com.ondevop.core.data.repository.TrackerRepositoryImp
 import com.ondevop.core.domain.repository.SaveImageRepository
+import com.ondevop.core.domain.repository.TrackerRepository
 import com.ondevop.core.domain.use_cases.SaveImage
 import dagger.Binds
 import dagger.Module
@@ -46,7 +50,7 @@ object CoreModule {
     @Singleton
     fun provideTrackedChallengeRepository(
         trackerDatabase: TrackerDatabase
-    ) : TrackerRepository{
+    ) : TrackerRepository {
         return TrackerRepositoryImp(trackerDatabase.trackerDao)
     }
 

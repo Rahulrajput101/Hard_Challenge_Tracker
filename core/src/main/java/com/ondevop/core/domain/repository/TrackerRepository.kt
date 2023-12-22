@@ -1,6 +1,6 @@
-package com.ondevop.tracker_domain.repository
+package com.ondevop.core.domain.repository
 
-import com.ondevop.tracker_domain.model.TrackedChallenge
+import com.ondevop.core.domain.model.TrackedChallenge
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDate
 
