@@ -1,6 +1,6 @@
-package com.ondevop.tracker_data.mapper
+package com.ondevop.core.data.mapper
 
-import com.ondevop.tracker_data.local.TrackedChallengeEntity
+import com.ondevop.core.data.local.entity.TrackedChallengeEntity
 import com.ondevop.tracker_domain.model.TrackedChallenge
 import java.time.LocalDate
 

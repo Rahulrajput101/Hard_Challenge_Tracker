@@ -1,4 +1,4 @@
-package com.ondevop.tracker_data.local
+package com.ondevop.core.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

@@ -1,9 +1,10 @@
-package com.ondevop.tracker_data.local
+package com.ondevop.core.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Query
 import androidx.room.Upsert
+import com.ondevop.core.data.local.entity.TrackedChallengeEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

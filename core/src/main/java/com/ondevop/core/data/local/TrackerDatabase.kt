@@ -1,7 +1,9 @@
-package com.ondevop.tracker_data.local
+package com.ondevop.core.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.ondevop.core.data.local.dao.TrackerDao
+import com.ondevop.core.data.local.entity.TrackedChallengeEntity
 
 @Database(
     entities = [TrackedChallengeEntity::class],
