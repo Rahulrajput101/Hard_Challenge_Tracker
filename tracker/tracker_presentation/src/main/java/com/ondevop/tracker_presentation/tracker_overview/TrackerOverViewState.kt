@@ -4,7 +4,7 @@ import java.time.LocalDate
 
 data class TrackerOverViewState(
     val id: Long? = null,
-    val totalDays: Int = 45,
+    val totalDays: Int = 0,
     val goal: Int = 75,
     val drinkGoal: Int = 4,
     val waterIntake : Int = 0,

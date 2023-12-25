@@ -9,12 +9,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.tracker_presentation.tracker_overview.component.DietCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.PictureCardView
@@ -25,9 +28,11 @@ import com.ondevop.tracker_presentation.tracker_overview.component.WorkoutCardVi
 
 @Composable
 fun TrackerOverViewScreen(
+    snackbarHostState: SnackbarHostState,
     viewModel: TrackerOverviewViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsState()
+    val totalDays by viewModel.totalDays.collectAsState()
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
@@ -40,6 +45,21 @@ fun TrackerOverViewScreen(
 
         }
     )
+    LaunchedEffect(key1 = true){
+        viewModel.uiEvent.collect{event ->
+            when(event){
+                is UiEvent.ShowSnackbar ->{
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    snackbarHostState.showSnackbar(event.message.asString(context))
+                }
+
+                else -> Unit
+            }
+
+        }
+
+    }
+
 
     LazyColumn(
         modifier = Modifier
@@ -49,7 +69,8 @@ fun TrackerOverViewScreen(
         item {
 
             TrackerHeader(
-                state = state
+                state = state,
+                totalDays = totalDays
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             WaterCardView(

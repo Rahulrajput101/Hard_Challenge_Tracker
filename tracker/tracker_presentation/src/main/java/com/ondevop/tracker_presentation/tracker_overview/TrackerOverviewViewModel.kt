@@ -12,10 +12,13 @@ import com.ondevop.tracker_domain.use_cases.TrackerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -31,6 +34,10 @@ class TrackerOverviewViewModel @Inject constructor(
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
+     val totalDays = trackerUseCases.getAllTrackedChallenge().map {
+         it.size
+     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
 
     val tackedChallengeData = trackerUseCases.getTrackedDataForDate(LocalDate.now())
         .onEach { trackedChallenge ->

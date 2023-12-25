@@ -31,12 +31,13 @@ import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewState
 @Composable
 fun TrackerHeader(
     state: TrackerOverViewState,
+    totalDays : Int,
     modifier: Modifier = Modifier
 ) {
     val spacing = LocalSpacing.current
 
     val animateDaysCount = animateIntAsState(
-        targetValue = state.totalDays, label = ""
+        targetValue = totalDays, label = ""
     )
 
 
@@ -103,7 +104,7 @@ fun TrackerHeader(
 
         }
         DaysBar(
-            days = state.totalDays,
+            days = totalDays,
             goal =state.goal,
             modifier = Modifier
                 .fillMaxWidth()

@@ -57,8 +57,8 @@ class MainActivity : ComponentActivity() {
                                 .fillMaxSize()
                                 .padding(it),
                             navController = navController,
-                          //  startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
-                            startDestination =  Route.TrackerHome.route
+                            //  startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
+                            startDestination = Route.TrackerHome.route
                         ) {
                             composable(Route.SignIn.route) {
                                 SignInScreen(
@@ -85,7 +85,9 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
                             composable(Route.TrackerHome.route) {
-                                        TrackerOverViewScreen()
+                                TrackerOverViewScreen(
+                                    snackbarHostState = snackbarHostState
+                                )
                             }
 
 

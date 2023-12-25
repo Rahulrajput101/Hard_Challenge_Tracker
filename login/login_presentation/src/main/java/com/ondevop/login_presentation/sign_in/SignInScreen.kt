@@ -298,9 +298,7 @@ fun SignInScreen(
                         modifier = Modifier.padding(start = 3.dp)
                     )
                 }
-
             }
-
         }
     }
 
