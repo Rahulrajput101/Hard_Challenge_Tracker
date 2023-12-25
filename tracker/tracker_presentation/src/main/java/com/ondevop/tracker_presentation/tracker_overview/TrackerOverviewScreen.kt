@@ -33,6 +33,7 @@ fun TrackerOverViewScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val totalDays by viewModel.totalDays.collectAsState()
+    val challengeGoal by viewModel.challengeGoal.collectAsState()
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
@@ -70,6 +71,7 @@ fun TrackerOverViewScreen(
 
             TrackerHeader(
                 state = state,
+                challengeGoal = challengeGoal,
                 totalDays = totalDays
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))

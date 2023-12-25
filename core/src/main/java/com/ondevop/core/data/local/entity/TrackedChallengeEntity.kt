@@ -11,6 +11,5 @@ data class TrackedChallengeEntity(
     val workedOut: Int,
     val read: Boolean,
     val imageUri: String? = null,
-    val dayCount : Int,
     val date: Long
 )

@@ -11,7 +11,6 @@ fun TrackedChallengeEntity.toTrackedChallenge() : TrackedChallenge {
         workedOut = workedOut,
         read = read,
         imageUri = imageUri,
-        dayCount = dayCount,
         date = convertLongToLocalDate(date)
     )
 }
@@ -23,7 +22,6 @@ fun TrackedChallenge.toTrackedChallengeEntity() : TrackedChallengeEntity {
         workedOut = workedOut,
         read = read,
         imageUri = imageUri,
-        dayCount = dayCount,
         date = covertLocalDateToLong(date)
     )
 }

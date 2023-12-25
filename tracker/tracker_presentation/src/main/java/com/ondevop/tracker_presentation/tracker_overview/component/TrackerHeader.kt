@@ -31,6 +31,7 @@ import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewState
 @Composable
 fun TrackerHeader(
     state: TrackerOverViewState,
+    challengeGoal :Int,
     totalDays : Int,
     modifier: Modifier = Modifier
 ) {
@@ -93,7 +94,7 @@ fun TrackerHeader(
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 UnitDisplay(
-                    amount = state.goal,
+                    amount = challengeGoal,
                     unit = stringResource(id = com.ondevop.core.R.string.days),
                     amountColor = MaterialTheme.colorScheme.onPrimary,
                     unitColor = MaterialTheme.colorScheme.onPrimary,
@@ -105,7 +106,7 @@ fun TrackerHeader(
         }
         DaysBar(
             days = totalDays,
-            goal =state.goal,
+            goal =challengeGoal,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(30.dp)

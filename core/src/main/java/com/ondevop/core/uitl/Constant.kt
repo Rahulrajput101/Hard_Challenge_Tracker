@@ -1,5 +1,7 @@
 package com.ondevop.core.uitl
 
+import android.support.v4.os.IResultReceiver.Default
+
 object Constant {
     const val DEFAULT_IS_LOGGED_IN = false
     const val DEFAULT_NAME = ""
@@ -7,5 +9,6 @@ object Constant {
     const val DEFAULT_WATER_GOAL = 4
     const val DEFAULT_WORKOUT_GOAL = 2
     const val DEFAULT_READ_GOAL = false
+    const val Default_DAYS_GOAL = 75
 
 }

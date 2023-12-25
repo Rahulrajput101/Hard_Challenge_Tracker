@@ -8,6 +8,8 @@ import com.ondevop.core.domain.use_cases.SaveImage
 import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core.uitl.UiText
 import com.ondevop.core.domain.model.TrackedChallenge
+import com.ondevop.core.domain.prefernces.Preferences
+import com.ondevop.core.uitl.Constant
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -26,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class TrackerOverviewViewModel @Inject constructor(
     private val trackerUseCases: TrackerUseCases,
-    private val saveImage: SaveImage
+    private val saveImage: SaveImage,
+    private val preferences: Preferences
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(TrackerOverViewState())
@@ -39,12 +42,13 @@ class TrackerOverviewViewModel @Inject constructor(
          it.size
      }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
 
+    val challengeGoal = preferences.getGoal().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Constant.Default_DAYS_GOAL)
+
     val tackedChallengeData = trackerUseCases.getTrackedDataForDate(LocalDate.now())
         .onEach { trackedChallenge ->
             trackedChallenge?.let {
                 _state.value = _state.value.copy(
                     id = trackedChallenge.id,
-                    totalDays = trackedChallenge.dayCount,
                     waterIntake = trackedChallenge.waterIntake,
                     imageUri = trackedChallenge.imageUri,
                     workedOut = trackedChallenge.workedOut,
@@ -95,7 +99,6 @@ class TrackerOverviewViewModel @Inject constructor(
                     read = state.value.read,
                     imageUri = state.value.imageUri,
                     date = state.value.localDate,
-                    dayCount = state.value.totalDays
                 )
             )
         }

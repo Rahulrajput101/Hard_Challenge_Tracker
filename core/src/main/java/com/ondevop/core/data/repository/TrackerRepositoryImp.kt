@@ -19,18 +19,6 @@ class TrackerRepositoryImp(
     }
 
     override fun getTrackedDataForDate(date: LocalDate): Flow<TrackedChallenge?> {
-//          return flow {
-//              TrackedChallengeEntity(
-//                  id  = 1,
-//                  waterIntake = 2,
-//                  workedOut = 3,
-//                  read = false,
-//                  imageUri = null,
-//                  date =3,
-//                  dayCount = 4
-//              ).toTrackedChallenge()
-//          }
-
         return trackerDao.getTrackedDataForDate(date.toEpochDay()).map {
             it?.toTrackedChallenge()
         }
