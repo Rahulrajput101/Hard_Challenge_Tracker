@@ -23,7 +23,6 @@
             <option value="$PROJECT_DIR$/onboarding/onboarding_domain" />
             <option value="$PROJECT_DIR$/onboarding/onboarding_presentation" />
             <option value="$PROJECT_DIR$/tracker" />
-            <option value="$PROJECT_DIR$/tracker/tracker_data" />
             <option value="$PROJECT_DIR$/tracker/tracker_domain" />
             <option value="$PROJECT_DIR$/tracker/tracker_presentation" />
           </set>

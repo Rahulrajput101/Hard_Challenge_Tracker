@@ -34,7 +34,10 @@ fun TrackerOverViewScreen(
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {uri ->
-             viewModel.onEvent(TrackerOverviewEvent.OnPhotoClick(uri.toString()))
+            uri?.let {
+                viewModel.onEvent(TrackerOverviewEvent.OnPhotoClick(it.toString()))
+            }
+
         }
     )
 

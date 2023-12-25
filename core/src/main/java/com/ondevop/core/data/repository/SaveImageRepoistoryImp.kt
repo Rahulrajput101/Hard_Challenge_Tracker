@@ -3,6 +3,7 @@ package com.ondevop.core.data.repository
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import com.ondevop.core.domain.repository.SaveImageRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -15,8 +16,12 @@ class SaveImageRepositoryImp(
 ) : SaveImageRepository {
     override suspend fun savePhotoToInternalStorage(uri: Uri?): Result<String> {
         val kermiBytes = uri?.let {
-            context.contentResolver.openInputStream(it)?.use {
-                it.readBytes()
+            try {
+                context.contentResolver.openInputStream(it)?.use {
+                    it.readBytes()
+                }
+            } catch (e: Exception) {
+                return Result.failure(Exception("Error reading InputStream: $e"))
             }
         } ?: return Result.failure(Exception("Null URI"))
 
