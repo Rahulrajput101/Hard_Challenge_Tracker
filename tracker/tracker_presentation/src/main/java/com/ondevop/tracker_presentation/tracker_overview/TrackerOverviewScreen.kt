@@ -14,17 +14,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core_ui.LocalSpacing
+import com.ondevop.tracker_presentation.tracker_overview.component.CompleteDialog
 import com.ondevop.tracker_presentation.tracker_overview.component.DietCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.PictureCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.ReadingCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.TrackerHeader
 import com.ondevop.tracker_presentation.tracker_overview.component.WaterCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.WorkoutCardView
+import kotlinx.coroutines.delay
 
 @Composable
 fun TrackerOverViewScreen(
@@ -37,28 +42,39 @@ fun TrackerOverViewScreen(
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
+    var shouldShowCompleteDialog by remember {
+        mutableStateOf(false)
+    }
+
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
-        onResult = {uri ->
+        onResult = { uri ->
             uri?.let {
                 viewModel.onEvent(TrackerOverviewEvent.OnPhotoClick(it.toString()))
             }
 
         }
     )
+
     LaunchedEffect(key1 = true){
-        viewModel.uiEvent.collect{event ->
-            when(event){
-                is UiEvent.ShowSnackbar ->{
+        delay(2000)
+        if (totalDays >= challengeGoal) {
+            shouldShowCompleteDialog = true
+        }
+    }
+
+
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.ShowSnackbar -> {
                     snackbarHostState.currentSnackbarData?.dismiss()
                     snackbarHostState.showSnackbar(event.message.asString(context))
                 }
 
                 else -> Unit
             }
-
         }
-
     }
 
 
@@ -85,7 +101,7 @@ fun TrackerOverViewScreen(
                     if (state.waterIntake < state.drinkGoal) {
                         viewModel.onEvent(TrackerOverviewEvent.OnDrinkClick)
                     }
-                    return@WaterCardView state.waterIntake >= state.drinkGoal-1
+                    return@WaterCardView state.waterIntake >= state.drinkGoal - 1
                 },
                 onCardClick = {
 
@@ -104,7 +120,7 @@ fun TrackerOverViewScreen(
                     if (state.workedOut < state.workoutGoal) {
                         viewModel.onEvent(TrackerOverviewEvent.OnWorkoutClick)
                     }
-                    return@WorkoutCardView state.workedOut >= state.workoutGoal-1
+                    return@WorkoutCardView state.workedOut >= state.workoutGoal - 1
                 })
 
             ReadingCardView(
@@ -130,13 +146,13 @@ fun TrackerOverViewScreen(
                 onCardClick = {
 
                 },
-                hasButton =state.imageUri.isNullOrEmpty(),
+                hasButton = state.imageUri.isNullOrEmpty(),
                 onTakePictureClick = {
-                   singlePhotoPickerLauncher.launch(
-                       PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                   )
+                    singlePhotoPickerLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
 
-                   return@PictureCardView state.imageUri != null
+                    return@PictureCardView state.imageUri != null
                 }
             )
 
@@ -149,6 +165,24 @@ fun TrackerOverViewScreen(
 
                 }
             )
+
+
+            CompleteDialog(
+                isDialogShowing = shouldShowCompleteDialog,
+                onRestart = {
+                   viewModel.onDialogEvent(CompleteDialogEvent.OnRestart)
+                    shouldShowCompleteDialog = false
+                },
+                onMoveForward = {
+                    viewModel.onDialogEvent(CompleteDialogEvent.OnMoveForward)
+                    shouldShowCompleteDialog = false
+                },
+                onDismiss = {
+                    shouldShowCompleteDialog = false
+                }
+            )
+
+
         }
 
 

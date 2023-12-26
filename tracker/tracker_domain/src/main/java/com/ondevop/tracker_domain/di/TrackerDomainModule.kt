@@ -1,6 +1,7 @@
 package com.ondevop.tracker_domain.di
 
 import com.ondevop.core.domain.repository.TrackerRepository
+import com.ondevop.tracker_domain.use_cases.ClearAllTrackedData
 import com.ondevop.tracker_domain.use_cases.FilterADayChallenge
 import com.ondevop.tracker_domain.use_cases.GetAllTrackedChallenge
 import com.ondevop.tracker_domain.use_cases.GetTrackedDataForDate
@@ -26,7 +27,8 @@ object TrackerDomainModule {
             trackChallenge = TrackChallenge(repository),
             getTrackedDataForDate = GetTrackedDataForDate(repository),
             getAllTrackedChallenge = GetAllTrackedChallenge(repository),
-            filterADayChallenge = FilterADayChallenge()
+            filterADayChallenge = FilterADayChallenge(),
+            clearAllTrackedData = ClearAllTrackedData(repository)
         )
     }
 }

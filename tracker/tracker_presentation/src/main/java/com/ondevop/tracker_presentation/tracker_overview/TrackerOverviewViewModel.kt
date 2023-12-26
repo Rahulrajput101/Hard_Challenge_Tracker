@@ -12,6 +12,7 @@ import com.ondevop.core.domain.prefernces.Preferences
 import com.ondevop.core.uitl.Constant
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -116,6 +117,34 @@ class TrackerOverviewViewModel @Inject constructor(
                 .onFailure {
                     _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
                 }
+        }
+
+    }
+
+    fun onDialogEvent(event: CompleteDialogEvent){
+        when(event){
+            CompleteDialogEvent.OnMoveForward -> {
+                viewModelScope.launch {
+                    preferences.apply {
+                        saveGoal(challengeGoal.value.plus(76))
+                    }
+                }
+
+            }
+            CompleteDialogEvent.OnRestart -> {
+                viewModelScope.launch {
+                    val saveGoalDeferred = async {
+                        preferences.saveGoal(75)
+                    }
+
+                    val clearTrackedDataDeferred = async {
+                        trackerUseCases.clearAllTrackedData()
+                    }
+
+                    saveGoalDeferred.await()
+                    clearTrackedDataDeferred.await()
+                }
+            }
         }
 
     }
