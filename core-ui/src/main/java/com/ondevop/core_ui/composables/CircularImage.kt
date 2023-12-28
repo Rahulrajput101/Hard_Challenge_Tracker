@@ -89,7 +89,8 @@ fun CircularImage(
         }else{
             Image(
                 painter = painterResource(id = R.drawable.profile__circle),
-                contentDescription = null
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize()
             )
         }
 

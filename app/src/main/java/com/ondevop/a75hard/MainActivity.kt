@@ -25,6 +25,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -62,7 +63,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
+            val profileUri = preferences.getProfileUri().first()
             val isLoggedIn = preferences.getLoggedInfo().first()
+            val name = preferences.getUserName().first()
 
 
             setContent {
@@ -75,7 +78,10 @@ class MainActivity : ComponentActivity() {
                     ModalNavigationDrawer(
                         drawerContent = {
                               ModalDrawerSheet {
-                                  DrawerHeader()
+                                  DrawerHeader(
+                                      name = name,
+                                      imageUri = profileUri.toUri()
+                                  )
                                   DrawerBody(
                                       onItemClick = {item ->
                                           when(item.id){
@@ -123,8 +129,8 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(it),
                                 navController = navController,
-                                //  startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
-                                startDestination = Route.TrackerHome.route
+                                  startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
+                                //startDestination = Route.TrackerHome.route
                             ) {
                                 composable(Route.SignIn.route) {
                                     SignInScreen(

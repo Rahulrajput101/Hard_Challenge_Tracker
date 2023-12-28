@@ -30,7 +30,7 @@ class SignInViewModel @Inject constructor(
     val validateEmail: ValidateEmail,
     val validatePassword: ValidatePassword,
     private val preferences: Preferences,
-    private val googleSignInClient: GoogleSignInClient
+    private val googleSignInClient: GoogleSignInClient,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignInState())
@@ -61,7 +61,10 @@ class SignInViewModel @Inject constructor(
             is SignInEvent.SaveUserdata -> {
                 viewModelScope.launch {
                     preferences.saveUserName(event.userData.userName ?: "")
-                    preferences.saveProfileUri(event.userData.profilePictureUrl.toString())
+                    if(event.userData.profilePictureUrl != null){
+                        preferences.saveProfileUri(event.userData.profilePictureUrl)
+                    }
+
                     _uiEvent.send(UiEvent.Success)
                 }
             }

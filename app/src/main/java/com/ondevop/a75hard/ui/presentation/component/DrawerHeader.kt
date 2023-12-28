@@ -53,9 +53,10 @@ import com.ondevop.core_ui.composables.SmallCircleImage
 
 @Composable
 fun DrawerHeader(
-    name : String? = null,
+    name : String,
     imageUri : Uri? = null
 ){
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -74,7 +75,7 @@ fun DrawerHeader(
                SmallCircleImage(
                    modifier = Modifier
                        .clip(CircleShape),
-                   imageUri = imageUri
+                   imageUri = if(imageUri.toString().isNotEmpty()) imageUri else null
                )
             }
 
@@ -93,7 +94,7 @@ fun DrawerHeader(
             Spacer(modifier = Modifier.height(2.dp))
 
             Text(
-                text = name ?: "Rahul",
+                text = name ,
                 style = MaterialTheme.typography.headlineSmall,
                 fontFamily = FontFamily(
                     Font(

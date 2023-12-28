@@ -97,8 +97,6 @@ fun SignInScreen(
                 val account = task.getResult(ApiException::class.java)
                 if (account != null) {
                     val userData = account.id?.let {
-                        Log.d("MyTag","tovs: im ${account.photoUrl}")
-                        Log.d("MyTag","tovs: im ${account.displayName}")
                         UserData(
                             userName = account.displayName,
                             profilePictureUrl = account.photoUrl.toString(),
