@@ -34,7 +34,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun TrackerOverViewScreen(
     snackbarHostState: SnackbarHostState,
-    viewModel: TrackerOverviewViewModel = hiltViewModel()
+    viewModel: TrackerOverviewViewModel = hiltViewModel(),
+    onMenuItemClick: ()->Unit
 ) {
     val state by viewModel.state.collectAsState()
     val totalDays by viewModel.totalDays.collectAsState()
@@ -88,7 +89,8 @@ fun TrackerOverViewScreen(
             TrackerHeader(
                 state = state,
                 challengeGoal = challengeGoal,
-                totalDays = totalDays
+                totalDays = totalDays,
+                onMenuItemClick = onMenuItemClick
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             WaterCardView(

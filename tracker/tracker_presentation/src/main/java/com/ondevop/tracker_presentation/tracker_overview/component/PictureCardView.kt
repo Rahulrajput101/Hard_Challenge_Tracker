@@ -60,21 +60,7 @@ fun PictureCardView(
             .fillMaxWidth()
             .height(160.dp),
     ) {
-//        CustomCardView(
-//            state = state,
-//            backgroundImage =  R.drawable.camera_svg,
-//            heading = R.string.click_picture,
-//            subHeading = R.string.daily_photo_goal,
-//            buttonText = R.string.take_photo,
-//            cardColor = pictureViolet,
-//            hasImage = true,
-//            hasButton = hasButton,
-//            onButtonClick = {
-//              onTakePictureClick()
-//            },
-//            onCardClick = {
-//                onCardClick()
-//            })
+
         Card(
             modifier = Modifier
                 .fillMaxWidth()

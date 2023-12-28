@@ -25,6 +25,7 @@
     <string name="or">OR</string>
     <string name="google">Google</string>
     <string name="welcome_text">Welcome %s</string>
+    <string name="welcome">Welcome</string>
     <string name="greeting_text">We wish you have a good day!</string>
     <string name="days">Days</string>
     <string name="your_goal">Your Goal</string>
@@ -44,4 +45,7 @@
     <string name="take_photo">Take photo</string>
     <string name="healthy_diet">Healthy diet</string>
     <string name="daily_goal_healthy_diet">Follow any nutrition plan designed for your goals, with zero alcohol and no cheat meals.</string>
+
+    <string name="menu_icon">Menu Icon</string>
+    <string name="tracker">Tracker</string>
 </resources>

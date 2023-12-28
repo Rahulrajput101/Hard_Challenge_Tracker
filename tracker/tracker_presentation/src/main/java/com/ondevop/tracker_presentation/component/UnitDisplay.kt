@@ -22,9 +22,9 @@ fun UnitDisplay(
     amount : Int,
     unit : String,
     modifier: Modifier = Modifier,
-    amountTextSize: TextUnit = 20.sp,
+    amountTextSize: TextUnit = 30.sp,
     amountColor: Color = MaterialTheme.colorScheme.onBackground,
-    unitTextSize: TextUnit = 14.sp,
+    unitTextSize: TextUnit = 13.sp,
     unitColor : Color = MaterialTheme.colorScheme.onBackground
 
 ) {
@@ -33,7 +33,6 @@ fun UnitDisplay(
     Row (modifier = modifier){
         Text(
             text = amount.toString(),
-            style = MaterialTheme.typography.headlineSmall,
             fontSize = amountTextSize,
             color = amountColor,
             modifier = Modifier.alignBy(LastBaseline)
@@ -43,7 +42,6 @@ fun UnitDisplay(
 
         Text(
             text = unit,
-            style = MaterialTheme.typography.bodySmall,
             fontSize = unitTextSize,
             color = unitColor,
             modifier = Modifier.alignBy(LastBaseline)

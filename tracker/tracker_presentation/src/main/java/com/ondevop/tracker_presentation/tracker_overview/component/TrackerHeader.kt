@@ -1,7 +1,5 @@
 package com.ondevop.tracker_presentation.tracker_overview.component
 
-import android.graphics.BitmapFactory
-import android.net.Uri
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -12,6 +10,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,21 +21,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.core.net.toUri
 import com.ondevop.core_ui.LocalSpacing
-import com.ondevop.core_ui.composables.CircularImage
-import com.ondevop.tracker_presentation.R
 import com.ondevop.tracker_presentation.component.UnitDisplay
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewState
 
 @Composable
 fun TrackerHeader(
+    modifier: Modifier = Modifier,
     state: TrackerOverViewState,
-    challengeGoal :Int,
-    totalDays : Int,
-    modifier: Modifier = Modifier
+    challengeGoal: Int,
+    totalDays: Int,
+    onMenuItemClick: () -> Unit
+
 ) {
     val spacing = LocalSpacing.current
 
@@ -55,27 +59,50 @@ fun TrackerHeader(
             .padding(
                 top = spacing.spaceSmall,
                 bottom = spacing.spaceLarge,
-                start = spacing.spaceMedium,
                 end = spacing.spaceMedium
             )
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            GreetingSection()
-            CircularImage(
-                modifier = Modifier,
-                imageUri = state.imageUri?.toUri(),
-                size = 60.dp
+            // GreetingSection()
+            IconButton(
+                onClick = {
+                    onMenuItemClick()
+                },
+                modifier = Modifier.padding(start = 4.dp)
             ) {
-
+                Icon(
+                    imageVector = Icons.Default.Menu,
+                    contentDescription = stringResource(id = com.ondevop.core.R.string.menu_icon),
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
             }
+            Text(
+                text = stringResource(id = com.ondevop.core.R.string.tracker),
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp),
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.onPrimary,
+                style = MaterialTheme.typography.headlineMedium,
+                fontFamily = FontFamily(
+                    Font(
+                        com.ondevop.core.R.font.rubik_medium,
+                        FontWeight.Bold
+                    )
+                )
+            )
+
         }
-        Spacer(modifier = Modifier.height(spacing.spaceSmall))
+        Spacer(modifier = Modifier.height(spacing.spaceLarge))
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    start = spacing.spaceMedium
+                ),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             UnitDisplay(
@@ -83,14 +110,13 @@ fun TrackerHeader(
                 unit = stringResource(id = com.ondevop.core.R.string.days),
                 amountColor = MaterialTheme.colorScheme.onPrimary,
                 unitColor = MaterialTheme.colorScheme.onPrimary,
-                amountTextSize = 40.sp,
                 modifier = Modifier.align(Alignment.Bottom)
             )
 
             Column {
                 Text(
                     text = stringResource(id = com.ondevop.core.R.string.your_goal),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 UnitDisplay(
@@ -98,7 +124,6 @@ fun TrackerHeader(
                     unit = stringResource(id = com.ondevop.core.R.string.days),
                     amountColor = MaterialTheme.colorScheme.onPrimary,
                     unitColor = MaterialTheme.colorScheme.onPrimary,
-                    amountTextSize = 40.sp,
                 )
 
             }
@@ -106,13 +131,14 @@ fun TrackerHeader(
         }
         DaysBar(
             days = totalDays,
-            goal =challengeGoal,
+            goal = challengeGoal,
             modifier = Modifier
                 .fillMaxWidth()
-                .height(30.dp)
+                .padding(
+                    start = spacing.spaceMedium
+                )
+                .height(26.dp)
         )
-
-
     }
 
 

@@ -30,7 +30,6 @@ fun DaysBar(
         daysWidthRatio.animateTo(
             targetValue = (days.toFloat() / goal)
         )
-        Log.d("DaysBar", "Animated to ${daysWidthRatio.value}")
     }
 
     Canvas(modifier = modifier ){
@@ -43,7 +42,7 @@ fun DaysBar(
             * daysWidth will be equal to the entire width of the canvas (size.width).
             * If daysWidthRatio.value is 0.5, daysWidth will be half the width of the canvas
             */
-           val daysWidth = daysWidthRatio.value * size.width
+           val daysWidth = daysWidthRatio.value * (size.width )
 
            drawRoundRect(
                color = background,

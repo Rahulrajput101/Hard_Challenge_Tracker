@@ -11,4 +11,11 @@ object Constant {
     const val DEFAULT_READ_GOAL = false
     const val Default_DAYS_GOAL = 75
 
+    const val TRACKER_HOME = "Tracker"
+    const val SETTING = "Setting"
+    const val PRIVACY_POLICY = "Privacy policy"
+    const val RATE_US= "Rate us"
+    const val FEEDBACK= "Feedback"
+
+
 }
