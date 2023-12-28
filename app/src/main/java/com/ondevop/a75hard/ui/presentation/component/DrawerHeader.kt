@@ -1,35 +1,24 @@
 package com.ondevop.a75hard.ui.presentation.component
 
 import android.net.Uri
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Star
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.PrivacyTip
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -47,10 +36,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.rememberVectorPainter
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
@@ -63,9 +48,7 @@ import com.ondevop.core.R
 import com.ondevop.core.uitl.Constant
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.core_ui.composables.AnimatedBorder
-import com.ondevop.core_ui.composables.CircularImage
 import com.ondevop.core_ui.composables.SmallCircleImage
-import kotlinx.coroutines.launch
 
 @Composable
 fun DrawerHeader(
@@ -132,10 +115,9 @@ fun DrawerHeader(
 @Composable
 fun DrawerBody(
     modifier: Modifier = Modifier,
-    drawerState : DrawerState,
     itemTextStyle : TextStyle = TextStyle(fontSize = 18.sp),
     onItemClick: (NavigationItem) -> Unit
-){
+) {
     var selectedItemIndex by rememberSaveable {
         mutableStateOf(0)
     }
@@ -163,22 +145,21 @@ fun DrawerBody(
             contentDescription = Constant.FEEDBACK
         ),
         NavigationItem(
-            id= Constant.SETTING,
+            id = Constant.SETTING,
             title = Constant.SETTING,
             selectedIcon = Icons.Filled.Settings,
             unSelectedIcon = Icons.Outlined.Settings,
             contentDescription = Constant.SETTING
         ),
         NavigationItem(
-            id= Constant.PRIVACY_POLICY,
-            title =Constant.PRIVACY_POLICY,
+            id = Constant.PRIVACY_POLICY,
+            title = Constant.PRIVACY_POLICY,
             selectedIcon = Icons.Filled.PrivacyTip,
             unSelectedIcon = Icons.Outlined.PrivacyTip,
             contentDescription = Constant.PRIVACY_POLICY
         ),
     )
 
-    val scope = rememberCoroutineScope()
     ModalDrawerSheet {
         Spacer(modifier = modifier.height(spacing.spaceMedium))
         items.forEachIndexed { index, item ->
@@ -218,5 +199,6 @@ fun DrawerBody(
             )
         }
     }
-
 }
+
+

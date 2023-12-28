@@ -72,6 +72,7 @@ dependencies {
     implementation(project(Modules.loginPresentation))
     implementation(project(Modules.trackerPresentation))
     implementation(project(Modules.trackerDomain))
+    implementation(project(Modules.settingsPresentation))
 
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.anayltics)

@@ -14,4 +14,6 @@ object Modules {
     const val trackerData = ":tracker:tracker_data"
     const val trackerDomain = ":tracker:tracker_domain"
     const val trackerPresentation = ":tracker:tracker_presentation"
+
+    const val settingsPresentation = ":settings:settings_presentation"
 }

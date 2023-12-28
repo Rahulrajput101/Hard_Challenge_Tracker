@@ -1,6 +1,10 @@
 package com.ondevop.a75hard
 
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -31,8 +35,14 @@ import com.ondevop.a75hard.ui.presentation.component.DrawerBody
 import com.ondevop.a75hard.ui.presentation.component.DrawerHeader
 import com.ondevop.a75hard.ui.theme._75HardTheme
 import com.ondevop.core.domain.prefernces.Preferences
+import com.ondevop.core.uitl.Constant
+import com.ondevop.core.uitl.Constant.FEEDBACK
+import com.ondevop.core.uitl.Constant.PRIVACY_POLICY
+import com.ondevop.core.uitl.Constant.SETTING
+import com.ondevop.core.uitl.Constant.TRACKER_HOME
 import com.ondevop.login_presentation.sign_in.SignInScreen
 import com.ondevop.login_presentation.sign_up.SignUpScreen
+import com.ondevop.settings_presentation.settings.SettingScreen
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
@@ -67,8 +77,25 @@ class MainActivity : ComponentActivity() {
                               ModalDrawerSheet {
                                   DrawerHeader()
                                   DrawerBody(
-                                      drawerState = drawerState,
-                                      onItemClick = {
+                                      onItemClick = {item ->
+                                          when(item.id){
+                                              TRACKER_HOME -> {
+
+                                              }
+                                              SETTING -> {
+                                                  scope.launch {
+                                                      drawerState.close()
+                                                  }
+                                                navController.navigate(Route.Setting.route)
+
+                                              }
+                                              PRIVACY_POLICY -> {
+
+                                              }
+                                              FEEDBACK ->{
+
+                                              }
+                                          }
 
                                       }
                                   )
@@ -129,6 +156,21 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
 
+                                composable(Route.Setting.route){
+                                    SettingScreen(
+                                        snackbarHostState = snackbarHostState,
+                                        onNavigateBack = {
+                                            navController.navigateUp()
+                                            scope.launch {
+                                                drawerState.open()
+                                            }
+
+                                        }
+
+                                    )
+                                }
+
+
                             }
                         }
                     }
@@ -138,7 +180,17 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+
 }
+
+private fun Activity.openAppSettings() {
+    Intent(
+        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+        Uri.fromParts("package", packageName, null)
+    ).also(::startActivity)
+}
+
 
 
 @Composable

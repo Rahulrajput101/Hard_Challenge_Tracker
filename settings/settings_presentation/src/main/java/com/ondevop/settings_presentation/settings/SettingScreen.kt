@@ -1,0 +1,160 @@
+package com.ondevop.settings_presentation.settings
+
+import androidx.activity.OnBackPressedCallback
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.ondevop.core.R
+import com.ondevop.core_ui.LocalSpacing
+
+
+@Composable
+fun SettingScreen(
+    viewModel: SettingViewModel = hiltViewModel(),
+    snackbarHostState: SnackbarHostState,
+    onNavigateBack: ()-> Unit,
+){
+    val spacing = LocalSpacing.current
+    val context  = LocalContext.current
+
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+
+    DisposableEffect(context) {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Handle back press event from Android shortcut
+                onNavigateBack()
+            }
+        }
+
+        backDispatcher?.addCallback(callback)
+
+        onDispose {
+            // Remove the callback when the composable is disposed
+            callback.remove()
+        }
+    }
+    
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(vertical = 4.dp)
+    ) {
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ){
+            item{
+                Row (
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+
+                ){
+                    IconButton(onClick = {
+                        onNavigateBack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = stringResource(id = R.string.back),
+                        )
+
+                    }
+
+                    Text(
+                        text = stringResource(id = R.string.setting),
+                        fontSize = 20.sp,
+                        fontFamily = FontFamily(
+                            Font(
+                                R.font.rubik_medium,
+                                FontWeight.SemiBold
+                            )
+                        ),
+                        letterSpacing = (0.2).sp
+                    )
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(8.dp)
+                        .padding(start = 8.dp),
+                ){
+                    Column (
+                        modifier = Modifier
+                            .weight(1f)
+                    ){
+                        Text(
+                            text = "Allow Notification",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontFamily = FontFamily(
+                                Font(
+                                    R.font.rubik_medium,
+                                    FontWeight.Medium
+                                )
+                            ),
+                            color = MaterialTheme.colorScheme.primary
+                        )
+
+                        Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
+
+                        Text(
+                            text = "You agree to receive notifications so that you can meet your daily goals",
+                            fontSize = 12.sp,
+                            fontFamily = FontFamily(
+                                Font(
+                                    R.font.rubik_medium,
+                                    FontWeight.Normal
+                                )
+                            ),
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+
+                    }
+                    Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
+
+                    Switch(
+                        checked = true,
+                        onCheckedChange = {
+
+                        },
+                    )
+
+                }
+            }
+
+        }
+
+        
+        
+    }
+
+}

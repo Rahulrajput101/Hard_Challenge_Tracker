@@ -48,4 +48,6 @@
 
     <string name="menu_icon">Menu Icon</string>
     <string name="tracker">Tracker</string>
+    <string name="setting">Settings</string>
+    <string name="back">Back</string>
 </resources>
