@@ -80,7 +80,9 @@ class MainActivity : ComponentActivity() {
                                       onItemClick = {item ->
                                           when(item.id){
                                               TRACKER_HOME -> {
-
+                                                  scope.launch {
+                                                      drawerState.close()
+                                                  }
                                               }
                                               SETTING -> {
                                                   scope.launch {
@@ -90,9 +92,15 @@ class MainActivity : ComponentActivity() {
 
                                               }
                                               PRIVACY_POLICY -> {
+//                                                  scope.launch {
+//                                                      drawerState.close()
+//                                                  }
 
                                               }
                                               FEEDBACK ->{
+//                                                  scope.launch {
+//                                                      drawerState.close()
+//                                                  }
 
                                               }
                                           }
@@ -163,6 +171,7 @@ class MainActivity : ComponentActivity() {
                                             navController.navigateUp()
                                             scope.launch {
                                                 drawerState.open()
+
                                             }
 
                                         }

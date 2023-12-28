@@ -30,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -118,9 +119,7 @@ fun DrawerBody(
     itemTextStyle : TextStyle = TextStyle(fontSize = 18.sp),
     onItemClick: (NavigationItem) -> Unit
 ) {
-    var selectedItemIndex by rememberSaveable {
-        mutableStateOf(0)
-    }
+    var selectedItemIndex = -1
     val spacing = LocalSpacing.current
     val items = listOf(
         NavigationItem(
