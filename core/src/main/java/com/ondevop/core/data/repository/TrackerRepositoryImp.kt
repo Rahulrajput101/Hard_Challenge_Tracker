@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import java.time.LocalDate
 
 class TrackerRepositoryImp(
-    private val trackerDao: TrackerDao
+    private val trackerDao: TrackerDao,
 ) : TrackerRepository {
     override suspend fun upsertTrackedChallenge(trackedChallenge: TrackedChallenge): Long {
         return trackerDao.upsertTrackedChallenge(

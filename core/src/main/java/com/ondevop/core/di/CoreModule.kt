@@ -14,11 +14,9 @@ import com.ondevop.core.domain.repository.TrackerRepository
 import com.ondevop.core.domain.use_cases.SaveImage
 import com.ondevop.core.domain.use_cases.SchedulingHabitAlarm
 import com.ondevop.core.domain.use_cases.ToShowNotification
-import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.scopes.ViewModelScoped
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -70,6 +68,7 @@ object CoreModule {
     ) : SchedulingHabitAlarm {
         return SchedulingHabitAlarm(scheduler)
     }
+
 
 
     @Provides

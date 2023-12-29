@@ -72,6 +72,8 @@ dependencies {
     implementation(project(Modules.loginPresentation))
     implementation(project(Modules.trackerPresentation))
     implementation(project(Modules.trackerDomain))
+    implementation(project(Modules.settingsData))
+    implementation(project(Modules.settingsDomain))
     implementation(project(Modules.settingsPresentation))
 
     implementation(platform(libs.firebase.bom))
@@ -100,6 +102,7 @@ dependencies {
     kapt(libs.dagger.hilt.android.compiler)
     implementation(libs.dagger.hilt.navigation.compose)
 
+    implementation(libs.firebase.auth.ktx)
     implementation(libs.google.auth)
 
 }

@@ -10,7 +10,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalDrawerSheet
@@ -21,6 +20,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
@@ -31,12 +33,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.firebase.auth.FirebaseAuth
 import com.ondevop.a75hard.navigation.Route
 import com.ondevop.a75hard.ui.presentation.component.DrawerBody
 import com.ondevop.a75hard.ui.presentation.component.DrawerHeader
 import com.ondevop.a75hard.ui.theme._75HardTheme
 import com.ondevop.core.domain.prefernces.Preferences
-import com.ondevop.core.uitl.Constant
 import com.ondevop.core.uitl.Constant.FEEDBACK
 import com.ondevop.core.uitl.Constant.PRIVACY_POLICY
 import com.ondevop.core.uitl.Constant.SETTING
@@ -59,11 +61,11 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var googleSignInClient: GoogleSignInClient
 
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
-            val profileUri = preferences.getProfileUri().first()
             val isLoggedIn = preferences.getLoggedInfo().first()
             val name = preferences.getUserName().first()
 
@@ -75,46 +77,52 @@ class MainActivity : ComponentActivity() {
 
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
+
+                    val profileUri by  preferences.getProfileUri().collectAsState(initial = "")
+
                     ModalNavigationDrawer(
                         drawerContent = {
-                              ModalDrawerSheet {
-                                  DrawerHeader(
-                                      name = name,
-                                      imageUri = profileUri.toUri()
-                                  )
-                                  DrawerBody(
-                                      onItemClick = {item ->
-                                          when(item.id){
-                                              TRACKER_HOME -> {
-                                                  scope.launch {
-                                                      drawerState.close()
-                                                  }
-                                              }
-                                              SETTING -> {
-                                                  scope.launch {
-                                                      drawerState.close()
-                                                  }
+                            ModalDrawerSheet {
+                                DrawerHeader(
+                                    name = name,
+                                    imageUri = profileUri.toUri()
+                                )
+                                DrawerBody(
+                                    onItemClick = { item ->
+                                        when (item.id) {
+                                            TRACKER_HOME -> {
+                                                scope.launch {
+                                                    drawerState.close()
+                                                }
+                                            }
+
+                                            SETTING -> {
+                                                scope.launch {
+                                                    drawerState.close()
+                                                }
                                                 navController.navigate(Route.Setting.route)
 
-                                              }
-                                              PRIVACY_POLICY -> {
+                                            }
+
+                                            PRIVACY_POLICY -> {
 //                                                  scope.launch {
 //                                                      drawerState.close()
 //                                                  }
 
-                                              }
-                                              FEEDBACK ->{
+                                            }
+
+                                            FEEDBACK -> {
 //                                                  scope.launch {
 //                                                      drawerState.close()
 //                                                  }
 
-                                              }
-                                          }
+                                            }
+                                        }
 
-                                      }
-                                  )
+                                    }
+                                )
 
-                              }
+                            }
 
                         },
                         drawerState = drawerState
@@ -129,7 +137,7 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(it),
                                 navController = navController,
-                                  startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
+                                startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
                                 //startDestination = Route.TrackerHome.route
                             ) {
                                 composable(Route.SignIn.route) {
@@ -170,7 +178,7 @@ class MainActivity : ComponentActivity() {
                                     )
                                 }
 
-                                composable(Route.Setting.route){
+                                composable(Route.Setting.route) {
                                     SettingScreen(
                                         snackbarHostState = snackbarHostState,
                                         onNavigateBack = {
@@ -180,6 +188,10 @@ class MainActivity : ComponentActivity() {
 
                                             }
 
+                                        },
+                                        onSignOut = {
+                                            navController.navigate(Route.SignIn.route)
+                                          //  navController.popBackStack(navController.graph.startDestinationId, false)
                                         }
 
                                     )
@@ -196,8 +208,8 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-
 }
+
 
 private fun Activity.openAppSettings() {
     Intent(
@@ -205,7 +217,6 @@ private fun Activity.openAppSettings() {
         Uri.fromParts("package", packageName, null)
     ).also(::startActivity)
 }
-
 
 
 @Composable

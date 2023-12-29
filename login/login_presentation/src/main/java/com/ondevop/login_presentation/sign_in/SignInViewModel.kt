@@ -1,19 +1,15 @@
 package com.ondevop.login_presentation.sign_in
 
-import android.app.Instrumentation.ActivityResult
 import android.util.Log
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.common.api.ApiException
 import com.ondevop.core.domain.prefernces.Preferences
-import com.ondevop.login_domain.use_case.SignUpWithEmailAndPassword
-import com.ondevop.core.R
 import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core.uitl.UiText
+import com.ondevop.login_domain.use_case.IsSignedIn
 import com.ondevop.login_domain.use_case.SignInWithEmailAndPassword
+import com.ondevop.login_domain.use_case.SignInWithGoogle
 import com.ondevop.login_domain.use_case.ValidateEmail
 import com.ondevop.login_domain.use_case.ValidatePassword
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,6 +27,8 @@ class SignInViewModel @Inject constructor(
     val validatePassword: ValidatePassword,
     private val preferences: Preferences,
     private val googleSignInClient: GoogleSignInClient,
+    private val isSignedIn: IsSignedIn,
+    private val signInWithGoogle: SignInWithGoogle,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SignInState())
@@ -38,10 +36,22 @@ class SignInViewModel @Inject constructor(
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
+
+    init {
+        viewModelScope.launch {
+             val result = isSignedIn()
+            if(result){
+                _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString("logged in ")))
+            }else{
+                _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString("logged out")))
+            }
+
+        }
+    }
     fun onEvent(event: SignInEvent) {
         when (event) {
             is SignInEvent.SignInClick -> {
-                signIn()
+                signInWithEmailAndPass()
             }
 
             is SignInEvent.UpdateEmail -> {
@@ -68,10 +78,26 @@ class SignInViewModel @Inject constructor(
                     _uiEvent.send(UiEvent.Success)
                 }
             }
+
+            is SignInEvent.SignInWithGoogle -> {
+                   viewModelScope.launch {
+                       Log.d("SIVm"," sign im vm")
+                      signInWithGoogle(event.idToken).onSuccess {
+                          _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.userName)))
+                          preferences.saveLoggedInfo(true)
+                          preferences.saveUserName(it.userName)
+                          val profileUri = it.profileUri.toString()
+                          preferences.saveProfileUri(profileUri)
+                          _uiEvent.send(UiEvent.Success)
+                      }.onFailure {
+                          _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
+                      }
+                   }
+            }
         }
     }
 
-    private fun signIn() {
+    private fun signInWithEmailAndPass() {
         val emailResult = validateEmail(state.value.email)
         val passwordResult = validatePassword(state.value.password)
         val hasError = listOf(

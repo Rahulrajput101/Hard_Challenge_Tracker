@@ -101,10 +101,9 @@ fun SignInScreen(
                             userName = account.displayName,
                             profilePictureUrl = account.photoUrl.toString(),
                         )
-
                     }
-                    if(userData != null){
-                        viewModel.onEvent(SignInEvent.SaveUserdata(userData))
+                    account.idToken?.let{idToken ->
+                         viewModel.onEvent(SignInEvent.SignInWithGoogle(idToken))
                     }
 
                 } else {

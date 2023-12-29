@@ -2,7 +2,9 @@ package di
 
 import com.ondevop.login_domain.EmailValidator
 import com.ondevop.login_domain.repository.AuthRepository
+import com.ondevop.login_domain.use_case.IsSignedIn
 import com.ondevop.login_domain.use_case.SignInWithEmailAndPassword
+import com.ondevop.login_domain.use_case.SignInWithGoogle
 import com.ondevop.login_domain.use_case.SignUpWithEmailAndPassword
 import com.ondevop.login_domain.use_case.ValidateEmail
 import com.ondevop.login_domain.use_case.ValidatePassword
@@ -25,6 +27,14 @@ object LogInDomainModule {
         repository: AuthRepository
     ): SignInWithEmailAndPassword{
         return SignInWithEmailAndPassword(repository)
+    }
+
+    @Provides
+    @ViewModelScoped
+    fun provideGoogleSignInUseCase(
+        repository: AuthRepository
+    ): SignInWithGoogle{
+        return SignInWithGoogle(repository)
     }
 
     @Singleton
@@ -53,6 +63,14 @@ object LogInDomainModule {
     @ViewModelScoped
     fun provideValidateRepeatedPasswordUseCase() : ValidateRepeatedPassword {
         return ValidateRepeatedPassword()
+    }
+
+    @Singleton
+    @ViewModelScoped
+    fun provideIsSignedIn(
+        repository: AuthRepository
+    ): IsSignedIn{
+        return IsSignedIn(repository)
     }
 
 }

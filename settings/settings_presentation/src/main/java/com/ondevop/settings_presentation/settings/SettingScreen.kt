@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -24,6 +23,11 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -35,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core.R
+import com.ondevop.core.uitl.UiEvent
 import com.ondevop.core_ui.LocalSpacing
 
 
@@ -42,10 +47,13 @@ import com.ondevop.core_ui.LocalSpacing
 fun SettingScreen(
     viewModel: SettingViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState,
-    onNavigateBack: ()-> Unit,
-){
+    onNavigateBack: () -> Unit,
+    onSignOut: () -> Unit
+) {
     val spacing = LocalSpacing.current
-    val context  = LocalContext.current
+    val context = LocalContext.current
+    var signInChecked by remember { mutableStateOf(true) }
+
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
@@ -64,7 +72,23 @@ fun SettingScreen(
             callback.remove()
         }
     }
-    
+
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.ShowSnackbar -> {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    snackbarHostState.showSnackbar(event.message.asString(context))
+                }
+                is UiEvent.Success -> {
+                    onSignOut()
+                }
+
+                else -> Unit
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -73,13 +97,13 @@ fun SettingScreen(
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize()
-        ){
-            item{
-                Row (
+        ) {
+            item {
+                Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
 
-                ){
+                ) {
                     IconButton(onClick = {
                         onNavigateBack()
                     }) {
@@ -104,16 +128,17 @@ fun SettingScreen(
                 }
 
                 Row(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(8.dp)
                         .padding(start = 8.dp),
-                ){
-                    Column (
+                ) {
+                    Column(
                         modifier = Modifier
                             .weight(1f)
-                    ){
+                    ) {
                         Text(
-                            text = "Allow Notification",
+                            text = stringResource(id = R.string.allow_notification),
                             style = MaterialTheme.typography.bodyLarge,
                             fontFamily = FontFamily(
                                 Font(
@@ -127,7 +152,7 @@ fun SettingScreen(
                         Spacer(modifier = Modifier.height(spacing.spaceExtraSmall))
 
                         Text(
-                            text = "You agree to receive notifications so that you can meet your daily goals",
+                            text = stringResource(id = R.string.notification_reason),
                             fontSize = 12.sp,
                             fontFamily = FontFamily(
                                 Font(
@@ -149,12 +174,43 @@ fun SettingScreen(
                     )
 
                 }
+
+                Spacer(modifier = Modifier.height(spacing.spaceMedium))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .padding(start = 8.dp),
+                ) {
+
+                    Text(
+                        text = stringResource(id = R.string.log_out),
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontFamily = FontFamily(
+                            Font(
+                                R.font.rubik_medium,
+                                FontWeight.Medium
+                            )
+                        ),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+
+                    Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
+
+                    Switch(
+                        checked = !signInChecked,
+                        onCheckedChange = {
+                            viewModel.onEvent(SettingEvent.SignOut)
+                        },
+                    )
+
+                }
             }
 
         }
 
-        
-        
+
     }
 
 }

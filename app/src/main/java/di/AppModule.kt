@@ -13,11 +13,18 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Named("webClientId")
+    fun provideWebClientId(): String {
+        return "621978207845-6maius9oe77h3ms2sruoth6u7lcuqivi.apps.googleusercontent.com"
+    }
     @Provides
     @Singleton
     fun providePreference(
@@ -34,10 +41,14 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideGoogleSignClient(app: Application) : GoogleSignInClient {
+    fun provideGoogleSignClient(
+        app: Application,
+        @Named("webClientId") webClientId: String
+    ) : GoogleSignInClient {
         return GoogleSignIn.getClient(
             app,
             GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(webClientId)
                 .requestEmail()
                 .build()
         )

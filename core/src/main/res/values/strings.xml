@@ -50,4 +50,7 @@
     <string name="tracker">Tracker</string>
     <string name="setting">Settings</string>
     <string name="back">Back</string>
+    <string name="allow_notification">Allow Notification</string>
+    <string name="log_out">Log Out</string>
+    <string name="notification_reason">You agree to receive notifications so, that you can meet your daily goals</string>
 </resources>

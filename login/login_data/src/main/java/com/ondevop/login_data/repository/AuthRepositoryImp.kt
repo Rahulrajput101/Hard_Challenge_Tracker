@@ -1,14 +1,19 @@
 package com.ondevop.login_data.repository
 
 import android.app.Application
+import android.util.Log
 import androidx.core.net.toUri
+import com.google.firebase.Firebase
 import com.google.firebase.FirebaseException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthEmailException
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.GoogleAuthCredential
+import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.auth.UserProfileChangeRequest
+import com.google.firebase.auth.auth
 import com.ondevop.login_domain.model.UserInfo
 import com.ondevop.login_domain.repository.AuthRepository
 import kotlinx.coroutines.tasks.await
@@ -22,15 +27,16 @@ class AuthRepositoryImp(
 
     override suspend fun loginWithEmailPassword(email: String, password: String): Result<UserInfo> {
         return try {
+            Log.d("auth", "$email , $password")
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             if (result.user != null) {
+                Log.d("auth2", "$email , $password")
                 val user = result.user!!
-
                 Result.success(
                     UserInfo(
                     userName = user.displayName ?: "",
                     profileUri = user.photoUrl
-                )
+                 )
                 )
             } else {
                 Result.failure(Exception("Login Failed "))
@@ -51,6 +57,39 @@ class AuthRepositoryImp(
             Result.failure(e)
         }
 
+    }
+
+    override suspend fun loginWithGoogle(id: String): Result<UserInfo> {
+        return try {
+            val credential = GoogleAuthProvider.getCredential(id, null)
+            val result = firebaseAuth.signInWithCredential(credential).await()
+
+            if (result.user != null) {
+                val user = result.user!!
+                Result.success(
+                    UserInfo(
+                        userName = user.displayName ?: "",
+                        profileUri = user.photoUrl
+                    )
+                )
+            } else {
+                Result.failure(Exception("Google Login Failed"))
+            }
+        } catch (e: FirebaseAuthInvalidUserException) {
+            Result.failure(Exception("User does not exist"))
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            Result.failure(Exception("Invalid Google credentials"))
+        } catch (e: FirebaseException) {
+            Result.failure(Exception(e.localizedMessage ?: "Google Login Failed"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
+
+    override suspend fun isUserSignedIn(): Boolean {
+        return firebaseAuth.currentUser != null
     }
 
     override suspend fun registerUserWithEmailPassword(

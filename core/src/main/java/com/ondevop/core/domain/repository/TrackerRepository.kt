@@ -13,4 +13,5 @@ interface TrackerRepository {
     fun getAllTrackedChallenge() : Flow<List<TrackedChallenge>>
 
     suspend fun clearAllTrackedChallenge()
+
 }
