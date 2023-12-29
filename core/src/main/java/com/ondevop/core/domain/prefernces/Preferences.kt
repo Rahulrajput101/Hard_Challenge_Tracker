@@ -17,6 +17,8 @@ interface Preferences {
 
      fun getGoal(): Flow<Int>
 
+     suspend fun clearAllPreferenceData()
+
      companion object {
          const val Key_IS_LOG_IN = "is_log_in"
          const val Key_NAME= "name"

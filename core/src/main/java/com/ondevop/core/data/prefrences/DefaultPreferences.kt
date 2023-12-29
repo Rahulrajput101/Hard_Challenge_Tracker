@@ -63,6 +63,11 @@ class DefaultPreferences(private val dataStore: DataStore<androidx.datastore.pre
         preference[goalKey] ?: Constant.Default_DAYS_GOAL
     }
 
-
-
+    override suspend fun clearAllPreferenceData() {
+        dataStore.edit {preferences ->
+            preferences[nameKey] = Constant.DEFAULT_NAME
+            preferences[profileUriKey] = Constant.DEFAULT_PROFILE_URI
+            preferences[isLoggedInKey] = Constant.DEFAULT_IS_LOGGED_IN
+        }
+    }
 }

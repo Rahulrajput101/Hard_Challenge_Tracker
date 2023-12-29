@@ -2,6 +2,7 @@ package com.ondevop.settings_presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ondevop.core.domain.prefernces.Preferences
 import com.ondevop.core.uitl.UiEvent
 import com.ondevop.settings_domain.use_case.SignOut
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,13 +32,12 @@ class SettingViewModel @Inject constructor(
             }
 
             SettingEvent.SignOut -> {
-
                 viewModelScope.launch {
                     signOut().onSuccess {
                         _uiEvent.send(UiEvent.Success)
 
                     }.onFailure {
-                        it.stackTrace
+                        it.printStackTrace()
                     }
 
                 }
