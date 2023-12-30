@@ -1,6 +1,7 @@
 package com.ondevop.login_presentation.sign_up
 
-import com.ondevop.core.uitl.UiText
+import com.ondevop.core_domain.uitl.UiText
+
 
 data class SignUpState(
     val name: String ="",

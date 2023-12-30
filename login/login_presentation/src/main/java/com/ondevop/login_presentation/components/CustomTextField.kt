@@ -64,7 +64,7 @@ fun CustomTextField(
             trailingIcon = {
                 Icon(
                     imageVector = icon,
-                    contentDescription = stringResource(id = com.ondevop.core.R.string.email)
+                    contentDescription = stringResource(id = com.ondevop.core_domain.R.string.email)
                 )
             }
 

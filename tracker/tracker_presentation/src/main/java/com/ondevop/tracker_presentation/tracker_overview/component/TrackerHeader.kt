@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.ondevop.core_ui.LocalSpacing
+import com.ondevop.core_domain.R
 import com.ondevop.tracker_presentation.component.UnitDisplay
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewState
 
@@ -75,12 +76,12 @@ fun TrackerHeader(
             ) {
                 Icon(
                     imageVector = Icons.Default.Menu,
-                    contentDescription = stringResource(id = com.ondevop.core.R.string.menu_icon),
+                    contentDescription = stringResource(id = R.string.menu_icon),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
             Text(
-                text = stringResource(id = com.ondevop.core.R.string.tracker),
+                text = stringResource(id = R.string.tracker),
                 modifier = Modifier
                     .weight(1f)
                     .padding(end = 8.dp),
@@ -89,7 +90,7 @@ fun TrackerHeader(
                 style = MaterialTheme.typography.headlineMedium,
                 fontFamily = FontFamily(
                     Font(
-                        com.ondevop.core.R.font.rubik_medium,
+                        R.font.rubik_medium,
                         FontWeight.Bold
                     )
                 )
@@ -107,7 +108,7 @@ fun TrackerHeader(
         ) {
             UnitDisplay(
                 amount = animateDaysCount.value,
-                unit = stringResource(id = com.ondevop.core.R.string.days),
+                unit = stringResource(id = R.string.days),
                 amountColor = MaterialTheme.colorScheme.onPrimary,
                 unitColor = MaterialTheme.colorScheme.onPrimary,
                 modifier = Modifier.align(Alignment.Bottom)
@@ -115,13 +116,13 @@ fun TrackerHeader(
 
             Column {
                 Text(
-                    text = stringResource(id = com.ondevop.core.R.string.your_goal),
+                    text = stringResource(id = R.string.your_goal),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onPrimary
                 )
                 UnitDisplay(
                     amount = challengeGoal,
-                    unit = stringResource(id = com.ondevop.core.R.string.days),
+                    unit = stringResource(id = R.string.days),
                     amountColor = MaterialTheme.colorScheme.onPrimary,
                     unitColor = MaterialTheme.colorScheme.onPrimary,
                 )

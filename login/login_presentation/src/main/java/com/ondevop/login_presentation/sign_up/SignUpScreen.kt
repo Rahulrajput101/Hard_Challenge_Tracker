@@ -51,11 +51,10 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ondevop.core.R
-import com.ondevop.core.uitl.UiEvent
-import com.ondevop.core.uitl.UiText
+import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.core_ui.composables.CircularImage
+import com.ondevop.core_domain.R
 import com.ondevop.login_presentation.components.CustomTextField
 
 

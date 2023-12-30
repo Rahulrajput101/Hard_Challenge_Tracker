@@ -20,7 +20,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.ondevop.core.uitl.UiEvent
+import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.tracker_presentation.tracker_overview.component.CompleteDialog
 import com.ondevop.tracker_presentation.tracker_overview.component.DietCardView

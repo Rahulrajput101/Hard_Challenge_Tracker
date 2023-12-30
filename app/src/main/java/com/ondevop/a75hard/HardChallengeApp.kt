@@ -1,9 +1,8 @@
 package com.ondevop.a75hard
 
 import android.app.Application
-import com.ondevop.core.data.repository.AndroidHabitAlarmScheduler
-import com.ondevop.core.domain.MyNotificationChannel
-import com.ondevop.core.domain.MyNotificationManager
+import com.ondevop.core_domain.MyNotificationChannel
+import com.ondevop.core_domain.MyNotificationManager
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 

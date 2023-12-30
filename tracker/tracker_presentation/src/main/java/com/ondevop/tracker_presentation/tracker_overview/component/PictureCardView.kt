@@ -39,7 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
-import com.ondevop.core.R
+import com.ondevop.core_domain.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.core_ui.composables.CircularImage
 import com.ondevop.core_ui.pictureViolet

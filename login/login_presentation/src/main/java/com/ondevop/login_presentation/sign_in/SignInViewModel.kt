@@ -4,9 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.ondevop.core.domain.prefernces.Preferences
-import com.ondevop.core.uitl.UiEvent
-import com.ondevop.core.uitl.UiText
+import com.ondevop.core_domain.prefernces.Preferences
+import com.ondevop.core_domain.uitl.UiEvent
+import com.ondevop.core_domain.uitl.UiText
 import com.ondevop.login_domain.use_case.IsSignedIn
 import com.ondevop.login_domain.use_case.SignInWithEmailAndPassword
 import com.ondevop.login_domain.use_case.SignInWithGoogle

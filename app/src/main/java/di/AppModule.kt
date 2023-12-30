@@ -5,9 +5,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.ondevop.a75hard.EmailValidatorImp
-import com.ondevop.core.data.prefrences.DefaultPreferences
-import com.ondevop.core.data.prefrences.dataStore
-import com.ondevop.core.domain.prefernces.Preferences
+import com.ondevop.core_data.prefrences.DefaultPreferences
+import com.ondevop.core_data.prefrences.dataStore
+import com.ondevop.core_domain.prefernces.Preferences
 import com.ondevop.login_domain.EmailValidator
 import dagger.Module
 import dagger.Provides

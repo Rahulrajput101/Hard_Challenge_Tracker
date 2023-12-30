@@ -38,11 +38,11 @@ import com.ondevop.a75hard.navigation.Route
 import com.ondevop.a75hard.ui.presentation.component.DrawerBody
 import com.ondevop.a75hard.ui.presentation.component.DrawerHeader
 import com.ondevop.a75hard.ui.theme._75HardTheme
-import com.ondevop.core.domain.prefernces.Preferences
-import com.ondevop.core.uitl.Constant.FEEDBACK
-import com.ondevop.core.uitl.Constant.PRIVACY_POLICY
-import com.ondevop.core.uitl.Constant.SETTING
-import com.ondevop.core.uitl.Constant.TRACKER_HOME
+import com.ondevop.core_domain.prefernces.Preferences
+import com.ondevop.core_domain.uitl.Constant.FEEDBACK
+import com.ondevop.core_domain.uitl.Constant.PRIVACY_POLICY
+import com.ondevop.core_domain.uitl.Constant.SETTING
+import com.ondevop.core_domain.uitl.Constant.TRACKER_HOME
 import com.ondevop.login_presentation.sign_in.SignInScreen
 import com.ondevop.login_presentation.sign_up.SignUpScreen
 import com.ondevop.settings_presentation.settings.SettingScreen

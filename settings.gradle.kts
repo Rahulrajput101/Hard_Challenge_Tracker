@@ -15,7 +15,6 @@ dependencyResolutionManagement {
 
 rootProject.name = "75 Hard"
 include(":app")
-include(":core")
 include(":onboarding")
 include(":onboarding:onboarding_presentation")
 include(":onboarding:onboarding_domain")
@@ -31,3 +30,6 @@ include(":settings")
 include(":settings:settings_presentation")
 include(":settings:settings_data")
 include(":settings:settings_domain")
+include(":core")
+include(":core:core_data")
+include(":core:core_domain")

@@ -1,7 +1,8 @@
 object Modules {
     const val app = ":app"
 
-    const val core = ":core"
+    const val coreData= ":core:core_data"
+    const val coreDomain = ":core:core_domain"
     const val coreUi = ":core-ui"
 
     const val onboardingDomain = ":onboarding:onboarding_domain"
@@ -14,7 +15,6 @@ object Modules {
     const val trackerData = ":tracker:tracker_data"
     const val trackerDomain = ":tracker:tracker_domain"
     const val trackerPresentation = ":tracker:tracker_presentation"
-
 
     const val settingsData = ":settings:settings_data"
     const val settingsDomain = ":settings:settings_domain"

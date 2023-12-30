@@ -17,7 +17,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.ondevop.core.R
+import com.ondevop.core_domain.R
 import com.ondevop.core_ui.LocalSpacing
 
 @Composable

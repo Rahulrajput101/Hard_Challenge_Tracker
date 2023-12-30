@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.transform.CircleCropTransformation
-import com.ondevop.core.R
+import com.ondevop.core_domain.R
 
 @Composable
 fun SmallCircleImage(

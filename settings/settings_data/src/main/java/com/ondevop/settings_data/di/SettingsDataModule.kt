@@ -3,7 +3,7 @@ package com.ondevop.settings_data.di
 import android.content.Context
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.firebase.auth.FirebaseAuth
-import com.ondevop.core.domain.prefernces.Preferences
+import com.ondevop.core_domain.prefernces.Preferences
 import com.ondevop.settings_data.repository.SettingsRepositoryImp
 import com.ondevop.settings_domain.repository.SettingsRepository
 import dagger.Module

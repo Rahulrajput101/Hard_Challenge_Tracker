@@ -36,7 +36,7 @@ import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 import coil.size.Scale
 import coil.transform.CircleCropTransformation
-import com.ondevop.core.R
+import com.ondevop.core_domain.R
 import com.ondevop.core_ui.LocalSpacing
 
 @Preview

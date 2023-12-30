@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.ondevop.core.R
+import com.ondevop.core_domain.R
 import com.ondevop.core_ui.ReadTeal
 import com.ondevop.core_ui.WorkoutRed
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewState

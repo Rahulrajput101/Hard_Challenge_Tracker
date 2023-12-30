@@ -12,7 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import com.ondevop.core.R
+import com.ondevop.core_domain.R
 import com.ondevop.core_ui.LocalSpacing
 
 @Composable

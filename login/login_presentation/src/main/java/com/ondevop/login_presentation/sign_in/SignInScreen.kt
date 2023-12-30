@@ -51,10 +51,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.common.api.ApiException
-import com.ondevop.core.R
+import com.ondevop.core_domain.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.login_presentation.components.CustomTextField
-import com.ondevop.core.uitl.UiEvent
+import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.login_presentation.components.RoundedButton
 
 

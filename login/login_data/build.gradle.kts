@@ -11,7 +11,7 @@ android {
 }
 
 dependencies {
-    implementation(project(Modules.core))
+    implementation(project(Modules.coreDomain))
     implementation(project(Modules.loginDomain))
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.auth.ktx)

@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.ondevop.core_ui.LocalSpacing
+import com.ondevop.core_domain.R
 
 
 @Composable
@@ -64,7 +65,7 @@ fun CompleteDialog(
                         style = MaterialTheme.typography.headlineMedium,
                         fontFamily = FontFamily(
                             Font(
-                                com.ondevop.core.R.font.rubik_medium,
+                                R.font.rubik_medium,
                                 FontWeight.SemiBold
                             )
                         )
@@ -75,7 +76,7 @@ fun CompleteDialog(
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
                     Image(
-                        painter = painterResource(id = com.ondevop.core.R.drawable.celebration),
+                        painter = painterResource(id = R.drawable.celebration),
                         contentDescription = "celebration Image",
 
                         )
@@ -86,7 +87,7 @@ fun CompleteDialog(
                         style = MaterialTheme.typography.bodyMedium,
                         fontFamily = FontFamily(
                             Font(
-                                com.ondevop.core.R.font.rubik_medium,
+                                R.font.rubik_medium,
                                 FontWeight.SemiBold
                             )
                         )

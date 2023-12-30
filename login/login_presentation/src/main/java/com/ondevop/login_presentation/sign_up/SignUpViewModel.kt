@@ -3,10 +3,10 @@ package com.ondevop.login_presentation.sign_up
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ondevop.core.R
-import com.ondevop.core.domain.prefernces.Preferences
-import com.ondevop.core.uitl.UiEvent
-import com.ondevop.core.uitl.UiText
+import com.ondevop.core_domain.prefernces.Preferences
+import com.ondevop.core_domain.uitl.UiEvent
+import com.ondevop.core_domain.R
+import com.ondevop.core_domain.uitl.UiText
 import com.ondevop.login_domain.use_case.SignUpWithEmailAndPassword
 import com.ondevop.login_domain.use_case.ValidateEmail
 import com.ondevop.login_domain.use_case.ValidatePassword

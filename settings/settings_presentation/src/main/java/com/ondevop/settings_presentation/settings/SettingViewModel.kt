@@ -2,8 +2,7 @@ package com.ondevop.settings_presentation.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ondevop.core.domain.prefernces.Preferences
-import com.ondevop.core.uitl.UiEvent
+import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.settings_domain.use_case.SignOut
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel

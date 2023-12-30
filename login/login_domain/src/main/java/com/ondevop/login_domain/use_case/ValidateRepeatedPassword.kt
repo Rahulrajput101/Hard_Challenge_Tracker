@@ -1,9 +1,10 @@
 package com.ondevop.login_domain.use_case
 
 import android.util.Patterns
+import com.ondevop.core_domain.uitl.UiText
 import com.ondevop.login_domain.ValidateResult
-import com.ondevop.core.uitl.UiText
 import com.ondevop.login_domain.EmailValidator
+import com.ondevop.core_domain.R
 import javax.inject.Inject
 
 class ValidateRepeatedPassword @Inject constructor() {
@@ -13,7 +14,7 @@ class ValidateRepeatedPassword @Inject constructor() {
         if(password != repeatedPassword){
             return ValidateResult(
                 successful = false,
-                errorMessage = UiText.StringResource(com.ondevop.core.R.string.password_do_not_match)
+                errorMessage = UiText.StringResource(R.string.password_do_not_match)
             )
         }
 

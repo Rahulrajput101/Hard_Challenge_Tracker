@@ -1,6 +1,6 @@
 package com.ondevop.tracker_domain.di
 
-import com.ondevop.core.domain.repository.TrackerRepository
+import com.ondevop.core_domain.repository.TrackerRepository
 import com.ondevop.tracker_domain.use_cases.ClearAllTrackedData
 import com.ondevop.tracker_domain.use_cases.FilterADayChallenge
 import com.ondevop.tracker_domain.use_cases.GetAllTrackedChallenge
