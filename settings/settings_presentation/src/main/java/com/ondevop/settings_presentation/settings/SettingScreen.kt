@@ -3,6 +3,7 @@ package com.ondevop.settings_presentation.settings
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -182,6 +183,7 @@ fun SettingScreen(
                         .fillMaxWidth()
                         .padding(8.dp)
                         .padding(start = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
 
                     Text(

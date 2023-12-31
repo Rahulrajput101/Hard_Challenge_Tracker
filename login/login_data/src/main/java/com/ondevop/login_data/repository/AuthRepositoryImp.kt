@@ -27,10 +27,8 @@ class AuthRepositoryImp(
 
     override suspend fun loginWithEmailPassword(email: String, password: String): Result<UserInfo> {
         return try {
-            Log.d("auth", "$email , $password")
             val result = firebaseAuth.signInWithEmailAndPassword(email, password).await()
             if (result.user != null) {
-                Log.d("auth2", "$email , $password")
                 val user = result.user!!
                 Result.success(
                     UserInfo(

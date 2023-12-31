@@ -45,6 +45,7 @@ import com.ondevop.core_domain.uitl.Constant.SETTING
 import com.ondevop.core_domain.uitl.Constant.TRACKER_HOME
 import com.ondevop.login_presentation.sign_in.SignInScreen
 import com.ondevop.login_presentation.sign_up.SignUpScreen
+import com.ondevop.onboarding_presentation.notification_allow.NotificationAllowScreen
 import com.ondevop.settings_presentation.settings.SettingScreen
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewScreen
 import dagger.hilt.android.AndroidEntryPoint
@@ -137,9 +138,30 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(it),
                                 navController = navController,
-                                startDestination = if (!isLoggedIn) Route.SignIn.route else Route.TrackerHome.route
+                                startDestination =  Route.NotificationAllow.route
                                 //startDestination = Route.TrackerHome.route
                             ) {
+                                composable(Route.NotificationAllow.route){
+                                    NotificationAllowScreen(
+                                        snackbarHostState = snackbarHostState,
+                                        onNextClick = {}
+
+                                    )
+                                }
+
+                                composable(Route.SignIn.route) {
+                                    SignInScreen(
+                                        snackbarHostState = snackbarHostState,
+                                        navigateToSignUp = {
+                                            navController.navigate(Route.SignUp.route)
+                                        },
+                                        navigateToTrackerHome = {
+                                            navController.navigate(Route.TrackerHome.route)
+                                        },
+                                        googleSignInClient = googleSignInClient
+                                    )
+                                }
+
                                 composable(Route.SignIn.route) {
                                     SignInScreen(
                                         snackbarHostState = snackbarHostState,

@@ -94,7 +94,6 @@ class SignUpViewModel @Inject constructor(
                         saveUserName(state.value.name)
                         saveProfileUri(state.value.profileUri.toString())
                     }
-                    Log.d("MyTag", "suvm: ${preferences.getLoggedInfo()}")
                     _uiEvent.send(UiEvent.Success)
                 }
                 .onFailure {

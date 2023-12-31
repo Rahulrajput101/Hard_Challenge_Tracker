@@ -24,6 +24,8 @@
     <string name="password_do_not_match">Password don\'t match</string>
     <string name="or">OR</string>
     <string name="google">Google</string>
+    <string name="skip">Skip</string>
+    <string name="approve">Approve</string>
     <string name="welcome_text">Welcome %s</string>
     <string name="welcome">Welcome</string>
     <string name="greeting_text">We wish you have a good day!</string>
@@ -51,6 +53,8 @@
     <string name="setting">Settings</string>
     <string name="back">Back</string>
     <string name="allow_notification">Allow Notification</string>
+    <string name="notification">NOTIFICATION</string>
+    <string name="notification_description"> We need your permission to send you notification to notify about your tasks if it is completed or not. Without this permission we won\'t be able to inform you.</string>
     <string name="log_out">Log Out</string>
     <string name="notification_reason">You agree to receive notifications so, that you can meet your daily goals</string>
 </resources>

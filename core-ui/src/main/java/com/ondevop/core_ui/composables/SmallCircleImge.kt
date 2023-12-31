@@ -32,12 +32,10 @@ fun SmallCircleImage(
         contentAlignment = Alignment.Center,
 
     ) {
-        if(imageUri != null){
+        if(imageUri != null && imageUri.toString().isNotEmpty()){
             Image(
-                painter = // Add a unique key to force Coil to fetch a new image
-                rememberAsyncImagePainter(
+                painter = rememberAsyncImagePainter(
                     ImageRequest.Builder(LocalContext.current).data(data = imageUri).apply(block = fun ImageRequest.Builder.() {
-                        // Add a unique key to force Coil to fetch a new image
                         crossfade(true)
                         transformations(CircleCropTransformation())
                     }).build()
