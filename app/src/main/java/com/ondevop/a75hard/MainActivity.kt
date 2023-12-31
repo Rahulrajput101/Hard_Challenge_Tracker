@@ -144,8 +144,11 @@ class MainActivity : ComponentActivity() {
                                 composable(Route.NotificationAllow.route){
                                     NotificationAllowScreen(
                                         snackbarHostState = snackbarHostState,
-                                        onNextClick = {}
-
+                                        onSkipClick = {
+                                            navController.navigate(Route.SignIn.route)
+                                        },
+                                        openAppSetting = ::openAppSettings,
+                                        onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale
                                     )
                                 }
 

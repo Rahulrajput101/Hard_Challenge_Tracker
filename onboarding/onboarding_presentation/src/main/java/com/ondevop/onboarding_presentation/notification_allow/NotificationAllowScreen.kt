@@ -1,5 +1,9 @@
 package com.ondevop.onboarding_presentation.notification_allow
 
+import android.Manifest
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -28,26 +32,53 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core_domain.R
+import com.ondevop.core_domain.uitl.Permission
 import com.ondevop.core_ui.LocalSpacing
+import com.ondevop.core_ui.composables.CameraPermissionTextProvider
+import com.ondevop.core_ui.composables.NotificationPermissionTextProvider
+import com.ondevop.core_ui.composables.PermissionDialog
 
 
-@Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
-@Composable
-fun PreviewNotify(){
-    NotificationAllowScreen(snackbarHostState = SnackbarHostState()) {
-
-    }
-}
 @Composable
 fun NotificationAllowScreen(
+    viewModel : NotificationAllowViewModel= hiltViewModel(),
     snackbarHostState: SnackbarHostState,
-    onNextClick: () -> Unit,
+    onShouldShowPermissionRationale: (String) -> Boolean,
+    openAppSetting: () -> Unit,
+    onSkipClick: () -> Unit,
+
 ) {
     val spacing = LocalSpacing.current
+    val dialogQueue = viewModel.visiblePermissionDialogQueue
+     val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+         arrayOf(
+             Permission.CAMERA,
+             Permission.POST_NOTIFICATIONS
+        )
+     } else {
+         arrayOf(
+             Permission.CAMERA,
+         )
+     }
+
+
+    val multiplePermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions() ,
+        onResult = {perms ->
+            permissionsToRequest.forEach { permissions ->
+                viewModel.onPermissionResult(
+                    permission = permissions ,
+                    isGranted = perms[permissions.toPermissionString()] == true
+                )
+            }
+
+        }
+    )
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -74,7 +105,7 @@ fun NotificationAllowScreen(
                 modifier = Modifier
                     .align(Alignment.End)
                     .clickable {
-
+                     onSkipClick()
                     }
                     .padding(2.dp)
             )
@@ -82,7 +113,8 @@ fun NotificationAllowScreen(
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
             Box(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .weight(1f),
                 contentAlignment = Alignment.Center
             ) {
@@ -94,7 +126,8 @@ fun NotificationAllowScreen(
                     Image(
                         painter = painterResource(id = R.drawable.notification_icon),
                         contentDescription = null,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .size(150.dp)
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceSmall))
@@ -143,7 +176,12 @@ fun NotificationAllowScreen(
 
             FloatingActionButton(
                 onClick = {
-                     onNextClick()
+                    multiplePermissionLauncher.launch(
+                        permissionsToRequest.map {
+                            it.toPermissionString()
+                        }.toTypedArray()
+                    )
+
                 },
                 modifier = Modifier
                     .fillMaxWidth(),
@@ -154,6 +192,27 @@ fun NotificationAllowScreen(
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontSize = 18.sp
                 )
+            }
+
+            dialogQueue
+                .reversed()
+                .forEach {permission ->
+                    PermissionDialog(
+                        permissionTextProvider = when(permission){
+                           Permission.CAMERA -> CameraPermissionTextProvider()
+                           Permission.POST_NOTIFICATIONS-> NotificationPermissionTextProvider()
+                            else -> return@forEach
+                        },
+                        isPermanentlyDeclined = !onShouldShowPermissionRationale(permission.toPermissionString()),
+                        onDismissClick =  viewModel::dismissDialog,
+                        onOkClick = {
+                                    viewModel.dismissDialog()
+                            multiplePermissionLauncher.launch(
+                                arrayOf(permission.toPermissionString())
+                            )
+                        },
+                        onGoToAppSettingsClicks = openAppSetting,
+                    )
             }
 
         }
