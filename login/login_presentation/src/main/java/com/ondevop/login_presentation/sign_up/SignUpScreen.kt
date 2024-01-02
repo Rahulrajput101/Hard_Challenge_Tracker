@@ -55,6 +55,7 @@ import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.core_ui.composables.CircularImage
 import com.ondevop.core_domain.R
+import com.ondevop.core_ui.composables.CustomLoadingDialog
 import com.ondevop.login_presentation.components.CustomTextField
 
 
@@ -272,6 +273,13 @@ fun SignUpScreen(
                     modifier = Modifier.clickable {
                         navigateToSignIN()
                     }
+                )
+            }
+
+            if(state.isLoading){
+                CustomLoadingDialog(
+                    showDialog = true,
+                    text = stringResource(id = R.string.signing_in)
                 )
             }
         }

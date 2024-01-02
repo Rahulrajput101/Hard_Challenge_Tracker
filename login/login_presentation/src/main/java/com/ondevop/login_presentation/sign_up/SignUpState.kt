@@ -11,5 +11,6 @@ data class SignUpState(
     val password: String ="",
     val passwordError: UiText? =null,
     val repeatedPassword: String ="",
-    val repeatedPasswordError: UiText? = null
+    val repeatedPasswordError: UiText? = null,
+    val isLoading: Boolean = false,
 )

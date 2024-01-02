@@ -37,17 +37,6 @@ class SignInViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-    init {
-        viewModelScope.launch {
-             val result = isSignedIn()
-            if(result){
-                _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString("logged in ")))
-            }else{
-                _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString("logged out")))
-            }
-
-        }
-    }
     fun onEvent(event: SignInEvent) {
         when (event) {
             is SignInEvent.SignInClick -> {
@@ -64,6 +53,7 @@ class SignInViewModel @Inject constructor(
 
             is SignInEvent.SignInUnsuccessful -> {
                 viewModelScope.launch {
+                    _state.value = _state.value.copy(isLoading = false)
                     _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(event.errorMessage)))
                 }
             }
@@ -74,22 +64,21 @@ class SignInViewModel @Inject constructor(
                     if(event.userData.profilePictureUrl != null){
                         preferences.saveProfileUri(event.userData.profilePictureUrl)
                     }
-
                     _uiEvent.send(UiEvent.Success)
                 }
             }
 
             is SignInEvent.SignInWithGoogle -> {
                    viewModelScope.launch {
-                       Log.d("SIVm"," sign im vm")
+                       _state.value = _state.value.copy(isLoading = true)
                       signInWithGoogle(event.idToken).onSuccess {
-                          _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.userName)))
                           preferences.saveLoggedInfo(true)
                           preferences.saveUserName(it.userName)
                           val profileUri = it.profileUri.toString()
                           preferences.saveProfileUri(profileUri)
                           _uiEvent.send(UiEvent.Success)
                       }.onFailure {
+                          _state.value = _state.value.copy(isLoading = false)
                           _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
                       }
                    }
@@ -114,9 +103,9 @@ class SignInViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
             signInWithEmailPassword(state.value.email, state.value.password)
                 .onSuccess {
-                    _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.userName)))
                     preferences.saveLoggedInfo(true)
                     preferences.saveUserName(it.userName)
                     val profileUri = it.profileUri.toString()
@@ -124,6 +113,7 @@ class SignInViewModel @Inject constructor(
                     _uiEvent.send(UiEvent.Success)
                 }
                 .onFailure {
+                    _state.value = _state.value.copy(isLoading = false)
                     _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
                 }
         }

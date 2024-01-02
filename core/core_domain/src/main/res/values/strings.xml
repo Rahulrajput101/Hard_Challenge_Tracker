@@ -24,6 +24,7 @@
     <string name="password_do_not_match">Password don\'t match</string>
     <string name="or">OR</string>
     <string name="google">Google</string>
+    <string name="signing_in">Signing in</string>
     <string name="skip">Skip</string>
     <string name="approve">Approve</string>
     <string name="welcome_text">Welcome %s</string>

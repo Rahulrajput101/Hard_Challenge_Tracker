@@ -55,6 +55,7 @@ import com.ondevop.core_domain.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.login_presentation.components.CustomTextField
 import com.ondevop.core_domain.uitl.UiEvent
+import com.ondevop.core_ui.composables.CustomLoadingDialog
 import com.ondevop.login_presentation.components.RoundedButton
 
 
@@ -82,6 +83,7 @@ fun SignInScreen(
                 }
 
                 UiEvent.Success -> {
+                   // viewModel.onEvent(SignInEvent.UpdateLoadingState(false))
                     navigateToTrackerHome()
                 }
             }
@@ -295,6 +297,13 @@ fun SignInScreen(
                         modifier = Modifier.padding(start = 3.dp)
                     )
                 }
+            }
+
+            if(state.isLoading){
+                CustomLoadingDialog(
+                    showDialog = true,
+                    text = stringResource(id = R.string.signing_in)
+                )
             }
         }
     }

@@ -86,6 +86,7 @@ class SignUpViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true)
             signUpWithEmailAndPassword(state.value.email, state.value.password,state.value.name,state.value.profileUri)
                 .onSuccess {
                     _uiEvent.send(UiEvent.Success)
@@ -94,9 +95,11 @@ class SignUpViewModel @Inject constructor(
                         saveUserName(state.value.name)
                         saveProfileUri(state.value.profileUri.toString())
                     }
+                    _state.value = _state.value.copy(isLoading = false)
                     _uiEvent.send(UiEvent.Success)
                 }
                 .onFailure {
+                    _state.value = _state.value.copy(isLoading = false)
                     _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
                 }
         }
