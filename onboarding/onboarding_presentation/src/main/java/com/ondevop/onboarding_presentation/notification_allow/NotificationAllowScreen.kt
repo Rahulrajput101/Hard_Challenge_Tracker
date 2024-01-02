@@ -56,12 +56,10 @@ fun NotificationAllowScreen(
     val dialogQueue = viewModel.visiblePermissionDialogQueue
      val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
          arrayOf(
-             Permission.CAMERA,
              Permission.POST_NOTIFICATIONS
         )
      } else {
          arrayOf(
-             Permission.CAMERA,
          )
      }
 
@@ -199,7 +197,6 @@ fun NotificationAllowScreen(
                 .forEach {permission ->
                     PermissionDialog(
                         permissionTextProvider = when(permission){
-                           Permission.CAMERA -> CameraPermissionTextProvider()
                            Permission.POST_NOTIFICATIONS-> NotificationPermissionTextProvider()
                             else -> return@forEach
                         },

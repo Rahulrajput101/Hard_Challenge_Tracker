@@ -1,9 +1,12 @@
 package com.ondevop.core_data.repository
 
+import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
+import android.os.Build
 import com.ondevop.core_data.receivers.HabitAlarmReceiver
 import com.ondevop.core_domain.model.HabitReminder
 import com.ondevop.core_domain.repository.HabitAlarmScheduler
@@ -28,10 +31,15 @@ class AndroidHabitAlarmScheduler(
         if (scheduledTime.isBefore(LocalDateTime.now())) {
             scheduledTime.plusDays(1)
         }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
 
 
         val intent = Intent(context, HabitAlarmReceiver::class.java)
-        alarmManager.setRepeating(
+        alarmManager.setInexactRepeating(
             AlarmManager.RTC_WAKEUP,
             scheduledTime.atZone(ZoneId.systemDefault()).toEpochSecond()* 1000,
             AlarmManager.INTERVAL_DAY,
@@ -45,10 +53,14 @@ class AndroidHabitAlarmScheduler(
     }
 
     override fun cancel(habitReminder: HabitReminder) {
-        TODO("Not yet implemented")
+        alarmManager.cancel(
+            PendingIntent.getBroadcast(
+                context,
+                habitReminder.hashCode(),
+                Intent(context,HabitAlarmReceiver::class.java),
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        )
     }
 
-    companion object{
-        const val INTENT_HABIT_REMINDER_KEY = "intent_habit_reminder"
-    }
 }

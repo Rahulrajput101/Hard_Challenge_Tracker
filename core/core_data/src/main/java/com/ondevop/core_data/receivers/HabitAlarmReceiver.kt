@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.ondevop.core_domain.MyNotification
 import com.ondevop.core_domain.MyNotificationManager
+import com.ondevop.core_domain.use_cases.SchedulingHabitAlarm
 import com.ondevop.core_domain.use_cases.ToShowNotification
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -22,6 +23,9 @@ class HabitAlarmReceiver : BroadcastReceiver() {
     lateinit var toShowNotification: ToShowNotification
 
     @Inject
+    lateinit var  schedulingHabitAlarm: SchedulingHabitAlarm
+
+    @Inject
     lateinit var myNotificationManager: MyNotificationManager
 
     @OptIn(DelicateCoroutinesApi::class)
@@ -34,6 +38,7 @@ class HabitAlarmReceiver : BroadcastReceiver() {
             if(shouldShowNotification){
                 myNotificationManager.notify(MyNotification.HabitNotification)
             }
+
         }
 
     }

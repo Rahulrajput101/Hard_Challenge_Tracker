@@ -43,6 +43,7 @@ import com.ondevop.core_domain.uitl.Constant.FEEDBACK
 import com.ondevop.core_domain.uitl.Constant.PRIVACY_POLICY
 import com.ondevop.core_domain.uitl.Constant.SETTING
 import com.ondevop.core_domain.uitl.Constant.TRACKER_HOME
+import com.ondevop.core_domain.use_cases.SchedulingHabitAlarm
 import com.ondevop.login_presentation.sign_in.SignInScreen
 import com.ondevop.login_presentation.sign_up.SignUpScreen
 import com.ondevop.onboarding_presentation.notification_allow.NotificationAllowScreen
@@ -62,14 +63,20 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var googleSignInClient: GoogleSignInClient
 
+    @Inject
+    lateinit var schedulingHabitAlarm: SchedulingHabitAlarm
+
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launch {
-            val isLoggedIn = preferences.getLoggedInfo().first()
-            val name = preferences.getUserName().first()
-
+            val isOnboardingCompleted = preferences.getIsOnboardingCompleted().first()
+            val isLoggedIn  = preferences.getLoggedInfo().first()
+            val isAlarmScheduled = preferences.getAlarmScheduled().first()
+            if(!isAlarmScheduled){
+                schedulingHabitAlarm()
+            }
 
             setContent {
                 _75HardTheme {
@@ -80,6 +87,7 @@ class MainActivity : ComponentActivity() {
                     val scope = rememberCoroutineScope()
 
                     val profileUri by  preferences.getProfileUri().collectAsState(initial = "")
+                    val name by preferences.getUserName().collectAsState(initial = "")
 
                     ModalNavigationDrawer(
                         drawerContent = {
@@ -116,7 +124,6 @@ class MainActivity : ComponentActivity() {
 //                                                  scope.launch {
 //                                                      drawerState.close()
 //                                                  }
-
                                             }
                                         }
 
@@ -138,13 +145,22 @@ class MainActivity : ComponentActivity() {
                                     .fillMaxSize()
                                     .padding(it),
                                 navController = navController,
-                                startDestination =  Route.NotificationAllow.route
+                                startDestination = if (!isOnboardingCompleted) {
+                                    Route.NotificationAllow.route
+                                } else if (!isLoggedIn) {
+                                    Route.SignIn.route
+                                } else {
+                                    Route.TrackerHome.route
+                                }
                                 //startDestination = Route.TrackerHome.route
                             ) {
                                 composable(Route.NotificationAllow.route){
                                     NotificationAllowScreen(
                                         snackbarHostState = snackbarHostState,
                                         onSkipClick = {
+                                            scope.launch {
+                                                preferences.saveIsOnboardingCompleted(true)
+                                            }
                                             navController.navigate(Route.SignIn.route)
                                         },
                                         openAppSetting = ::openAppSettings,
@@ -194,9 +210,7 @@ class MainActivity : ComponentActivity() {
                                         snackbarHostState = snackbarHostState,
                                         onMenuItemClick = {
                                             scope.launch {
-                                                Log.d("drawer", " ${drawerState.currentValue}")
                                                 if (drawerState.isClosed) drawerState.open() else drawerState.close()
-                                                Log.d("drawer", " ${drawerState.currentValue}")
                                             }
                                         }
 
@@ -216,12 +230,10 @@ class MainActivity : ComponentActivity() {
                                         },
                                         onSignOut = {
                                             navController.navigate(Route.SignIn.route)
-                                          //  navController.popBackStack(navController.graph.startDestinationId, false)
-                                        }
-
+                                        },
+                                        openAppSettings = ::openAppSettings
                                     )
                                 }
-
 
                             }
                         }

@@ -8,14 +8,16 @@ import javax.inject.Inject
 
 
 @HiltAndroidApp
-class HardChallengeApp: Application() {
+class HardChallengeApp : Application() {
 
     @Inject
     lateinit var myNotificationManager: MyNotificationManager
 
     override fun onCreate() {
         super.onCreate()
-
         myNotificationManager.createChannel(MyNotificationChannel.HabitReminderChannel)
+
     }
+
+
 }

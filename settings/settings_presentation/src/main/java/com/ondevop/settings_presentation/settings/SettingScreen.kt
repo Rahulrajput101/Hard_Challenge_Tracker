@@ -1,5 +1,8 @@
 package com.ondevop.settings_presentation.settings
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
@@ -28,6 +31,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +42,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core_domain.R
 import com.ondevop.core_domain.uitl.UiEvent
@@ -49,12 +54,29 @@ fun SettingScreen(
     viewModel: SettingViewModel = hiltViewModel(),
     snackbarHostState: SnackbarHostState,
     onNavigateBack: () -> Unit,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+    openAppSettings: () -> Unit
 ) {
     val spacing = LocalSpacing.current
     val context = LocalContext.current
-    var signInChecked by remember { mutableStateOf(true) }
+    val signInChecked by remember { mutableStateOf(true) }
 
+    var hasNotificationPermissions by rememberSaveable {
+        mutableStateOf(false)
+    }
+
+
+    LaunchedEffect(key1 = Unit) {
+        hasNotificationPermissions =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            } else {
+                true
+            }
+    }
 
     val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
 
@@ -81,6 +103,7 @@ fun SettingScreen(
                     snackbarHostState.currentSnackbarData?.dismiss()
                     snackbarHostState.showSnackbar(event.message.asString(context))
                 }
+
                 is UiEvent.Success -> {
                     onSignOut()
                 }
@@ -168,9 +191,9 @@ fun SettingScreen(
                     Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
 
                     Switch(
-                        checked = true,
+                        checked = hasNotificationPermissions,
                         onCheckedChange = {
-
+                            openAppSettings()
                         },
                     )
 
@@ -201,7 +224,7 @@ fun SettingScreen(
                     Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
 
                     Switch(
-                        checked = !signInChecked,
+                        checked = signInChecked,
                         onCheckedChange = {
                             viewModel.onEvent(SettingEvent.SignOut)
                         },

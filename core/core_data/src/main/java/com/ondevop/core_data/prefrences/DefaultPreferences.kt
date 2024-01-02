@@ -20,6 +20,8 @@ private val isLoggedInKey = booleanPreferencesKey(Preferences.Key_IS_LOG_IN)
 private val nameKey = stringPreferencesKey(Preferences.Key_NAME)
 private val profileUriKey =stringPreferencesKey(Preferences.Key_PROFILE_URI)
 private val goalKey = intPreferencesKey(Preferences.KEY_GOAL)
+private val isOnboardingCompletedKey = booleanPreferencesKey(Preferences.KEY_IS_ONBOARDING_COMPLETED)
+private val isAlarmScheduledKey = booleanPreferencesKey(Preferences.KEY_IS_ALARM_SCHEDULED)
 
 class DefaultPreferences(private val dataStore: DataStore<androidx.datastore.preferences.core.Preferences>) :
     Preferences {
@@ -47,6 +49,19 @@ class DefaultPreferences(private val dataStore: DataStore<androidx.datastore.pre
         }
     }
 
+    override suspend fun saveIsOnboardingCompleted(completed: Boolean) {
+        dataStore.edit { preference ->
+            preference[isOnboardingCompletedKey] = completed
+        }
+    }
+
+    override suspend fun saveAlarmSchedule(isSchedule: Boolean) {
+        dataStore.edit { perference->
+            perference[isAlarmScheduledKey] = isSchedule
+
+        }
+    }
+
     override fun getLoggedInfo(): Flow<Boolean> = dataStore.data.map { preference ->
         preference[isLoggedInKey] ?: Constant.DEFAULT_IS_LOGGED_IN
     }
@@ -61,6 +76,14 @@ class DefaultPreferences(private val dataStore: DataStore<androidx.datastore.pre
 
     override fun getGoal(): Flow<Int> = dataStore.data.map { preference->
         preference[goalKey] ?: Constant.Default_DAYS_GOAL
+    }
+
+    override fun getIsOnboardingCompleted(): Flow<Boolean> = dataStore.data.map { preference ->
+        preference[isOnboardingCompletedKey] ?: Constant.DEFAULT_IS_ONBOARDING_COMPLETED
+    }
+
+    override fun getAlarmScheduled(): Flow<Boolean> = dataStore.data.map { preference ->
+        preference[isAlarmScheduledKey] ?: Constant.DEFAULT_IS_ALARM_SCHEDULED
     }
 
     override suspend fun clearAllPreferenceData() {

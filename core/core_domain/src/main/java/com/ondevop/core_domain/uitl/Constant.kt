@@ -10,6 +10,8 @@ object Constant {
     const val DEFAULT_WORKOUT_GOAL = 2
     const val DEFAULT_READ_GOAL = false
     const val Default_DAYS_GOAL = 75
+    const val DEFAULT_IS_ONBOARDING_COMPLETED = false
+    const val DEFAULT_IS_ALARM_SCHEDULED= false
 
     const val TRACKER_HOME = "Tracker"
     const val SETTING = "Setting"
