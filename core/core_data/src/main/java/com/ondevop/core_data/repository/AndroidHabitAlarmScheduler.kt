@@ -9,17 +9,18 @@ import android.content.pm.PackageManager
 import android.os.Build
 import com.ondevop.core_data.receivers.HabitAlarmReceiver
 import com.ondevop.core_domain.model.HabitReminder
+import com.ondevop.core_domain.prefernces.Preferences
 import com.ondevop.core_domain.repository.HabitAlarmScheduler
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.ZoneId
 
 class AndroidHabitAlarmScheduler(
-    private val context : Context
+    private val context : Context,
 ) : HabitAlarmScheduler {
 
     private val alarmManager = context.getSystemService(AlarmManager::class.java)
-    override fun schedule(habitReminder: HabitReminder) {
+    override fun schedule(habitReminder: HabitReminder) : Result<Unit> {
 
         //set the reminder time to 10 pm
         val reminderTime = LocalTime.of(22,0)
@@ -34,7 +35,7 @@ class AndroidHabitAlarmScheduler(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) {
-            return
+            return Result.failure( Exception("Permission not allowed to show notification"))
         }
 
 
@@ -50,6 +51,8 @@ class AndroidHabitAlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+
+         return Result.success(Unit)
     }
 
     override fun cancel(habitReminder: HabitReminder) {

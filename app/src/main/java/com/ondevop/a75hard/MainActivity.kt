@@ -75,6 +75,7 @@ class MainActivity : ComponentActivity() {
             val isLoggedIn  = preferences.getLoggedInfo().first()
             val isAlarmScheduled = preferences.getAlarmScheduled().first()
             if(!isAlarmScheduled){
+                Log.d("ma"," alarm = false")
                 schedulingHabitAlarm()
             }
 

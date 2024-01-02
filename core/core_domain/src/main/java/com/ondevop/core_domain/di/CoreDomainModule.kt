@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.content.ContextCompat
+import com.ondevop.core_domain.prefernces.Preferences
 import com.ondevop.core_domain.repository.HabitAlarmScheduler
 import com.ondevop.core_domain.repository.SaveImageRepository
 import com.ondevop.core_domain.repository.TrackerRepository
@@ -15,6 +16,7 @@ import com.ondevop.core_domain.use_cases.ToShowNotification
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Named
 import javax.inject.Singleton
@@ -44,14 +46,17 @@ object CoreDomainModule {
     @Provides
     @Singleton
     fun provideSchedulingHabitAlarm(
-        scheduler: HabitAlarmScheduler
+        scheduler: HabitAlarmScheduler,
+        preferences: Preferences
     ) : SchedulingHabitAlarm {
-        return SchedulingHabitAlarm(scheduler)
+        return SchedulingHabitAlarm(scheduler,preferences)
     }
 
     @Provides
     @Named("notificationPermission")
-    fun provideNotificationPermission(context: Context): Boolean {
+    fun provideNotificationPermission(
+        @ApplicationContext context: Context
+    ): Boolean {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             ContextCompat.checkSelfPermission(
                 context,
