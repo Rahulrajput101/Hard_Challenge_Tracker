@@ -75,7 +75,6 @@ class MainActivity : ComponentActivity() {
             val isLoggedIn  = preferences.getLoggedInfo().first()
             val isAlarmScheduled = preferences.getAlarmScheduled().first()
             if(!isAlarmScheduled){
-                Log.d("ma"," alarm = false")
                 schedulingHabitAlarm()
             }
 
@@ -162,7 +161,11 @@ class MainActivity : ComponentActivity() {
                                             scope.launch {
                                                 preferences.saveIsOnboardingCompleted(true)
                                             }
-                                            navController.navigate(Route.SignIn.route)
+                                            navController.navigate(Route.SignIn.route){
+                                                popUpTo(Route.NotificationAllow.route){
+                                                    inclusive = true
+                                                }
+                                            }
                                         },
                                         openAppSetting = ::openAppSettings,
                                         onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale
@@ -189,7 +192,11 @@ class MainActivity : ComponentActivity() {
                                             navController.navigate(Route.SignUp.route)
                                         },
                                         navigateToTrackerHome = {
-                                            navController.navigate(Route.TrackerHome.route)
+                                            navController.navigate(Route.TrackerHome.route){
+                                                popUpTo(Route.SignIn.route){
+                                                    inclusive = true
+                                                }
+                                            }
                                         },
                                         googleSignInClient = googleSignInClient
                                     )
@@ -199,7 +206,11 @@ class MainActivity : ComponentActivity() {
                                     SignUpScreen(
                                         snackbarHostState = snackbarHostState,
                                         navigateToTrackerHome = {
-                                            navController.navigate(Route.TrackerHome.route)
+                                            navController.navigate(Route.TrackerHome.route){
+                                                popUpTo(Route.SignUp.route){
+                                                    inclusive = true
+                                                }
+                                            }
                                         },
                                         navigateToSignIN = {
                                             navController.navigateUp()

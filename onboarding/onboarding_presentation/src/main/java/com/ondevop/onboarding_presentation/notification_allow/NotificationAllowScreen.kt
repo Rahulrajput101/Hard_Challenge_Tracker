@@ -23,8 +23,12 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core_domain.R
 import com.ondevop.core_domain.uitl.Permission
+import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.core_ui.composables.CameraPermissionTextProvider
 import com.ondevop.core_ui.composables.NotificationPermissionTextProvider
@@ -53,7 +58,9 @@ fun NotificationAllowScreen(
 
 ) {
     val spacing = LocalSpacing.current
+    val context = LocalContext.current
     val dialogQueue = viewModel.visiblePermissionDialogQueue
+
      val permissionsToRequest = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
          arrayOf(
              Permission.POST_NOTIFICATIONS
@@ -76,6 +83,23 @@ fun NotificationAllowScreen(
 
         }
     )
+
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.ShowSnackbar -> {
+                    snackbarHostState.currentSnackbarData?.dismiss()
+                    snackbarHostState.showSnackbar(event.message.asString(context))
+                }
+
+                is UiEvent.Success -> {
+                    onSkipClick()
+                }
+
+                else -> Unit
+            }
+        }
+    }
 
     Box(
         modifier = Modifier
@@ -103,7 +127,7 @@ fun NotificationAllowScreen(
                 modifier = Modifier
                     .align(Alignment.End)
                     .clickable {
-                     onSkipClick()
+                        onSkipClick()
                     }
                     .padding(2.dp)
             )
