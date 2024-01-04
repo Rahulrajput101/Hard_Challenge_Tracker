@@ -11,6 +11,7 @@ android {
 
 dependencies {
     implementation(project(Modules.coreDomain))
+    implementation(libs.lottie)
     implementation(project(Modules.coreUi))
     implementation(project(Modules.onboardingDomain))
 }
