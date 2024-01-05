@@ -25,29 +25,21 @@ class AndroidHabitAlarmScheduler(
 
     override fun schedule(habitReminder: HabitReminder): Result<Unit> {
 
-//        // Set the reminder time to 10 pm
-        val reminderTime = LocalTime.of(23, 0)
-//
-//        // Combine the reminder time with the date of the habitReminder
-          var scheduledTime = LocalDateTime.of(habitReminder.time.toLocalDate(), reminderTime)
 
+        val reminderTime = LocalTime.of(22,0 )
+        var scheduledTime = LocalDateTime.of(LocalDate.now(), reminderTime)
 
         if (scheduledTime.isBefore(LocalDateTime.now())) {
             scheduledTime = scheduledTime.plusDays(1)
         }
-        Log.d("AHAS", "Scheduled time: $scheduledTime")
-
-//        val reminderTime = LocalTime.of(22, 0)
-//        val scheduledTime = LocalDateTime.of(LocalDate.now(), reminderTime)
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             context.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
         ) {
             return Result.failure(Exception("Permission not allowed to show notification"))
         }
-          Log.d("AHAS"," schuling")
-        val intent = Intent(context, HabitAlarmReceiver::class.java)
+
+         val intent = Intent(context, HabitAlarmReceiver::class.java)
         try {
             alarmManager.setInexactRepeating(
                 AlarmManager.RTC_WAKEUP,
@@ -66,6 +58,18 @@ class AndroidHabitAlarmScheduler(
             Log.e("AHAS", "Failed to schedule alarm", e)
             return Result.failure(e)
         }
+
+//        alarmManager.setExactAndAllowWhileIdle(
+//            AlarmManager.RTC_WAKEUP,
+//            scheduledTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
+//            PendingIntent.getBroadcast(
+//                context,
+//                habitReminder.hashCode(),
+//                intent,
+//                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+//            )
+//        )
+//        return Result.success(Unit)
     }
 
     override fun cancel(habitReminder: HabitReminder) {
@@ -77,5 +81,6 @@ class AndroidHabitAlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
+
     }
 }

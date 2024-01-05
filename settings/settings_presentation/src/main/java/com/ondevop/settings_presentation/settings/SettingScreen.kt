@@ -206,19 +206,21 @@ fun SettingScreen(
                         .fillMaxWidth()
                         .padding(8.dp)
                         .padding(start = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
 
                     Text(
                         text = stringResource(id = R.string.log_out),
-                        style = MaterialTheme.typography.bodyLarge,
+                        fontSize = 20.sp,
                         fontFamily = FontFamily(
                             Font(
                                 R.font.rubik_medium,
                                 FontWeight.Medium
                             )
                         ),
-                        color = MaterialTheme.colorScheme.primary
+                        color = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.weight(1f)
                     )
 
                     Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))

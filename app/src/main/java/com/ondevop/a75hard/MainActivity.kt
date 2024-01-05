@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -50,6 +51,7 @@ import com.ondevop.core_domain.uitl.Constant.PRIVACY_POLICY
 import com.ondevop.core_domain.uitl.Constant.SETTING
 import com.ondevop.core_domain.uitl.Constant.TRACKER_HOME
 import com.ondevop.core_domain.use_cases.SchedulingHabitAlarm
+import com.ondevop.core_domain.use_cases.ToShowNotification
 import com.ondevop.login_presentation.sign_in.SignInScreen
 import com.ondevop.login_presentation.sign_up.SignUpScreen
 import com.ondevop.onboarding_presentation.notification_allow.NotificationAllowScreen
@@ -62,6 +64,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -75,6 +78,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var schedulingHabitAlarm: SchedulingHabitAlarm
+
+    @Inject
+    lateinit var toShowNotification: ToShowNotification
 
 
     @OptIn(ExperimentalMaterial3Api::class)
@@ -114,7 +120,7 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = if (!isOnboardingCompleted) {
                                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
-                                    Route.NotificationAllow.route
+                                    Route.Welcome.route
                                 }else{
                                     Route.SignIn.route
                                 }
@@ -139,8 +145,8 @@ class MainActivity : ComponentActivity() {
                                     }
 
                                     onDispose {
-                                        // Set the FLAG_LAYOUT_NO_LIMITS flag when leaving the WelcomeScreen
 
+                                        // Set the FLAG_LAYOUT_NO_LIMITS flag when leaving the WelcomeScreen
                                         window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
                                     }
                                 }

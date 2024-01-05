@@ -16,7 +16,6 @@ class SchedulingHabitAlarm @Inject constructor(
 
     suspend operator fun invoke(){
         habitAlarmScheduler.schedule(HabitReminder(LocalDateTime.now())).onSuccess {
-            Log.d("ma"," alarm = true")
             preferences.saveAlarmSchedule(true)
         }
             .onFailure {

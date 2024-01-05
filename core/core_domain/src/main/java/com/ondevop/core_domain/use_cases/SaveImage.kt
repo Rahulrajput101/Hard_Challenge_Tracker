@@ -10,7 +10,6 @@ class SaveImage @Inject constructor(
 ) {
     suspend operator fun invoke(uri: Uri?) : Result<String> {
         val imageUir =  repository.savePhotoToInternalStorage(uri)
-        Log.d("si"," uri: $imageUir $")
        return imageUir
     }
 }
