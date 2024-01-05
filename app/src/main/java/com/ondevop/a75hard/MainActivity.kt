@@ -120,7 +120,7 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = if (!isOnboardingCompleted) {
                                 if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
-                                    Route.Welcome.route
+                                    Route.NotificationAllow.route
                                 }else{
                                     Route.SignIn.route
                                 }
