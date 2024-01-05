@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "621978207845",
+    "project_id": "hard-64229",
+    "storage_bucket": "hard-64229.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:621978207845:android:403c50bd5e1e53a6b0a88c",
+        "android_client_info": {
+          "package_name": "com.ondevop.a75hard"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqgyhRpjzh_VARvjrMP8olQrnEMAD0B04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
