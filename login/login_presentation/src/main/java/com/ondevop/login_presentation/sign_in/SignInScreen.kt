@@ -131,7 +131,7 @@ fun SignInScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .padding(20.dp)
+            .padding(12.dp)
     ) {
         Column(
             modifier = Modifier

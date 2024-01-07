@@ -24,7 +24,7 @@ android {
         applicationId = ProjectConfig.appId
         minSdk = ProjectConfig.minSdk
         targetSdk = ProjectConfig.targetSdk
-        versionCode = 1
+        versionCode = ProjectConfig.versionCode
         versionName = ProjectConfig.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
