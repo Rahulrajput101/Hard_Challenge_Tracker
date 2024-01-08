@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,6 +34,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.ondevop.a75hard.navigation.Route
@@ -126,12 +129,12 @@ class MainActivity : ComponentActivity() {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                     Route.NotificationAllow.route
                                 } else {
-                                    Route.SignIn.route
+                                    Route.GraphAuth.route
                                 }
                             } else if (!isLoggedIn) {
-                                Route.SignIn.route
+                                Route.GraphAuth.route
                             } else {
-                                Route.TrackerHome.route
+                                Route.GraphTracker.route
                             }
                         ) {
                             composable(Route.Welcome.route) {
@@ -142,9 +145,6 @@ class MainActivity : ComponentActivity() {
                             }
 
                             composable(Route.NotificationAllow.route) {
-                                window.clearFlags(
-                                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-                                )
                                 NotificationAllowScreen(
                                     snackbarHostState = snackbarHostState,
                                     onSkipClick = {
@@ -162,126 +162,129 @@ class MainActivity : ComponentActivity() {
                                 )
                             }
 
-                            composable(Route.SignIn.route) {
-                                SignInScreen(
-                                    snackbarHostState = snackbarHostState,
-                                    navigateToSignUp = {
-                                        navController.navigate(Route.SignUp.route)
-                                    },
-                                    navigateToTrackerHome = {
-                                        navController.navigate(Route.TrackerHome.route)
-                                    },
-                                    googleSignInClient = googleSignInClient
-                                )
-                            }
-
-                            composable(Route.SignIn.route) {
-                                SignInScreen(
-                                    snackbarHostState = snackbarHostState,
-                                    navigateToSignUp = {
-                                        navController.navigate(Route.SignUp.route)
-                                    },
-                                    navigateToTrackerHome = {
-                                        navController.navigate(Route.TrackerHome.route) {
-                                            popUpTo(Route.SignIn.route) {
-                                                inclusive = true
-                                            }
-                                        }
-                                    },
-                                    googleSignInClient = googleSignInClient
-                                )
-                            }
-
-                            composable(Route.SignUp.route) {
-                                SignUpScreen(
-                                    snackbarHostState = snackbarHostState,
-                                    navigateToTrackerHome = {
-                                        navController.navigate(Route.TrackerHome.route) {
-                                            popUpTo(Route.SignUp.route) {
-                                                inclusive = true
-                                            }
-                                        }
-                                    },
-                                    navigateToSignIN = {
-                                        navController.navigateUp()
-                                    },
-                                )
-                            }
-                            composable(Route.TrackerHome.route) {
-                                ModalNavigationDrawer(
-                                    drawerContent = {
-                                        ModalDrawerSheet {
-                                            DrawerHeader(
-                                                name = name,
-                                                imageUri = profileUri.toUri()
-                                            )
-                                            DrawerBody(
-                                                onItemClick = { item ->
-                                                    when (item.id) {
-                                                        TRACKER_HOME -> {
-                                                            scope.launch {
-                                                                drawerState.close()
-                                                            }
-                                                        }
-
-                                                        SETTING -> {
-                                                            scope.launch {
-                                                                drawerState.close()
-                                                            }
-                                                            navController.navigate(Route.Setting.route)
-
-                                                        }
-
-                                                        PRIVACY_POLICY -> {
-//                                                  scope.launch {
-//                                                      drawerState.close()
-//                                                  }
-
-                                                        }
-
-                                                        FEEDBACK -> {
-//                                                  scope.launch {
-//                                                      drawerState.close()
-//                                                  }
-                                                        }
-                                                    }
-
-                                                }
-                                            )
-
-                                        }
-
-                                    },
-                                    drawerState = drawerState
-                                ) {
-                                    TrackerOverViewScreen(
+                            navigation(
+                                startDestination = Route.SignIn.route,
+                                route = Route.GraphAuth.route
+                            ){
+                                composable(Route.SignIn.route) {
+                                    SignInScreen(
                                         snackbarHostState = snackbarHostState,
-                                        onMenuItemClick = {
-                                            scope.launch {
-                                                if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                                        navigateToSignUp = {
+                                            navController.navigate(Route.SignUp.route)
+                                        },
+                                        navigateToTrackerHome = {
+                                            navController.navigate(Route.GraphTracker.route) {
+                                                popUpTo(Route.GraphAuth.route) {
+                                                    inclusive = true
+                                                }
                                             }
-                                        }
-
+                                        },
+                                        googleSignInClient = googleSignInClient
                                     )
                                 }
+
+                                composable(Route.SignUp.route) {
+                                    SignUpScreen(
+                                        snackbarHostState = snackbarHostState,
+                                        navigateToTrackerHome = {
+                                            navController.navigate(Route.GraphTracker.route) {
+                                                popUpTo(Route.GraphAuth.route) {
+                                                    inclusive = true
+                                                }
+                                            }
+                                        },
+                                        navigateToSignIN = {
+                                            navController.navigateUp()
+                                        },
+                                    )
+                                }
+
                             }
 
-                            composable(Route.Setting.route) {
-                                SettingScreen(
-                                    snackbarHostState = snackbarHostState,
-                                    onNavigateBack = {
-                                        navController.navigateUp()
-                                        scope.launch {
-                                            drawerState.open()
+                            navigation(
+                                startDestination = Route.TrackerHome.route,
+                                route  = Route.GraphTracker.route
+                            ){
+                                composable(Route.TrackerHome.route) {
+                                    ModalNavigationDrawer(
+                                        drawerContent = {
+                                            ModalDrawerSheet {
+                                                DrawerHeader(
+                                                    name = name,
+                                                    imageUri = profileUri.toUri()
+                                                )
+                                                DrawerBody(
+                                                    onItemClick = { item ->
+                                                        when (item.id) {
+                                                            TRACKER_HOME -> {
+                                                                scope.launch {
+                                                                    drawerState.close()
+                                                                }
+                                                            }
 
-                                        }
+                                                            SETTING -> {
+                                                                scope.launch {
+                                                                    drawerState.close()
+                                                                }
+                                                                navController.navigate(Route.Setting.route)
 
-                                    },
-                                    onSignOut = {
-                                        navController.navigate(Route.SignIn.route)
-                                    },
-                                    openAppSettings = ::openAppSettings
-                                )
+                                                            }
+
+                                                            PRIVACY_POLICY -> {
+//                                                  scope.launch {
+//                                                      drawerState.close()
+//                                                  }
+
+                                                            }
+
+                                                            FEEDBACK -> {
+//                                                  scope.launch {
+//                                                      drawerState.close()
+//                                                  }
+                                                            }
+                                                        }
+
+                                                    }
+                                                )
+
+                                            }
+
+                                        },
+                                        drawerState = drawerState
+                                    ) {
+                                        TrackerOverViewScreen(
+                                            snackbarHostState = snackbarHostState,
+                                            onMenuItemClick = {
+                                                scope.launch {
+                                                    if (drawerState.isClosed) drawerState.open() else drawerState.close()
+                                                }
+                                            }
+
+                                        )
+                                    }
+                                }
+
+                                composable(Route.Setting.route) {
+                                    SettingScreen(
+                                        snackbarHostState = snackbarHostState,
+                                        onNavigateBack = {
+                                            navController.navigateUp()
+                                            scope.launch {
+                                                drawerState.open()
+
+                                            }
+
+                                        },
+                                        onSignOut = {
+                                            navController.navigate(Route.GraphAuth.route){
+                                                popUpTo(Route.GraphTracker.route){
+                                                    inclusive = true
+                                                }
+                                            }
+                                        },
+                                        openAppSettings = ::openAppSettings
+                                    )
+                                }
                             }
 
                         }

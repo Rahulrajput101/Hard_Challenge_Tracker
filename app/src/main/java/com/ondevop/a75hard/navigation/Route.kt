@@ -10,4 +10,7 @@ sealed class Route(val route: String) {
     object TrackerHome: Route("tracker_home")
 
     object Setting: Route("setting")
+
+    object GraphTracker: Route("graph_tracker")
+    object GraphAuth: Route("graph_auth")
 }
