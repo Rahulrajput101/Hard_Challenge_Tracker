@@ -32,7 +32,6 @@ class HabitAlarmReceiver : BroadcastReceiver() {
     @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(p0: Context?, p1: Intent?) {
         GlobalScope.launch(Dispatchers.Main) {
-
             val shouldShowNotification = withContext(Dispatchers.IO){
                 toShowNotification(LocalDate.now())
             }

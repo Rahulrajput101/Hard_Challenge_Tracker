@@ -27,6 +27,7 @@ androidxDatastore = "1.0.0"
 coilKtCompose = "2.4.0"
 kotlinxSerializationJson = "1.5.1"
 lottieVersion = "6.0.0"
+splashApi = "1.0.1"
 
 
 [libraries]
@@ -41,6 +42,7 @@ compose-ui-material3 = { group = "androidx.compose.material3", name = "material3
 compose-ui-material-icon = {group = "androidx.compose.material", name = "material-icons-extended"}
 
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "androidxNavigationCompose" }
+androidx-core-splashscreen = { group = "androidx.core", name = "core-splashscreen", version.ref ="splashApi"}
 
 dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHiltAndroid" }
 dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHiltAndroid" }

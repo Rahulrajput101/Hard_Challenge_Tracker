@@ -26,7 +26,7 @@ class AndroidHabitAlarmScheduler(
     override fun schedule(habitReminder: HabitReminder): Result<Unit> {
 
 
-        val reminderTime = LocalTime.of(22,0 )
+        val reminderTime = LocalTime.of(22,0)
         var scheduledTime = LocalDateTime.of(LocalDate.now(), reminderTime)
 
         if (scheduledTime.isBefore(LocalDateTime.now())) {
@@ -52,7 +52,6 @@ class AndroidHabitAlarmScheduler(
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
             )
-            Log.d("AHAS", "scheduling")
             return Result.success(Unit)
         } catch (e: Exception) {
             Log.e("AHAS", "Failed to schedule alarm", e)

@@ -82,7 +82,7 @@ fun TrackerOverViewScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(bottom = spacing.spaceSmall)
+            .padding(bottom = spacing.spaceExtraSmall)
     ) {
         item {
 

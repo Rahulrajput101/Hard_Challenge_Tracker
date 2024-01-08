@@ -105,7 +105,7 @@ dependencies {
 
     implementation(libs.firebase.auth.ktx)
     implementation(libs.google.auth)
-    implementation("com.google.accompanist:accompanist-systemuicontroller:0.23.0")
+    implementation(libs.androidx.core.splashscreen)
 
 
 }

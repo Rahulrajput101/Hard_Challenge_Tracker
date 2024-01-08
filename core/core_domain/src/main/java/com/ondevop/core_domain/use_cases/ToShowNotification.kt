@@ -34,7 +34,7 @@ class ToShowNotification @Inject constructor(
                     trackedChallenge?.let {
                         !it.read || it.waterIntake != DEFAULT_WATER_GOAL ||
                                 it.workedOut != DEFAULT_WORKOUT_GOAL ||  it.imageUri.isNullOrBlank()
-                    } ?: false
+                    } ?: true
                 }
                 .first()  && notificationPermission // Show notification only if permission is granted
         } catch (e: Exception) {

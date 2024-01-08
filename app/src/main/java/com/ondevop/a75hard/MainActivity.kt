@@ -6,10 +6,10 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
@@ -22,24 +22,18 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
-import androidx.core.view.WindowCompat
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.ondevop.a75hard.navigation.Route
 import com.ondevop.a75hard.ui.presentation.component.DrawerBody
@@ -59,12 +53,10 @@ import com.ondevop.onboarding_presentation.welcome.WelcomeScreen
 import com.ondevop.settings_presentation.settings.SettingScreen
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewScreen
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.time.LocalDate
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -82,19 +74,33 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var toShowNotification: ToShowNotification
 
-
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         lifecycleScope.launch {
 
+            val splash = installSplashScreen()
+            splash.setKeepOnScreenCondition { true }
+            async {
+                delay(1000)
+                splash.setKeepOnScreenCondition { false }
+            }
 
-            val isOnboardingCompleted = preferences.getIsOnboardingCompleted().first()
-            val isLoggedIn = preferences.getLoggedInfo().first()
-            val isAlarmScheduled = preferences.getAlarmScheduled().first()
+            val isAlarmScheduledDeferred = async { preferences.getAlarmScheduled().first() }
+            val isOnboardingCompletedDeferred =
+                async { preferences.getIsOnboardingCompleted().first() }
+            val isLoggedInDeferred = async { preferences.getLoggedInfo().first() }
+
+            // Wait for the results
+            val isAlarmScheduled = isAlarmScheduledDeferred.await()
+            val isOnboardingCompleted = isOnboardingCompletedDeferred.await()
+            val isLoggedIn = isLoggedInDeferred.await()
+
             if (!isAlarmScheduled) {
                 schedulingHabitAlarm()
             }
+
 
             setContent {
                 _75HardTheme {
@@ -107,8 +113,6 @@ class MainActivity : ComponentActivity() {
                     val profileUri by preferences.getProfileUri().collectAsState(initial = "")
                     val name by preferences.getUserName().collectAsState(initial = "")
 
-                    val currentBackStackEntry by rememberUpdatedState(newValue = navController.currentBackStackEntry)
-
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
                         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
@@ -119,9 +123,9 @@ class MainActivity : ComponentActivity() {
                                 .padding(it),
                             navController = navController,
                             startDestination = if (!isOnboardingCompleted) {
-                                if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.S){
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                     Route.NotificationAllow.route
-                                }else{
+                                } else {
                                     Route.SignIn.route
                                 }
                             } else if (!isLoggedIn) {
@@ -131,36 +135,9 @@ class MainActivity : ComponentActivity() {
                             }
                         ) {
                             composable(Route.Welcome.route) {
-                                var clearFlags = remember{
-                                    mutableStateOf(true)
-                                }
-
-                                DisposableEffect(clearFlags.value) {
-                                    if (clearFlags.value) {
-                                        // Clear the FLAG_LAYOUT_NO_LIMITS flag when entering the WelcomeScreen
-                                        window.setFlags(
-                                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-                                            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-                                        )
-                                    }
-
-                                    onDispose {
-
-                                        // Set the FLAG_LAYOUT_NO_LIMITS flag when leaving the WelcomeScreen
-                                        window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-                                    }
-                                }
-//                                window.setFlags(
-//                                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
-//                                    WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
-//                                )
-
 
                                 WelcomeScreen {
-                                   // window.clearFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS)
-                                    clearFlags.value = false
                                     navController.navigate(Route.NotificationAllow.route)
-
                                 }
                             }
 
