@@ -1,16 +1,15 @@
 package com.ondevop.a75hard
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.util.Log
-import android.view.WindowManager
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
@@ -20,21 +19,17 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -126,7 +121,7 @@ class MainActivity : ComponentActivity() {
                                 .padding(it),
                             navController = navController,
                             startDestination = if (!isOnboardingCompleted) {
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                     Route.NotificationAllow.route
                                 } else {
                                     Route.GraphAuth.route
@@ -165,7 +160,7 @@ class MainActivity : ComponentActivity() {
                             navigation(
                                 startDestination = Route.SignIn.route,
                                 route = Route.GraphAuth.route
-                            ){
+                            ) {
                                 composable(Route.SignIn.route) {
                                     SignInScreen(
                                         snackbarHostState = snackbarHostState,
@@ -203,8 +198,8 @@ class MainActivity : ComponentActivity() {
 
                             navigation(
                                 startDestination = Route.TrackerHome.route,
-                                route  = Route.GraphTracker.route
-                            ){
+                                route = Route.GraphTracker.route
+                            ) {
                                 composable(Route.TrackerHome.route) {
                                     ModalNavigationDrawer(
                                         drawerContent = {
@@ -231,16 +226,42 @@ class MainActivity : ComponentActivity() {
                                                             }
 
                                                             PRIVACY_POLICY -> {
-//                                                  scope.launch {
-//                                                      drawerState.close()
-//                                                  }
+                                                                scope.launch {
+                                                                    drawerState.close()
+                                                                }
+                                                                try {
+                                                                    val openurl =
+                                                                        Intent(Intent.ACTION_VIEW)
+                                                                    openurl.data = Uri.parse("https://www.freeprivacypolicy.com/live/dc396031-6b14-45f8-bec2-e03a64b5f720")
+                                                                    startActivity(openurl)
+                                                                } catch (e: ActivityNotFoundException) {
+                                                                    Toast.makeText(
+                                                                        this@MainActivity,
+                                                                        "Unable to open Url",
+                                                                        Toast.LENGTH_SHORT
+                                                                    ).show()
+                                                                }
 
                                                             }
 
                                                             FEEDBACK -> {
-//                                                  scope.launch {
-//                                                      drawerState.close()
-//                                                  }
+                                                                scope.launch {
+                                                                    drawerState.close()
+                                                                }
+                                                                try {
+                                                                    val intent =
+                                                                        Intent(Intent.ACTION_SENDTO).apply {
+                                                                            data =
+                                                                                Uri.parse("mailto:") // only email apps should handle this
+                                                                            putExtra(
+                                                                                Intent.EXTRA_EMAIL,
+                                                                                arrayOf("rahulsingh4959199@gmail.com")
+                                                                            )
+                                                                        }
+                                                                    startActivity(intent)
+                                                                } catch (e: Exception) {
+                                                                    e.printStackTrace()
+                                                                }
                                                             }
                                                         }
 
@@ -276,8 +297,8 @@ class MainActivity : ComponentActivity() {
 
                                         },
                                         onSignOut = {
-                                            navController.navigate(Route.GraphAuth.route){
-                                                popUpTo(Route.GraphTracker.route){
+                                            navController.navigate(Route.GraphAuth.route) {
+                                                popUpTo(Route.GraphTracker.route) {
                                                     inclusive = true
                                                 }
                                             }
@@ -307,19 +328,6 @@ private fun Activity.openAppSettings() {
     ).also(::startActivity)
 }
 
+private fun sendEmail() {
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    _75HardTheme {
-        Greeting("Android")
-    }
 }

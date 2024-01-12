@@ -179,9 +179,6 @@ fun SignInScreen(
                     modifier = Modifier
                         .size(250.dp) // Adjust the height as needed
                         .fillMaxWidth()
-                        .clickable {
-                            navigateToTrackerHome()
-                        }
                 )
             }
 
@@ -259,7 +256,7 @@ fun SignInScreen(
                     text = stringResource(id = R.string.sign_up),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Blue,
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable {
                         navigateToSignUp()
                     }

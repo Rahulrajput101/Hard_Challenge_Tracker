@@ -1,7 +1,9 @@
 package com.ondevop.settings_presentation.settings
 
 import android.Manifest
+import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -17,8 +19,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -37,9 +41,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -120,7 +127,9 @@ fun SettingScreen(
             .padding(vertical = 4.dp)
     ) {
         LazyColumn(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 16.dp)
         ) {
             item {
                 Row(
@@ -233,8 +242,65 @@ fun SettingScreen(
                     )
 
                 }
+
             }
 
+        }
+
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp) // Add some additional padding at the bottom
+                .align(Alignment.BottomCenter),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = Icons.Default.Delete,
+                tint = MaterialTheme.colorScheme.error,
+                contentDescription = stringResource(id = R.string.back),
+            )
+
+            Spacer(modifier = Modifier.width(spacing.spaceExtraSmall))
+            ClickableText(
+                text = buildAnnotatedString {
+                    withStyle(
+                        style = SpanStyle(
+                            color = MaterialTheme.colorScheme.error,
+                            fontSize = 16.sp,
+                            fontFamily = FontFamily(
+                                Font(
+                                    R.font.rubik_light,
+                                    FontWeight.Normal
+                                )
+                            ),
+                        )
+                    ) {
+                        append(stringResource(id = R.string.delete_my_account))
+                    }
+                },
+                onClick = {
+                    try {
+                        val intent =
+                            Intent(Intent.ACTION_SENDTO).apply {
+                                data =
+                                    Uri.parse("mailto:") // only email apps should handle this
+                                putExtra(
+                                    Intent.EXTRA_EMAIL,
+                                    arrayOf("rahulsingh4959199@gmail.com")
+                                )
+                                putExtra(Intent.EXTRA_SUBJECT, "Account Removal Request")
+                                putExtra(
+                                    Intent.EXTRA_TEXT,
+                                    "Please delete my account. Thanks."
+                                )
+                            }
+                        context.startActivity(intent)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                },
+            )
         }
 
 

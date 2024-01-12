@@ -35,7 +35,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -106,6 +106,8 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.google.auth)
     implementation(libs.androidx.core.splashscreen)
+
+   implementation(libs.google.play.integrity)
 
 
 }

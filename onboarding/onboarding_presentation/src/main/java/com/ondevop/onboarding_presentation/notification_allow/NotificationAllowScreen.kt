@@ -28,6 +28,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -148,9 +149,11 @@ fun NotificationAllowScreen(
                     Image(
                         painter = painterResource(id = R.drawable.notification_icon),
                         contentDescription = null,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary),
                         modifier = Modifier
                             .fillMaxWidth()
                             .size(150.dp)
+
                     )
                     Spacer(modifier = Modifier.height(spacing.spaceSmall))
 

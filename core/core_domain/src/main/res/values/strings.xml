@@ -57,5 +57,6 @@
     <string name="notification">NOTIFICATION</string>
     <string name="notification_description"> We need your permission to send you notification to notify about your tasks if it is completed or not. Without this permission we won\'t be able to inform you.</string>
     <string name="log_out">Log Out</string>
+    <string name="delete_my_account">Delete My Account</string>
     <string name="notification_reason">You agree to receive notifications so, that you can meet your daily goals</string>
 </resources>

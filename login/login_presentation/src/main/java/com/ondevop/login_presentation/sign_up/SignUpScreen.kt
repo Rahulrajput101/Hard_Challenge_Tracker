@@ -269,7 +269,7 @@ fun SignUpScreen(
                     text = stringResource(id = R.string.login),
                     style = MaterialTheme.typography.bodySmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = Color.Blue,
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable {
                         navigateToSignIN()
                     }
