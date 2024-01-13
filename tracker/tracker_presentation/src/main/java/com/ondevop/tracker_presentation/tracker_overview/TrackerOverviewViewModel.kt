@@ -12,6 +12,7 @@ import com.ondevop.core_domain.uitl.UiText
 import com.ondevop.core_domain.use_cases.SaveImage
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,6 +23,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -39,33 +41,27 @@ class TrackerOverviewViewModel @Inject constructor(
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
-     val totalDays = trackerUseCases.getAllTrackedChallenge().map {
-         it.size
-     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
+    private var trackedChallengeJob: Job? = null
 
-    val challengeGoal = preferences.getGoal().stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Constant.Default_DAYS_GOAL)
+    val totalDays = trackerUseCases.getAllTrackedChallenge().map {
+        it.size
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
 
-    val tackedChallengeData = trackerUseCases.getTrackedDataForDate(LocalDate.now())
-        .onEach { trackedChallenge ->
-            trackedChallenge?.let {
-                _state.value = _state.value.copy(
-                    id = trackedChallenge.id,
-                    waterIntake = trackedChallenge.waterIntake,
-                    imageUri = trackedChallenge.imageUri,
-                    workedOut = trackedChallenge.workedOut,
-                    read = trackedChallenge.read,
-                    localDate = trackedChallenge.date
-                )
-            }
-        }.launchIn(viewModelScope)
+    val challengeGoal = preferences.getGoal()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Constant.Default_DAYS_GOAL)
 
+    init {
+        fetchTrackedChallengeData()
+    }
 
     fun onEvent(event: TrackerOverviewEvent) {
         when (event) {
             TrackerOverviewEvent.OnDrinkClick -> {
-                _state.value = _state.value.copy(
-                    waterIntake = state.value.waterIntake.plus(1)
-                )
+                _state.update {
+                    it.copy(
+                        waterIntake = state.value.waterIntake.plus(1)
+                    )
+                }
                 updateTrackedData()
             }
 
@@ -75,17 +71,38 @@ class TrackerOverviewViewModel @Inject constructor(
             }
 
             is TrackerOverviewEvent.OnReadClick -> {
-                _state.value = _state.value.copy(
-                    read = event.read
-                )
+                _state.update {
+                    it.copy(
+                        read = event.read
+                    )
+                }
                 updateTrackedData()
             }
 
             TrackerOverviewEvent.OnWorkoutClick -> {
-                _state.value = _state.value.copy(
-                    workedOut = _state.value.workedOut.plus(1)
-                )
+                _state.update {
+                    it.copy(
+                        workedOut = _state.value.workedOut.plus(1)
+                    )
+                }
                 updateTrackedData()
+
+            }
+
+            TrackerOverviewEvent.OnNextDayClick -> {
+                _state.update {
+                    it.copy(
+                        localDate = state.value.localDate.plusDays(1)
+                    )
+                }
+            }
+
+            TrackerOverviewEvent.OnPreviousDayClick -> {
+                _state.update {
+                    it.copy(
+                        localDate = state.value.localDate.minusDays(1)
+                    )
+                }
             }
         }
     }
@@ -108,10 +125,13 @@ class TrackerOverviewViewModel @Inject constructor(
     private fun saveImageInInternalStorage(uri: Uri?) {
         viewModelScope.launch {
             saveImage(uri)
-                .onSuccess {
-                    _state.value = _state.value.copy(
-                        imageUri = it
-                    )
+                .onSuccess { imageUri ->
+                    _state.update {
+                        it.copy(
+                            imageUri = imageUri
+                        )
+                    }
+
                     updateTrackedData()
                 }
                 .onFailure {
@@ -121,8 +141,8 @@ class TrackerOverviewViewModel @Inject constructor(
 
     }
 
-    fun onDialogEvent(event: CompleteDialogEvent){
-        when(event){
+    fun onDialogEvent(event: CompleteDialogEvent) {
+        when (event) {
             CompleteDialogEvent.OnMoveForward -> {
                 viewModelScope.launch {
                     preferences.apply {
@@ -131,6 +151,7 @@ class TrackerOverviewViewModel @Inject constructor(
                 }
 
             }
+
             CompleteDialogEvent.OnRestart -> {
                 viewModelScope.launch {
                     val saveGoalDeferred = async {
@@ -147,6 +168,25 @@ class TrackerOverviewViewModel @Inject constructor(
             }
         }
 
+    }
+
+    fun fetchTrackedChallengeData() {
+        trackedChallengeJob?.cancel()
+        trackerUseCases.getTrackedDataForDate(LocalDate.now())
+            .onEach { trackedChallenge ->
+                trackedChallenge?.let { innerTrackedChallenge ->
+                    _state.update {
+                        it.copy(
+                            id = innerTrackedChallenge.id,
+                            waterIntake = innerTrackedChallenge.waterIntake,
+                            imageUri = innerTrackedChallenge.imageUri,
+                            workedOut = innerTrackedChallenge.workedOut,
+                            read = innerTrackedChallenge.read,
+                            localDate = innerTrackedChallenge.date
+                        )
+                    }
+                }
+            }.launchIn(viewModelScope)
     }
 
 }
