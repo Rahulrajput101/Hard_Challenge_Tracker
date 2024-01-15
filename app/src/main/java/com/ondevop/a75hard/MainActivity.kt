@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -96,6 +97,7 @@ class MainActivity : ComponentActivity() {
             val isLoggedIn = isLoggedInDeferred.await()
 
             if (!isAlarmScheduled) {
+                Log.d("Tag","alarm scheduled  $isAlarmScheduled")
                 schedulingHabitAlarm()
             }
 

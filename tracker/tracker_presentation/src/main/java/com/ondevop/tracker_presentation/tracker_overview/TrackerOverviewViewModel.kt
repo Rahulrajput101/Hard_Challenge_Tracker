@@ -18,6 +18,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -95,13 +96,22 @@ class TrackerOverviewViewModel @Inject constructor(
                         localDate = state.value.localDate.plusDays(1)
                     )
                 }
+                fetchTrackedChallengeData()
             }
 
             TrackerOverviewEvent.OnPreviousDayClick -> {
-                _state.update {
-                    it.copy(
-                        localDate = state.value.localDate.minusDays(1)
-                    )
+                viewModelScope.launch {
+                    val range = totalDays.first()
+                      trackerUseCases.checkTheDateIsInRange(range,state.value.localDate).onSuccess {
+                          _state.update {
+                              it.copy(
+                                  localDate = state.value.localDate.minusDays(1)
+                              )
+                          }
+                          fetchTrackedChallengeData()
+                      }.onFailure {
+                          _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
+                      }
                 }
             }
         }
@@ -170,9 +180,9 @@ class TrackerOverviewViewModel @Inject constructor(
 
     }
 
-    fun fetchTrackedChallengeData() {
+    private fun fetchTrackedChallengeData() {
         trackedChallengeJob?.cancel()
-        trackerUseCases.getTrackedDataForDate(LocalDate.now())
+        trackerUseCases.getTrackedDataForDate(state.value.localDate)
             .onEach { trackedChallenge ->
                 trackedChallenge?.let { innerTrackedChallenge ->
                     _state.update {

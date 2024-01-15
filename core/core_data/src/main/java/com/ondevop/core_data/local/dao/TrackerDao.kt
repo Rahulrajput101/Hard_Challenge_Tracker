@@ -22,6 +22,9 @@ interface TrackerDao {
     @Query("select * from TrackedChallengeEntity order by date desc")
     fun getAllTrackedChallenge() : Flow<List<TrackedChallengeEntity>>
 
+    @Query("select count(*) from TrackedChallengeEntity")
+    fun getTrackedChallengeCount() : Flow<Int>
+
     @Query("delete from TrackedChallengeEntity")
     suspend fun clear()
 }

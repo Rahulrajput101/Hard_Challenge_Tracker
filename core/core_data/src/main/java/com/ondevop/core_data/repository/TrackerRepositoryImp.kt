@@ -32,6 +32,10 @@ class TrackerRepositoryImp(
         }
     }
 
+    override fun getTrackedChallengeCount(): Flow<Int> {
+        return trackerDao.getTrackedChallengeCount()
+    }
+
     override suspend fun clearAllTrackedChallenge() {
         return trackerDao.clear()
     }

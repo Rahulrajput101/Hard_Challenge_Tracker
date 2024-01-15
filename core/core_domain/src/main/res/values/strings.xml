@@ -59,4 +59,8 @@
     <string name="log_out">Log Out</string>
     <string name="delete_my_account">Delete My Account</string>
     <string name="notification_reason">You agree to receive notifications so, that you can meet your daily goals</string>
+
+    <string name="today">Today</string>
+    <string name="previous_day">Previous day</string>
+    <string name="next_day">Next day</string>
 </resources>

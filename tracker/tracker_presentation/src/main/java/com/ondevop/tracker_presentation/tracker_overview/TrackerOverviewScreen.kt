@@ -1,6 +1,5 @@
 package com.ondevop.tracker_presentation.tracker_overview
 
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,6 +22,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.tracker_presentation.tracker_overview.component.CompleteDialog
+import com.ondevop.tracker_presentation.tracker_overview.component.DaySelector
 import com.ondevop.tracker_presentation.tracker_overview.component.DietCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.PictureCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.ReadingCardView
@@ -35,7 +35,7 @@ import kotlinx.coroutines.delay
 fun TrackerOverViewScreen(
     snackbarHostState: SnackbarHostState,
     viewModel: TrackerOverviewViewModel = hiltViewModel(),
-    onMenuItemClick: ()->Unit
+    onMenuItemClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val totalDays by viewModel.totalDays.collectAsState()
@@ -57,7 +57,7 @@ fun TrackerOverViewScreen(
         }
     )
 
-    LaunchedEffect(key1 = true){
+    LaunchedEffect(key1 = true) {
         delay(2000)
         if (totalDays >= challengeGoal) {
             shouldShowCompleteDialog = true
@@ -93,6 +93,15 @@ fun TrackerOverViewScreen(
                 onMenuItemClick = onMenuItemClick
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
+            DaySelector(
+                date = state.localDate,
+                onPreviousDayClick = {
+                    viewModel.onEvent(TrackerOverviewEvent.OnPreviousDayClick)
+                },
+                onNextDayClick = {
+                    viewModel.onEvent(TrackerOverviewEvent.OnNextDayClick)
+                }
+            )
             WaterCardView(
                 modifier = Modifier.padding(
                     horizontal = spacing.spaceMedium,
@@ -172,7 +181,7 @@ fun TrackerOverViewScreen(
             CompleteDialog(
                 isDialogShowing = shouldShowCompleteDialog,
                 onRestart = {
-                   viewModel.onDialogEvent(CompleteDialogEvent.OnRestart)
+                    viewModel.onDialogEvent(CompleteDialogEvent.OnRestart)
                     shouldShowCompleteDialog = false
                 },
                 onMoveForward = {
