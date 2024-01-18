@@ -8,7 +8,7 @@ import com.ondevop.tracker_domain.use_cases.GetAllTrackedChallenge
 import com.ondevop.tracker_domain.use_cases.GetTrackedChallengeCount
 import com.ondevop.tracker_domain.use_cases.GetTrackedDataForDate
 import com.ondevop.tracker_domain.use_cases.HasUserLostTheChallenge
-import com.ondevop.tracker_domain.use_cases.IsYesterdayChallengeTracked
+import com.ondevop.tracker_domain.use_cases.IsYesterdayChallengeNotTracked
 import com.ondevop.tracker_domain.use_cases.TrackChallenge
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
 import dagger.Module
@@ -35,7 +35,7 @@ object TrackerDomainModule {
             filterADayChallenge = FilterADayChallenge(),
             clearAllTrackedData = ClearAllTrackedData(repository),
             checkTheDateIsInRange = CheckTheDateIsInRange(),
-            isYesterdayChallengeTracked = IsYesterdayChallengeTracked(repository),
+            isYesterdayChallengeTracked = IsYesterdayChallengeNotTracked(repository),
             hasUserLostTheChallenge = HasUserLostTheChallenge(repository)
         )
     }
