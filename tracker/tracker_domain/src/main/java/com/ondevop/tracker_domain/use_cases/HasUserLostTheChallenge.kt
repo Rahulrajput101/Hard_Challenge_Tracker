@@ -10,16 +10,18 @@ class HasUserLostTheChallenge(
     private val repository: TrackerRepository
 ) {
     /**
-     * Retrieves tracked data for the date two days ago and maps the result to
-     * a Flow of Boolean values.
-     *
-     * @return Flow<Boolean> - True if tracked data is available, false otherwise.
+     * Executes the use case logic. If there is a tracked challenge for the day before yesterday,
+     * it is considered a loss, and all data in the database is cleared.
      */
-    operator fun invoke() : Flow<Boolean> {
-        val ereYesterday = LocalDate.now().minusDays(2)
-        return repository.getTrackedDataForDate(ereYesterday).map { trackedChallenge ->
-            trackedChallenge != null
-        }
+    suspend operator fun invoke() {
+        val dayBeforeYesterday = LocalDate.now().minusDays(2)
 
+             repository.getAllTrackedChallenge().map {challenges ->
+            // Check if the last tracked challenge has the date of the day before yesterday
+            if(challenges.isNotEmpty() && challenges.last().date == dayBeforeYesterday){
+                repository.clearAllTrackedChallenge()
+            }
+
+        }
     }
 }
