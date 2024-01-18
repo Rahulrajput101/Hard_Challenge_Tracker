@@ -26,7 +26,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,6 +46,12 @@ class TrackerOverviewViewModel @Inject constructor(
     val totalDays = trackerUseCases.getAllTrackedChallenge().map {
         it.size
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
+
+    val isYesterdayChallengeTracked = trackerUseCases.isYesterdayChallengeTracked()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
+
+    val hasUserLostTheChallenge = trackerUseCases.hasUserLostTheChallenge()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     val challengeGoal = preferences.getGoal()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Constant.Default_DAYS_GOAL)
@@ -103,16 +108,16 @@ class TrackerOverviewViewModel @Inject constructor(
             TrackerOverviewEvent.OnPreviousDayClick -> {
                 viewModelScope.launch {
                     val range = totalDays.first()
-                      trackerUseCases.checkTheDateIsInRange(range,state.value.localDate).onSuccess {
-                          _state.update {
-                              it.copy(
-                                  localDate = state.value.localDate.minusDays(1)
-                              )
-                          }
-                          fetchTrackedChallengeData()
-                      }.onFailure {
-                          _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
-                      }
+                    trackerUseCases.checkTheDateIsInRange(range, state.value.localDate).onSuccess {
+                        _state.update {
+                            it.copy(
+                                localDate = state.value.localDate.minusDays(1)
+                            )
+                        }
+                        fetchTrackedChallengeData()
+                    }.onFailure {
+                        _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
+                    }
                 }
             }
         }

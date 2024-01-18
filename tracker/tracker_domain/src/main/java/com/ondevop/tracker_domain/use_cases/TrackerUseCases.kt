@@ -9,5 +9,7 @@ data class TrackerUseCases (
     val filterADayChallenge: FilterADayChallenge,
     val clearAllTrackedData: ClearAllTrackedData,
 
-    val checkTheDateIsInRange: CheckTheDateIsInRange
+    val checkTheDateIsInRange: CheckTheDateIsInRange,
+    val isYesterdayChallengeTracked: IsYesterdayChallengeTracked,
+    val hasUserLostTheChallenge: HasUserLostTheChallenge
 )
