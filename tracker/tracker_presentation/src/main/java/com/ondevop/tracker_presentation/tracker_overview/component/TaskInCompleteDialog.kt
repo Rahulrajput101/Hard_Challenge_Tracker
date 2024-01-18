@@ -27,33 +27,20 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.core_domain.R
+import com.ondevop.core_ui.LocalSpacing
 
-
-
-@Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
 @Composable
-fun previewCompleteDialog(){
-  CompleteDialog(
-      isDialogShowing =  true,
-      onRestart = { /*TODO*/ },
-      onMoveForward = { /*TODO*/ }) {
-      
-  }
-}
-@Composable
-fun CompleteDialog(
+fun TaskIncompleteDialog(
     modifier: Modifier = Modifier,
     isDialogShowing: Boolean,
     onRestart: () -> Unit,
-    onMoveForward: () -> Unit,
+    onCompleteNow: () -> Unit,
     onDismiss: () ->Unit
-) {
+){
     val spacing = LocalSpacing.current
     if (isDialogShowing) {
         Dialog(
@@ -69,11 +56,11 @@ fun CompleteDialog(
                 ) {
                     Spacer(modifier = Modifier.height(spacing.spaceSmall))
                     Text(
-                        text = "Hurray!",
+                        text = "Missing!",
                         modifier = Modifier
                             .fillMaxWidth(),
                         textAlign = TextAlign.Center,
-                        color = Color.Green,
+                        color = Color.Red,
                         style = MaterialTheme.typography.headlineMedium,
                         fontFamily = FontFamily(
                             Font(
@@ -88,13 +75,13 @@ fun CompleteDialog(
                     Spacer(modifier = Modifier.height(spacing.spaceMedium))
 
                     Image(
-                        painter = painterResource(id = R.drawable.celebration),
-                        contentDescription = "celebration Image",
+                        painter = painterResource(id = R.drawable.incomplete_task),
+                        contentDescription = "task incomplete image",
 
                         )
                     Spacer(modifier = Modifier.height(spacing.spaceSmall))
                     Text(
-                        text = "You have completed your goal",
+                        text = "You seem to have missed yesterday’s goal.",
                         modifier = Modifier,
                         style = MaterialTheme.typography.bodyMedium,
                         fontFamily = FontFamily(
@@ -133,12 +120,12 @@ fun CompleteDialog(
                                 .clip(RoundedCornerShape(10.dp))
                                 .background(MaterialTheme.colorScheme.primary)
                                 .clickable {
-                                    onMoveForward()
+                                    onCompleteNow()
                                 }
                                 .padding(vertical = 10.dp, horizontal = 18.dp),
                         ) {
                             Text(
-                                text = "Move forward",
+                                text = "Complete now",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
@@ -152,4 +139,5 @@ fun CompleteDialog(
             }
         }
     }
+
 }

@@ -53,6 +53,7 @@ class TrackerOverviewViewModel @Inject constructor(
 
     init {
         fetchTrackedChallengeData()
+
     }
 
     fun onEvent(event: TrackerOverviewEvent) {

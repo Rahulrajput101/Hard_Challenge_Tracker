@@ -14,15 +14,8 @@ class IsYesterdayChallengeTracked (
     private val repository: TrackerRepository
 ) {
 
-    suspend operator fun invoke(yesterdayDate: LocalDate) : Boolean? {
-        return try {
-            repository.getTrackedDataForDate(yesterdayDate)
-                .map { trackedChallenge ->
-                    trackedChallenge != null
-                }
-                .firstOrNull()
-        } catch (e: Exception) {
-            null
-        }
+    suspend operator fun invoke(yesterdayDate: LocalDate) : Flow<Boolean?> {
+            return repository.getTrackedDataForDate(yesterdayDate)
+                .map { it != null }
     }
 }
