@@ -329,7 +329,3 @@ private fun Activity.openAppSettings() {
         Uri.fromParts("package", packageName, null)
     ).also(::startActivity)
 }
-
-private fun sendEmail() {
-
-}

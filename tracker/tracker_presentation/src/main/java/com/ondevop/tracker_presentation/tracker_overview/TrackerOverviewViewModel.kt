@@ -1,6 +1,7 @@
 package com.ondevop.tracker_presentation.tracker_overview
 
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -26,6 +27,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,17 +49,18 @@ class TrackerOverviewViewModel @Inject constructor(
         it.size
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
 
-    val isYesterdayChallengeTracked = trackerUseCases.isYesterdayChallengeTracked()
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), true)
-
-    val hasUserLostTheChallenge = trackerUseCases.hasUserLostTheChallenge()
+    val isYesterdayChallengeNotTracked = trackerUseCases.isYesterdayChallengeNotTracked()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
 
     val challengeGoal = preferences.getGoal()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Constant.Default_DAYS_GOAL)
 
     init {
         fetchTrackedChallengeData()
+        viewModelScope.launch {
+            trackerUseCases.hasUserLostTheChallenge()
+        }
 
     }
 
@@ -186,6 +189,7 @@ class TrackerOverviewViewModel @Inject constructor(
 
     }
 
+
     private fun fetchTrackedChallengeData() {
         trackedChallengeJob?.cancel()
         trackerUseCases.getTrackedDataForDate(state.value.localDate)
@@ -201,7 +205,14 @@ class TrackerOverviewViewModel @Inject constructor(
                             localDate = innerTrackedChallenge.date
                         )
                     }
+                } ?: run {
+                    if (state.value.localDate == LocalDate.now()) {
+                        _state.update {
+                            TrackerOverViewState()
+                        }
+                    }
                 }
+
             }.launchIn(viewModelScope)
     }
 

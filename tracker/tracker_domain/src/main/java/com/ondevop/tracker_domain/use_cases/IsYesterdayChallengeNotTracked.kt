@@ -9,7 +9,11 @@ import java.time.LocalDate
 class IsYesterdayChallengeNotTracked(
     private val repository: TrackerRepository
 ) {
-
+    /**
+     * Checks if there is at least one tracked challenge from yesterday in the repository.
+     *
+     * @return A [Flow] emitting a [Boolean] indicating whether yesterday's challenges are not tracked.
+     */
     operator fun invoke(): Flow<Boolean> {
         return repository.getAllTrackedChallenge().map { challenges ->
             if (challenges.size > 1) {

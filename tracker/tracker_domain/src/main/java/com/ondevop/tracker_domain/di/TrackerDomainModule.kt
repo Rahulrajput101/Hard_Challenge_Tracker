@@ -35,7 +35,7 @@ object TrackerDomainModule {
             filterADayChallenge = FilterADayChallenge(),
             clearAllTrackedData = ClearAllTrackedData(repository),
             checkTheDateIsInRange = CheckTheDateIsInRange(),
-            isYesterdayChallengeTracked = IsYesterdayChallengeNotTracked(repository),
+            isYesterdayChallengeNotTracked = IsYesterdayChallengeNotTracked(repository),
             hasUserLostTheChallenge = HasUserLostTheChallenge(repository)
         )
     }

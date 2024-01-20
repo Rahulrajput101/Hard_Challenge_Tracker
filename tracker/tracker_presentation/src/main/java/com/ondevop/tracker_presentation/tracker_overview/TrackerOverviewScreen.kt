@@ -26,6 +26,7 @@ import com.ondevop.tracker_presentation.tracker_overview.component.DaySelector
 import com.ondevop.tracker_presentation.tracker_overview.component.DietCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.PictureCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.ReadingCardView
+import com.ondevop.tracker_presentation.tracker_overview.component.TaskIncompleteDialog
 import com.ondevop.tracker_presentation.tracker_overview.component.TrackerHeader
 import com.ondevop.tracker_presentation.tracker_overview.component.WaterCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.WorkoutCardView
@@ -40,10 +41,14 @@ fun TrackerOverViewScreen(
     val state by viewModel.state.collectAsState()
     val totalDays by viewModel.totalDays.collectAsState()
     val challengeGoal by viewModel.challengeGoal.collectAsState()
+    val checkingIsYesterdayChallengeNotTracked by viewModel.isYesterdayChallengeNotTracked.collectAsState()
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
     var shouldShowCompleteDialog by remember {
+        mutableStateOf(false)
+    }
+    var shouldShowTaskNotCompleteDialog by remember {
         mutableStateOf(false)
     }
 
@@ -187,6 +192,19 @@ fun TrackerOverViewScreen(
                 onMoveForward = {
                     viewModel.onDialogEvent(CompleteDialogEvent.OnMoveForward)
                     shouldShowCompleteDialog = false
+                },
+                onDismiss = {
+                    shouldShowCompleteDialog = false
+                }
+            )
+
+            TaskIncompleteDialog(
+                isDialogShowing = shouldShowTaskNotCompleteDialog,
+                onRestart = {
+                    viewModel.onDialogEvent(CompleteDialogEvent.OnRestart)
+                },
+                onCompleteNow = {
+                    viewModel.onEvent(TrackerOverviewEvent.OnPreviousDayClick)
                 },
                 onDismiss = {
                     shouldShowCompleteDialog = false
