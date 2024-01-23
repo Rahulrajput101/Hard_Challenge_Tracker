@@ -1,4 +1,5 @@
 package com.ondevop.tracker_presentation.tracker_overview.component
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,6 +28,7 @@ fun DaySelector(
     date: LocalDate,
     onPreviousDayClick: () -> Unit,
     onNextDayClick: () -> Unit,
+    selectedDayIsFirstDay: Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -38,7 +40,12 @@ fun DaySelector(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        IconButton(onClick = onPreviousDayClick) {
+        IconButton(
+            onClick = onPreviousDayClick,
+            enabled = !selectedDayIsFirstDay,
+            modifier = Modifier
+                .alpha(if (selectedDayIsFirstDay) 0.5f else 1f)
+        ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
                 contentDescription = stringResource(id = R.string.previous_day)

@@ -11,5 +11,6 @@ data class TrackerUseCases (
 
     val checkTheDateIsInRange: CheckTheDateIsInRange,
     val isYesterdayChallengeNotTracked: IsYesterdayChallengeNotTracked,
-    val hasUserLostTheChallenge: HasUserLostTheChallenge
+    val hasUserLostTheChallenge: HasUserLostTheChallenge,
+    val checkUserEnteredAnyData: CheckUserEnteredAnyData
 )

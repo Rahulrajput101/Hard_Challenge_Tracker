@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 import com.ondevop.core_domain.MyNotification
 import com.ondevop.core_domain.MyNotificationManager
 import com.ondevop.core_domain.use_cases.SchedulingHabitAlarm
@@ -36,7 +37,7 @@ class HabitAlarmReceiver : BroadcastReceiver() {
             val shouldShowNotification = withContext(Dispatchers.IO){
                 toShowNotification(LocalDate.now())
             }
-
+            Log.d("Tag","alarm scheduled  $shouldShowNotification")
             if(shouldShowNotification){
                 myNotificationManager.notify(MyNotification.HabitNotification)
             }

@@ -41,7 +41,8 @@ fun TrackerOverViewScreen(
     val state by viewModel.state.collectAsState()
     val totalDays by viewModel.totalDays.collectAsState()
     val challengeGoal by viewModel.challengeGoal.collectAsState()
-    val checkingIsYesterdayChallengeNotTracked by viewModel.isYesterdayChallengeNotTracked.collectAsState()
+    val isYesterdayChallengeDataMissing by viewModel.isYesterdayChallengeDataMissing.collectAsState()
+    val selectedDayIsFirstDay by viewModel.selectedDayIsFirstDay.collectAsState()
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
@@ -58,7 +59,6 @@ fun TrackerOverViewScreen(
             uri?.let {
                 viewModel.onEvent(TrackerOverviewEvent.OnPhotoClick(it.toString()))
             }
-
         }
     )
 
@@ -66,6 +66,9 @@ fun TrackerOverViewScreen(
         delay(2000)
         if (totalDays >= challengeGoal) {
             shouldShowCompleteDialog = true
+        }
+        if(isYesterdayChallengeDataMissing){
+            shouldShowTaskNotCompleteDialog = true
         }
     }
 
@@ -77,7 +80,6 @@ fun TrackerOverViewScreen(
                     snackbarHostState.currentSnackbarData?.dismiss()
                     snackbarHostState.showSnackbar(event.message.asString(context))
                 }
-
                 else -> Unit
             }
         }
@@ -105,7 +107,8 @@ fun TrackerOverViewScreen(
                 },
                 onNextDayClick = {
                     viewModel.onEvent(TrackerOverviewEvent.OnNextDayClick)
-                }
+                },
+                selectedDayIsFirstDay = if(totalDays ==1) true else selectedDayIsFirstDay
             )
             WaterCardView(
                 modifier = Modifier.padding(
@@ -210,15 +213,7 @@ fun TrackerOverViewScreen(
                     shouldShowCompleteDialog = false
                 }
             )
-
-
-
-
         }
-
-
     }
-
-
 }
 

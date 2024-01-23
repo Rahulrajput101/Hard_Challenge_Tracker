@@ -2,6 +2,7 @@ package com.ondevop.tracker_domain.di
 
 import com.ondevop.core_domain.repository.TrackerRepository
 import com.ondevop.tracker_domain.use_cases.CheckTheDateIsInRange
+import com.ondevop.tracker_domain.use_cases.CheckUserEnteredAnyData
 import com.ondevop.tracker_domain.use_cases.ClearAllTrackedData
 import com.ondevop.tracker_domain.use_cases.FilterADayChallenge
 import com.ondevop.tracker_domain.use_cases.GetAllTrackedChallenge
@@ -36,7 +37,8 @@ object TrackerDomainModule {
             clearAllTrackedData = ClearAllTrackedData(repository),
             checkTheDateIsInRange = CheckTheDateIsInRange(),
             isYesterdayChallengeNotTracked = IsYesterdayChallengeNotTracked(repository),
-            hasUserLostTheChallenge = HasUserLostTheChallenge(repository)
+            hasUserLostTheChallenge = HasUserLostTheChallenge(repository),
+            checkUserEnteredAnyData = CheckUserEnteredAnyData(repository)
         )
     }
 }

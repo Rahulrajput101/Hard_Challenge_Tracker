@@ -15,7 +15,7 @@ class IsYesterdayChallengeNotTracked(
      * @return A [Flow] emitting a [Boolean] indicating whether yesterday's challenges are not tracked.
      */
     operator fun invoke(): Flow<Boolean> {
-        return repository.getAllTrackedChallenge().map { challenges ->
+        return  repository.getAllTrackedChallenge().map { challenges ->
             if (challenges.size > 1) {
                 challenges.none { it.date == LocalDate.now().minusDays(1) }
             } else {
