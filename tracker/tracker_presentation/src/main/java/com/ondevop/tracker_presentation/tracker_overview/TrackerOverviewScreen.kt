@@ -1,5 +1,6 @@
 package com.ondevop.tracker_presentation.tracker_overview
 
+import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -46,9 +47,11 @@ fun TrackerOverViewScreen(
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
+
     var shouldShowCompleteDialog by remember {
         mutableStateOf(false)
     }
+
     var shouldShowTaskNotCompleteDialog by remember {
         mutableStateOf(false)
     }
@@ -108,7 +111,7 @@ fun TrackerOverViewScreen(
                 onNextDayClick = {
                     viewModel.onEvent(TrackerOverviewEvent.OnNextDayClick)
                 },
-                selectedDayIsFirstDay = if(totalDays ==1) true else selectedDayIsFirstDay
+                selectedDayIsFirstDay = if(totalDays <=1) true else selectedDayIsFirstDay
             )
             WaterCardView(
                 modifier = Modifier.padding(
@@ -205,12 +208,14 @@ fun TrackerOverViewScreen(
                 isDialogShowing = shouldShowTaskNotCompleteDialog,
                 onRestart = {
                     viewModel.onDialogEvent(CompleteDialogEvent.OnRestart)
+                    shouldShowTaskNotCompleteDialog = false
                 },
                 onCompleteNow = {
-                    viewModel.onEvent(TrackerOverviewEvent.OnPreviousDayClick)
+                    viewModel.onDialogEvent(CompleteDialogEvent.OnCompleteNow)
+                    shouldShowTaskNotCompleteDialog = false
                 },
                 onDismiss = {
-                    shouldShowCompleteDialog = false
+                    shouldShowTaskNotCompleteDialog = false
                 }
             )
         }

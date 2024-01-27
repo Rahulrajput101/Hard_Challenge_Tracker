@@ -111,7 +111,7 @@ fun TaskIncompleteDialog(
                                 text = "Restart",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimary,
                             )
                         }
 
@@ -128,7 +128,7 @@ fun TaskIncompleteDialog(
                                 text = "Complete now",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimary,
                             )
                         }
 

@@ -68,7 +68,6 @@ fun SignInScreen(
     googleSignInClient: GoogleSignInClient
 ) {
 
-
     val spacing = LocalSpacing.current
     val context = LocalContext.current
     val state by viewModel.state.collectAsState()

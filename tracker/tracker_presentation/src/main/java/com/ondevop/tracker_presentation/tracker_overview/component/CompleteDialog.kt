@@ -124,7 +124,7 @@ fun CompleteDialog(
                                 text = "Restart",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimary,
                             )
                         }
 
@@ -141,7 +141,7 @@ fun CompleteDialog(
                                 text = "Move forward",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimary,
                             )
                         }
 

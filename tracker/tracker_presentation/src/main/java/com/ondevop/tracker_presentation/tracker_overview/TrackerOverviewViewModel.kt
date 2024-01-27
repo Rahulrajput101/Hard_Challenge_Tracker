@@ -12,7 +12,6 @@ import com.ondevop.core_domain.uitl.UiText
 import com.ondevop.core_domain.use_cases.SaveImage
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -28,7 +27,6 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -43,7 +41,7 @@ class TrackerOverviewViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     private val _selectedDayIsFirstDay = MutableStateFlow(false)
-    val selectedDayIsFirstDay= _selectedDayIsFirstDay.asStateFlow()
+    val selectedDayIsFirstDay = _selectedDayIsFirstDay.asStateFlow()
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -54,27 +52,28 @@ class TrackerOverviewViewModel @Inject constructor(
         it.size
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), 0)
 
-    val isYesterdayChallengeNotTracked = trackerUseCases.isYesterdayChallengeNotTracked()
+    private val isYesterdayChallengeNotTracked = trackerUseCases.isYesterdayChallengeNotTracked()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
-    val checkUserEnteredAnyData = trackerUseCases.checkUserEnteredAnyData()
+    private val checkUserEnteredAnyData = trackerUseCases.checkUserEnteredAnyData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
 
     val challengeGoal = preferences.getGoal()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Constant.Default_DAYS_GOAL)
 
-    val isYesterdayChallengeDataMissing = combine(isYesterdayChallengeNotTracked, checkUserEnteredAnyData){ noTrackedDataOfYesterday,isUserEnteredData ->
-         noTrackedDataOfYesterday || !isUserEnteredData
-    } .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
-
+    val isYesterdayChallengeDataMissing = combine(
+        isYesterdayChallengeNotTracked,
+        checkUserEnteredAnyData
+    ) { noTrackedDataOfYesterday, isUserEnteredData ->
+        noTrackedDataOfYesterday || !isUserEnteredData
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     init {
         fetchTrackedChallengeData()
         viewModelScope.launch {
             trackerUseCases.hasUserLostTheChallenge()
         }
-
     }
 
     fun onEvent(event: TrackerOverviewEvent) {
@@ -89,7 +88,6 @@ class TrackerOverviewViewModel @Inject constructor(
             }
 
             is TrackerOverviewEvent.OnPhotoClick -> {
-
                 saveImageInInternalStorage(event.imageUri.toUri())
             }
 
@@ -109,7 +107,6 @@ class TrackerOverviewViewModel @Inject constructor(
                     )
                 }
                 updateTrackedData()
-
             }
 
             TrackerOverviewEvent.OnNextDayClick -> {
@@ -199,6 +196,20 @@ class TrackerOverviewViewModel @Inject constructor(
                     saveGoalDeferred.await()
                     clearTrackedDataDeferred.await()
                 }
+            }
+
+            CompleteDialogEvent.OnCompleteNow -> {
+                _state.update {
+                    it.copy(
+                        id = null,
+                        waterIntake = 0,
+                        imageUri = null,
+                        workedOut = 0,
+                        read = false,
+                        localDate = LocalDate.now().minusDays(1)
+                    )
+                }
+                updateTrackedData()
             }
         }
 
