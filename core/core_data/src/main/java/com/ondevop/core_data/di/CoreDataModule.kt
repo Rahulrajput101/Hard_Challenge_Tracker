@@ -29,7 +29,6 @@ object CoreDataModule {
     }
 
 
-
     @Provides
     @Singleton
     fun provideMyNotificationManager(app: Application): MyNotificationManager {
@@ -42,7 +41,6 @@ object CoreDataModule {
     ) : HabitAlarmScheduler {
         return AndroidHabitAlarmScheduler(app)
     }
-
 
 
     @Provides

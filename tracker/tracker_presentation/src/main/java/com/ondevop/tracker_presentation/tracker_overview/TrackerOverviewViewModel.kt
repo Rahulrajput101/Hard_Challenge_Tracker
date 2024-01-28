@@ -130,8 +130,10 @@ class TrackerOverviewViewModel @Inject constructor(
                         }
                         fetchTrackedChallengeData()
                     }.onFailure {
-                        _selectedDayIsFirstDay.update { true }
-                        _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
+                        if (it is IllegalArgumentException){
+                            _selectedDayIsFirstDay.update { true }
+                            _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
+                        }
                     }
                 }
             }
@@ -169,7 +171,6 @@ class TrackerOverviewViewModel @Inject constructor(
                     _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
                 }
         }
-
     }
 
     fun onDialogEvent(event: CompleteDialogEvent) {
@@ -180,7 +181,6 @@ class TrackerOverviewViewModel @Inject constructor(
                         saveGoal(challengeGoal.value.plus(76))
                     }
                 }
-
             }
 
             CompleteDialogEvent.OnRestart -> {

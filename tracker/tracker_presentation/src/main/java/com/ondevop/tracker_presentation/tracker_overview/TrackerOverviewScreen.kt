@@ -47,7 +47,6 @@ fun TrackerOverViewScreen(
     val spacing = LocalSpacing.current
     val context = LocalContext.current
 
-
     var shouldShowCompleteDialog by remember {
         mutableStateOf(false)
     }
@@ -187,7 +186,6 @@ fun TrackerOverViewScreen(
 
                 }
             )
-
 
             CompleteDialog(
                 isDialogShowing = shouldShowCompleteDialog,

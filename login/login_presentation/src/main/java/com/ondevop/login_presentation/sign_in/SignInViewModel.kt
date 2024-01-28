@@ -26,8 +26,6 @@ class SignInViewModel @Inject constructor(
     val validateEmail: ValidateEmail,
     val validatePassword: ValidatePassword,
     private val preferences: Preferences,
-    private val googleSignInClient: GoogleSignInClient,
-    private val isSignedIn: IsSignedIn,
     private val signInWithGoogle: SignInWithGoogle,
 ) : ViewModel() {
 
