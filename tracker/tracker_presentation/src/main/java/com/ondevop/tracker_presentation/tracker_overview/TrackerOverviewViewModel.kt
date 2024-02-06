@@ -1,6 +1,7 @@
 package com.ondevop.tracker_presentation.tracker_overview
 
 import android.net.Uri
+import android.util.Log
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,9 @@ import com.ondevop.core_domain.uitl.Constant
 import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.core_domain.uitl.UiText
 import com.ondevop.core_domain.use_cases.SaveImage
+import com.ondevop.tracker_domain.use_cases.CannotNavigateException
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
+import com.ondevop.tracker_presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -72,7 +75,7 @@ class TrackerOverviewViewModel @Inject constructor(
     init {
         fetchTrackedChallengeData()
         viewModelScope.launch {
-            trackerUseCases.hasUserLostTheChallenge()
+             trackerUseCases.hasUserLostTheChallenge()
         }
     }
 
@@ -130,8 +133,10 @@ class TrackerOverviewViewModel @Inject constructor(
                         }
                         fetchTrackedChallengeData()
                     }.onFailure {
-                        if (it is IllegalArgumentException){
+                        if (it is CannotNavigateException){
                             _selectedDayIsFirstDay.update { true }
+                            _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(com.ondevop.core_domain.R.string.cannot_navigate_beyond_this)))
+                        }else{
                             _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
                         }
                     }

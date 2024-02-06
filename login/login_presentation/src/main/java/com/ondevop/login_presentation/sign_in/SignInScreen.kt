@@ -82,7 +82,6 @@ fun SignInScreen(
                 }
 
                 UiEvent.Success -> {
-                   // viewModel.onEvent(SignInEvent.UpdateLoadingState(false))
                     navigateToTrackerHome()
                 }
             }

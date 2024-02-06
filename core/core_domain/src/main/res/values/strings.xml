@@ -63,4 +63,6 @@
     <string name="today">Today</string>
     <string name="previous_day">Previous day</string>
     <string name="next_day">Next day</string>
+
+    <string name="cannot_navigate_beyond_this">Cannot navigate beyond this</string>
 </resources>
