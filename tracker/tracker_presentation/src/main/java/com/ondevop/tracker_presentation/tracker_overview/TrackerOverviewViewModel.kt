@@ -140,21 +140,23 @@ class TrackerOverviewViewModel @Inject constructor(
 
             TrackerOverviewEvent.OnPreviousDayClick -> {
                 viewModelScope.launch {
-                    val range = totalDays.first()
-                    trackerUseCases.checkTheDateIsInRange(range, _currentDate.value).onSuccess {
-                        _currentDate.update {
-                            it.minusDays(1)
-                        }
-                       // trackerUseCases.checkTheDateIsInRange(range,)
-                        fetchTrackedChallengeData()
-                    }.onFailure {
-                        if (it is CannotNavigateException){
-                            _selectedDayIsFirstDay.update { true }
-                            _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(com.ondevop.core_domain.R.string.cannot_navigate_beyond_this)))
-                        }else{
-                            _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
-                        }
+                    _currentDate.update {
+                        it.minusDays(1)
                     }
+                    fetchTrackedChallengeData()
+                    // trackerUseCases.checkTheDateIsInRange(range,)
+
+//                    val range = totalDays.first()
+//                    trackerUseCases.checkTheDateIsInRange(range, _currentDate.value).onSuccess {
+//
+//                    }.onFailure {
+//                        if (it is CannotNavigateException){
+//                            _selectedDayIsFirstDay.update { true }
+//                            _uiEvent.send(UiEvent.ShowSnackbar(UiText.StringResource(com.ondevop.core_domain.R.string.cannot_navigate_beyond_this)))
+//                        }else{
+//                            _uiEvent.send(UiEvent.ShowSnackbar(UiText.DynamicString(it.message.toString())))
+//                        }
+//                    }
                 }
             }
         }

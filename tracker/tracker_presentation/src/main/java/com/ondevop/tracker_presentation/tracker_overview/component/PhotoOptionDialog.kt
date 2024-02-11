@@ -1,12 +1,12 @@
 package com.ondevop.tracker_presentation.tracker_overview.component
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -17,6 +17,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -51,18 +52,24 @@ fun PhotoOptionDialog(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp, bottom = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceAround
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Image(
-                            painter = painterResource(id = R.drawable.camera),
-                            contentDescription = "camera",
+
+                            Image(
+                                painter = painterResource(id = R.drawable.camera),
+                                contentDescription = "camera",
+                                modifier = Modifier
+                                    .size(45.dp),
 
                             )
+
                         Spacer(modifier = Modifier.width(spacing.spaceSmall))
                         Text(
                             text = stringResource(id = R.string.click_picture),
-                            modifier = Modifier,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(4.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             fontFamily = FontFamily(
                                 Font(
@@ -77,18 +84,21 @@ fun PhotoOptionDialog(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp, bottom = 16.dp),
-                        horizontalArrangement = Arrangement.SpaceAround
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Image(
                             painter = painterResource(id = R.drawable.picker),
                             contentDescription = "image picker",
-
-                            )
+                            modifier = Modifier
+                                .size(40.dp)
+                        )
                         Spacer(modifier = Modifier.width(spacing.spaceSmall))
                         Text(
-                            text = stringResource(id = R.string.click_picture),
-                            modifier = Modifier,
+                            text = stringResource(id = R.string.pick_image),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(4.dp),
                             style = MaterialTheme.typography.bodyMedium,
                             fontFamily = FontFamily(
                                 Font(
