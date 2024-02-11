@@ -44,7 +44,7 @@ fun TaskIncompleteDialog(
     val spacing = LocalSpacing.current
     if (isDialogShowing) {
         Dialog(
-            onDismissRequest = {  onDismiss() },
+            onDismissRequest = {false},
         ) {
             Card(
                 modifier = modifier,

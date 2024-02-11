@@ -65,4 +65,5 @@
     <string name="next_day">Next day</string>
 
     <string name="cannot_navigate_beyond_this">Cannot navigate beyond this</string>
+    <string name="pick_image">Pick image from gallery</string>
 </resources>

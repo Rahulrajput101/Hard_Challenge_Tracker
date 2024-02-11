@@ -13,7 +13,6 @@ import com.ondevop.core_domain.uitl.UiText
 import com.ondevop.core_domain.use_cases.SaveImage
 import com.ondevop.tracker_domain.use_cases.CannotNavigateException
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
-import com.ondevop.tracker_presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
@@ -61,6 +60,8 @@ class TrackerOverviewViewModel @Inject constructor(
     private val checkUserEnteredAnyData = trackerUseCases.checkUserEnteredAnyData()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
+    private val _currentDate = MutableStateFlow(LocalDate.now())
+    val currentDate = _currentDate.asStateFlow()
 
     val challengeGoal = preferences.getGoal()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), Constant.Default_DAYS_GOAL)
@@ -71,6 +72,23 @@ class TrackerOverviewViewModel @Inject constructor(
     ) { noTrackedDataOfYesterday, isUserEnteredData ->
         noTrackedDataOfYesterday || !isUserEnteredData
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
+
+    /**
+     * A state flow representing whether there is any tracked challenge data available in the tracker use cases
+     * that is before the current date.
+     */
+    val isLeftDataAvailable = combine(
+        trackerUseCases.getAllTrackedChallenge(),
+        _currentDate
+    ){ trackerChallenges, currentDate ->
+        var isAvailable = false
+        for (challenges in trackerChallenges){
+            isAvailable = challenges.date.isBefore(currentDate)
+            if (isAvailable)
+                break
+        }
+        isAvailable
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(),false)
 
     init {
         fetchTrackedChallengeData()
@@ -113,10 +131,8 @@ class TrackerOverviewViewModel @Inject constructor(
             }
 
             TrackerOverviewEvent.OnNextDayClick -> {
-                _state.update {
-                    it.copy(
-                        localDate = state.value.localDate.plusDays(1)
-                    )
+                _currentDate.update {
+                    it.plusDays(1)
                 }
                 _selectedDayIsFirstDay.update { false }
                 fetchTrackedChallengeData()
@@ -125,12 +141,11 @@ class TrackerOverviewViewModel @Inject constructor(
             TrackerOverviewEvent.OnPreviousDayClick -> {
                 viewModelScope.launch {
                     val range = totalDays.first()
-                    trackerUseCases.checkTheDateIsInRange(range, state.value.localDate).onSuccess {
-                        _state.update {
-                            it.copy(
-                                localDate = state.value.localDate.minusDays(1)
-                            )
+                    trackerUseCases.checkTheDateIsInRange(range, _currentDate.value).onSuccess {
+                        _currentDate.update {
+                            it.minusDays(1)
                         }
+                       // trackerUseCases.checkTheDateIsInRange(range,)
                         fetchTrackedChallengeData()
                     }.onFailure {
                         if (it is CannotNavigateException){
@@ -154,11 +169,12 @@ class TrackerOverviewViewModel @Inject constructor(
                     workedOut = state.value.workedOut,
                     read = state.value.read,
                     imageUri = state.value.imageUri,
-                    date = state.value.localDate,
+                    date = _currentDate.value,
                 )
             )
         }
     }
+
 
     private fun saveImageInInternalStorage(uri: Uri?) {
         viewModelScope.launch {
@@ -211,8 +227,10 @@ class TrackerOverviewViewModel @Inject constructor(
                         imageUri = null,
                         workedOut = 0,
                         read = false,
-                        localDate = LocalDate.now().minusDays(1)
                     )
+                }
+                _currentDate.update {
+                    it.minusDays(1)
                 }
                 updateTrackedData()
             }
@@ -223,7 +241,7 @@ class TrackerOverviewViewModel @Inject constructor(
 
     private fun fetchTrackedChallengeData() {
         trackedChallengeJob?.cancel()
-        trackerUseCases.getTrackedDataForDate(state.value.localDate)
+        trackerUseCases.getTrackedDataForDate(_currentDate.value)
             .onEach { trackedChallenge ->
                 trackedChallenge?.let { innerTrackedChallenge ->
                     _state.update {
@@ -233,11 +251,13 @@ class TrackerOverviewViewModel @Inject constructor(
                             imageUri = innerTrackedChallenge.imageUri,
                             workedOut = innerTrackedChallenge.workedOut,
                             read = innerTrackedChallenge.read,
-                            localDate = innerTrackedChallenge.date
                         )
                     }
+                    _currentDate.update {
+                        innerTrackedChallenge.date
+                    }
                 } ?: run {
-                    if (state.value.localDate == LocalDate.now()) {
+                    if (_currentDate.value == LocalDate.now()) {
                         _state.update {
                             TrackerOverViewState()
                         }

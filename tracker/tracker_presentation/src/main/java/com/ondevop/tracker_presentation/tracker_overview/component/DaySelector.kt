@@ -28,7 +28,7 @@ fun DaySelector(
     date: LocalDate,
     onPreviousDayClick: () -> Unit,
     onNextDayClick: () -> Unit,
-    selectedDayIsFirstDay: Boolean,
+    isLeftAvailable : Boolean,
     modifier: Modifier = Modifier
 ) {
 
@@ -42,9 +42,9 @@ fun DaySelector(
 
         IconButton(
             onClick = onPreviousDayClick,
-            enabled = !selectedDayIsFirstDay,
+            enabled = isLeftAvailable,
             modifier = Modifier
-                .alpha(if (selectedDayIsFirstDay) 0.5f else 1f)
+                .alpha(if (!isLeftAvailable) 0.5f else 1f)
         ) {
             Icon(
                 imageVector = Icons.Default.ArrowBack,
