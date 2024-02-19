@@ -66,10 +66,6 @@ fun TrackerOverViewScreen(
         mutableStateOf<String?>(null)
     }
 
-    var capturedImageUri by rememberSaveable {
-        mutableStateOf<String?>(null)
-    }
-
     var shouldShowCompleteDialog by rememberSaveable {
         mutableStateOf(false)
     }
@@ -113,6 +109,8 @@ fun TrackerOverViewScreen(
                     viewModel.onEvent(TrackerOverviewEvent.OnPhotoClick(it))
                 }
             }
+
+            shouldShowPhotoOptionDialog = false
         }
     )
 
