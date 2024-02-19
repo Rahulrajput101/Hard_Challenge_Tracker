@@ -10,7 +10,9 @@ import com.ondevop.core_domain.prefernces.Preferences
 import com.ondevop.core_domain.repository.HabitAlarmScheduler
 import com.ondevop.core_domain.repository.SaveImageRepository
 import com.ondevop.core_domain.repository.TrackerRepository
+import com.ondevop.core_domain.use_cases.CreateTempPathForImage
 import com.ondevop.core_domain.use_cases.SaveImage
+import com.ondevop.core_domain.use_cases.SaveImageBitmap
 import com.ondevop.core_domain.use_cases.SchedulingHabitAlarm
 import com.ondevop.core_domain.use_cases.ToShowNotification
 import dagger.Module
@@ -31,6 +33,21 @@ object CoreDomainModule {
         repository: SaveImageRepository
     ): SaveImage {
         return SaveImage(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSaveImageBitmap(
+        repository: SaveImageRepository
+    ): SaveImageBitmap {
+        return SaveImageBitmap(repository)
+    }
+    @Provides
+    @Singleton
+    fun provideCreateTempPathForImage(
+        repository: SaveImageRepository
+    ): CreateTempPathForImage{
+        return CreateTempPathForImage(repository)
     }
 
 

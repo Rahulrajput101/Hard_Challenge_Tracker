@@ -47,6 +47,7 @@ import com.ondevop.core_domain.use_cases.SchedulingHabitAlarm
 import com.ondevop.core_domain.use_cases.ToShowNotification
 import com.ondevop.login_presentation.sign_in.SignInScreen
 import com.ondevop.login_presentation.sign_up.SignUpScreen
+import com.ondevop.onboarding_presentation.camera_allow.CameraAllowScreen
 import com.ondevop.onboarding_presentation.notification_allow.NotificationAllowScreen
 import com.ondevop.onboarding_presentation.welcome.WelcomeScreen
 import com.ondevop.settings_presentation.settings.SettingScreen
@@ -97,7 +98,7 @@ class MainActivity : ComponentActivity() {
             val isLoggedIn = isLoggedInDeferred.await()
 
             if (!isAlarmScheduled) {
-                Log.d("Tag","alarm scheduled  $isAlarmScheduled")
+                Log.d("Tag", "alarm scheduled  $isAlarmScheduled")
                 schedulingHabitAlarm()
             }
 
@@ -124,7 +125,7 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = if (!isOnboardingCompleted) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                    Route.NotificationAllow.route
+                                    Route.GraphOnBoarding.route
                                 } else {
                                     Route.GraphAuth.route
                                 }
@@ -137,27 +138,46 @@ class MainActivity : ComponentActivity() {
                             composable(Route.Welcome.route) {
 
                                 WelcomeScreen {
-                                    navController.navigate(Route.NotificationAllow.route)
+                                    navController.navigate(Route.CameraAllow.route)
                                 }
                             }
 
-                            composable(Route.NotificationAllow.route) {
-                                NotificationAllowScreen(
-                                    snackbarHostState = snackbarHostState,
-                                    onSkipClick = {
-                                        scope.launch {
-                                            preferences.saveIsOnboardingCompleted(true)
+                            navigation(
+                                startDestination = Route.CameraAllow.route,
+                                route = Route.GraphOnBoarding.route
+                            ) {
+
+                                composable(Route.CameraAllow.route) {
+                                    CameraAllowScreen(
+                                        snackbarHostState = snackbarHostState,
+                                        onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale,
+                                        openAppSetting = ::openAppSettings,
+                                        onSkipClick = {
+                                            navController.navigate(Route.NotificationAllow.route)
                                         }
-                                        navController.navigate(Route.SignIn.route) {
-                                            popUpTo(Route.NotificationAllow.route) {
-                                                inclusive = true
+                                    )
+                                }
+
+                                composable(Route.NotificationAllow.route) {
+                                    NotificationAllowScreen(
+                                        snackbarHostState = snackbarHostState,
+                                        onSkipClick = {
+                                            scope.launch {
+                                                preferences.saveIsOnboardingCompleted(true)
                                             }
-                                        }
-                                    },
-                                    openAppSetting = ::openAppSettings,
-                                    onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale
-                                )
+                                            navController.navigate(Route.SignIn.route) {
+                                                popUpTo(Route.GraphOnBoarding.route) {
+                                                    inclusive = true
+                                                }
+                                            }
+                                        },
+                                        openAppSetting = ::openAppSettings,
+                                        onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale
+                                    )
+                                }
                             }
+
+
 
                             navigation(
                                 startDestination = Route.SignIn.route,
@@ -234,7 +254,8 @@ class MainActivity : ComponentActivity() {
                                                                 try {
                                                                     val openurl =
                                                                         Intent(Intent.ACTION_VIEW)
-                                                                    openurl.data = Uri.parse("https://www.freeprivacypolicy.com/live/dc396031-6b14-45f8-bec2-e03a64b5f720")
+                                                                    openurl.data =
+                                                                        Uri.parse("https://www.freeprivacypolicy.com/live/dc396031-6b14-45f8-bec2-e03a64b5f720")
                                                                     startActivity(openurl)
                                                                 } catch (e: ActivityNotFoundException) {
                                                                     Toast.makeText(
@@ -281,8 +302,9 @@ class MainActivity : ComponentActivity() {
                                                 scope.launch {
                                                     if (drawerState.isClosed) drawerState.open() else drawerState.close()
                                                 }
-                                            }
-
+                                            },
+                                            onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale,
+                                            openAppSetting = ::openAppSettings,
                                         )
                                     }
                                 }

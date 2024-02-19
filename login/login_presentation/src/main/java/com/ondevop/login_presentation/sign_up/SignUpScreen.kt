@@ -75,7 +75,6 @@ fun SignUpScreen(
         mutableStateOf<Uri?>(null)
     }
 
-
     LaunchedEffect(key1 = Unit) {
         viewModel.uiEvent.collect { event ->
             when (event) {
@@ -98,7 +97,6 @@ fun SignUpScreen(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = {uri ->  
             selectImageUir = uri
-            Log.d("MyTag","SuS: $uri")
         }
     )
 

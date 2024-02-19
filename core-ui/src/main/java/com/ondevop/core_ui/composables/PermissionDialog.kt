@@ -80,8 +80,8 @@ class CameraPermissionTextProvider: PermissionTextProvider {
             "It seems you permanently declined camera permission. " +
                     "You can go to the app settings to grant it."
         } else {
-            "This app needs access to your camera so that your friends " +
-                    "can see you in a call."
+            "This app needs access to your camera so that you  " +
+                    "can click your picture."
         }
     }
 }

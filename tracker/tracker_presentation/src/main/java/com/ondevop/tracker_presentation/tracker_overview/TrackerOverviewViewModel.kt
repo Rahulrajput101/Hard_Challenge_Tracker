@@ -1,17 +1,20 @@
 package com.ondevop.tracker_presentation.tracker_overview
 
+import android.graphics.Bitmap
 import android.net.Uri
-import android.util.Log
+import androidx.compose.runtime.mutableStateListOf
 import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ondevop.core_domain.model.TrackedChallenge
 import com.ondevop.core_domain.prefernces.Preferences
 import com.ondevop.core_domain.uitl.Constant
+import com.ondevop.core_domain.uitl.Permission
 import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.core_domain.uitl.UiText
+import com.ondevop.core_domain.use_cases.CreateTempPathForImage
 import com.ondevop.core_domain.use_cases.SaveImage
-import com.ondevop.tracker_domain.use_cases.CannotNavigateException
+import com.ondevop.core_domain.use_cases.SaveImageBitmap
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -21,7 +24,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -36,6 +38,7 @@ import javax.inject.Inject
 class TrackerOverviewViewModel @Inject constructor(
     private val trackerUseCases: TrackerUseCases,
     private val saveImage: SaveImage,
+    private val createTempPathForImage: CreateTempPathForImage,
     private val preferences: Preferences
 ) : ViewModel() {
 
@@ -44,6 +47,8 @@ class TrackerOverviewViewModel @Inject constructor(
 
     private val _selectedDayIsFirstDay = MutableStateFlow(false)
     val selectedDayIsFirstDay = _selectedDayIsFirstDay.asStateFlow()
+
+    val visiblePermissionDialogQueue = mutableStateListOf<Permission>()
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -70,30 +75,31 @@ class TrackerOverviewViewModel @Inject constructor(
         isYesterdayChallengeNotTracked,
         checkUserEnteredAnyData
     ) { noTrackedDataOfYesterday, isUserEnteredData ->
-        noTrackedDataOfYesterday || !isUserEnteredData
+        noTrackedDataOfYesterday
+        //   || !isUserEnteredData
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     /**
-     * A state flow representing whether there is any tracked challenge data available in the tracker use cases
+     * This state flow representing whether there is any tracked challenge data available in the tracker use cases
      * that is before the current date.
      */
     val isLeftDataAvailable = combine(
         trackerUseCases.getAllTrackedChallenge(),
         _currentDate
-    ){ trackerChallenges, currentDate ->
+    ) { trackerChallenges, currentDate ->
         var isAvailable = false
-        for (challenges in trackerChallenges){
+        for (challenges in trackerChallenges) {
             isAvailable = challenges.date.isBefore(currentDate)
             if (isAvailable)
                 break
         }
         isAvailable
-    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(),false)
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(), false)
 
     init {
         fetchTrackedChallengeData()
         viewModelScope.launch {
-             trackerUseCases.hasUserLostTheChallenge()
+            trackerUseCases.hasUserLostTheChallenge()
         }
     }
 
@@ -268,5 +274,28 @@ class TrackerOverviewViewModel @Inject constructor(
 
             }.launchIn(viewModelScope)
     }
+
+    fun permissionHandleEvent(event: PermissionHandleEvent) {
+        when (event) {
+            PermissionHandleEvent.DismissDialog -> {
+                visiblePermissionDialogQueue.removeFirst()
+            }
+
+            is PermissionHandleEvent.OnPermissionResult -> {
+                if (!event.isGranted && !visiblePermissionDialogQueue.contains(event.permission)) {
+                    visiblePermissionDialogQueue.add(event.permission)
+                } else {
+                    viewModelScope.launch {
+                        _uiEvent.send(UiEvent.Success)
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun createTempImagePath() : String {
+           return createTempPathForImage() ?: ""
+    }
+
 
 }

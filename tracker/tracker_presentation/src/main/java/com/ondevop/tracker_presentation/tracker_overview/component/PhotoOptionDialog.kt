@@ -1,6 +1,7 @@
 package com.ondevop.tracker_presentation.tracker_overview.component
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.Font
@@ -52,15 +52,16 @@ fun PhotoOptionDialog(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .clickable { onCameraClick() }
                             .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
 
-                            Image(
-                                painter = painterResource(id = R.drawable.camera),
-                                contentDescription = "camera",
-                                modifier = Modifier
-                                    .size(45.dp),
+                        Image(
+                            painter = painterResource(id = R.drawable.camera),
+                            contentDescription = "camera",
+                            modifier = Modifier
+                                .size(45.dp),
 
                             )
 
@@ -84,6 +85,9 @@ fun PhotoOptionDialog(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
+                            .clickable {
+                                onPickerClick()
+                            }
                             .padding(16.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {

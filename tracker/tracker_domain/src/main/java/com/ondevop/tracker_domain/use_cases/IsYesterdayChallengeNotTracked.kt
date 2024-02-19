@@ -16,8 +16,14 @@ class IsYesterdayChallengeNotTracked(
      */
     operator fun invoke(): Flow<Boolean> {
         return  repository.getAllTrackedChallenge().map { challenges ->
-            if (challenges.size > 1) {
-                challenges.none { it.date == LocalDate.now().minusDays(1) }
+            if (challenges.isNotEmpty()) {
+                val lastChallengeDate = challenges.last().date
+                //This checks if the last challenge date is before yesterday's date.
+                lastChallengeDate.isBefore(LocalDate.now().minusDays(1))
+
+                // This expression checks if there are no challenges with yesterday's date.
+                //challenges.none { it.date == LocalDate.now().minusDays(1) }
+
             } else {
                 false
             }

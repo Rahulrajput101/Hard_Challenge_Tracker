@@ -1,6 +1,7 @@
 package com.ondevop.tracker_presentation.tracker_overview
 
-import android.net.Uri
+import android.Manifest
+import android.content.pm.PackageManager
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -16,14 +17,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.ondevop.core_domain.uitl.Permission
 import com.ondevop.core_domain.uitl.UiEvent
 import com.ondevop.core_ui.LocalSpacing
+import com.ondevop.core_ui.composables.CameraPermissionTextProvider
+import com.ondevop.core_ui.composables.PermissionDialog
 import com.ondevop.tracker_presentation.tracker_overview.component.CompleteDialog
 import com.ondevop.tracker_presentation.tracker_overview.component.DaySelector
 import com.ondevop.tracker_presentation.tracker_overview.component.DietCardView
@@ -35,14 +40,18 @@ import com.ondevop.tracker_presentation.tracker_overview.component.TrackerHeader
 import com.ondevop.tracker_presentation.tracker_overview.component.WaterCardView
 import com.ondevop.tracker_presentation.tracker_overview.component.WorkoutCardView
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @Composable
 fun TrackerOverViewScreen(
     snackbarHostState: SnackbarHostState,
     viewModel: TrackerOverviewViewModel = hiltViewModel(),
-    onMenuItemClick: () -> Unit
+    onMenuItemClick: () -> Unit,
+    onShouldShowPermissionRationale: (String) -> Boolean,
+    openAppSetting: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
+    val dialogQueue = viewModel.visiblePermissionDialogQueue
     val totalDays by viewModel.totalDays.collectAsState()
     val challengeGoal by viewModel.challengeGoal.collectAsState()
     val isYesterdayChallengeDataMissing by viewModel.isYesterdayChallengeDataMissing.collectAsState()
@@ -51,6 +60,15 @@ fun TrackerOverViewScreen(
     val currentDate by viewModel.currentDate.collectAsState()
     val spacing = LocalSpacing.current
     val context = LocalContext.current
+
+    val scope = rememberCoroutineScope()
+    var tempImgPath by rememberSaveable {
+        mutableStateOf<String?>(null)
+    }
+
+    var capturedImageUri by rememberSaveable {
+        mutableStateOf<String?>(null)
+    }
 
     var shouldShowCompleteDialog by rememberSaveable {
         mutableStateOf(false)
@@ -63,7 +81,21 @@ fun TrackerOverViewScreen(
     var shouldShowPhotoOptionDialog by rememberSaveable {
         mutableStateOf(false)
     }
+    val permissionsToRequest = arrayOf(Permission.CAMERA)
 
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { perms ->
+            permissionsToRequest.forEach { permissions ->
+                viewModel.permissionHandleEvent(
+                    PermissionHandleEvent.OnPermissionResult(
+                        permission = permissions,
+                        isGranted = perms[permissions.toPermissionString()] == true
+                    )
+                )
+            }
+        }
+    )
     val singlePhotoPickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
@@ -75,20 +107,24 @@ fun TrackerOverViewScreen(
 
     val cameraLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.TakePicture(),
-        onResult = {success ->
-             if(success){
-
-             }
+        onResult = { success ->
+            if (success) {
+                tempImgPath?.let {
+                    viewModel.onEvent(TrackerOverviewEvent.OnPhotoClick(it))
+                }
+            }
         }
     )
+
 
     LaunchedEffect(key1 = true) {
         delay(2000)
         if (totalDays >= challengeGoal) {
             shouldShowCompleteDialog = true
         }
-        if(isYesterdayChallengeDataMissing){
-          shouldShowTaskNotCompleteDialog = true
+
+        if (isYesterdayChallengeDataMissing) {
+            shouldShowTaskNotCompleteDialog = true
         }
     }
 
@@ -100,6 +136,7 @@ fun TrackerOverViewScreen(
                     snackbarHostState.currentSnackbarData?.dismiss()
                     snackbarHostState.showSnackbar(event.message.asString(context))
                 }
+
                 else -> Unit
             }
         }
@@ -121,7 +158,7 @@ fun TrackerOverViewScreen(
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             DaySelector(
-                date = currentDate ,
+                date = currentDate,
                 onPreviousDayClick = {
                     viewModel.onEvent(TrackerOverviewEvent.OnPreviousDayClick)
                 },
@@ -237,7 +274,21 @@ fun TrackerOverViewScreen(
             )
             PhotoOptionDialog(
                 isDialogShowing = shouldShowPhotoOptionDialog,
-                onCameraClick = { /*TODO*/ },
+                onCameraClick = {
+                    if (context.checkSelfPermission(Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        scope.launch {
+                            val uri = viewModel.createTempImagePath()
+                            tempImgPath = uri
+                            cameraLauncher.launch(uri.toUri())
+                        }
+                    } else {
+                        permissionLauncher.launch(
+                            permissionsToRequest.map {
+                                it.toPermissionString()
+                            }.toTypedArray()
+                        )
+                    }
+                },
                 onPickerClick = {
                     singlePhotoPickerLauncher.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
@@ -247,7 +298,29 @@ fun TrackerOverViewScreen(
                     shouldShowPhotoOptionDialog = false
                 }
             )
+
+            dialogQueue
+                .reversed()
+                .forEach { permission ->
+                    PermissionDialog(
+                        permissionTextProvider = when (permission) {
+                            Permission.CAMERA -> CameraPermissionTextProvider()
+                            else -> return@forEach
+                        },
+                        isPermanentlyDeclined = !onShouldShowPermissionRationale(permission.toPermissionString()),
+                        onDismissClick = {
+                            viewModel.permissionHandleEvent(PermissionHandleEvent.DismissDialog)
+                        },
+                        onOkClick = {
+                            viewModel.permissionHandleEvent(PermissionHandleEvent.DismissDialog)
+                            permissionLauncher.launch(
+                                arrayOf(permission.toPermissionString())
+                            )
+                        },
+                        onGoToAppSettingsClicks = openAppSetting,
+                    )
+                }
         }
     }
-}
 
+}
