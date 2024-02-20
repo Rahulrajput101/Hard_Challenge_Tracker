@@ -66,7 +66,7 @@ Its purpose being, to quickly demonstrate Android, Kotlin and software developme
  # Find this repository useful? :heart:
  
 :star: <br>
-[follow](https://github.com/akhilesh0707)__ me for my next creations! 🤩
+[follow](https://github.com/Rahulrajput101)__ me for my next creations! 🤩
 
 ## Contributions
 Please feel free to file an issue for errors, suggestions or feature requests. Pull requests are also encouraged.
