@@ -22,7 +22,7 @@ class HasUserLostTheChallenge(
                 val lastChallengeDate = challenges.last().date
                 // Check if the date of the last tracked challenge is before two days before yesterday
                 if(lastChallengeDate.isBefore(twoDaysBeforeYesterday)){
-                    Log.d("HasUser", " data cleared")
+                    repository.clearAllTrackedChallenge()
                 }
             }
         }
