@@ -24,8 +24,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -52,6 +54,7 @@ import com.ondevop.core_domain.uitl.Constant.SETTING
 import com.ondevop.core_domain.uitl.Constant.TRACKER_HOME
 import com.ondevop.core_domain.use_cases.SchedulingHabitAlarm
 import com.ondevop.core_domain.use_cases.ToShowNotification
+import com.ondevop.core_ui.composables.UpdateDeclinedDialog
 import com.ondevop.login_presentation.sign_in.SignInScreen
 import com.ondevop.login_presentation.sign_up.SignUpScreen
 import com.ondevop.onboarding_presentation.camera_allow.CameraAllowScreen
@@ -85,6 +88,8 @@ class MainActivity : ComponentActivity() {
     lateinit var appUpdateManager: AppUpdateManager
 
     private var updateType = AppUpdateType.IMMEDIATE
+    private var shouldShowUpdateDeclinedDialog by mutableStateOf(false)
+
 
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -114,17 +119,32 @@ class MainActivity : ComponentActivity() {
                 schedulingHabitAlarm()
             }
 
+            checkForUpdates()
 
             setContent {
                 _75HardTheme {
                     val navController = rememberNavController()
                     val snackbarHostState = remember { SnackbarHostState() }
-
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
-
+                    val dialogState = remember { mutableStateOf(false) }
                     val profileUri by preferences.getProfileUri().collectAsState(initial = "")
                     val name by preferences.getUserName().collectAsState(initial = "")
+
+
+                    // Show the dialog when needed
+                    UpdateDeclinedDialog(
+                        modifier = Modifier,
+                        isDialogShowing = shouldShowUpdateDeclinedDialog,
+                        onUpdate = {
+                            checkForUpdates()
+                            shouldShowUpdateDeclinedDialog = false
+                        },
+                        onDismiss = {
+                            shouldShowUpdateDeclinedDialog = false
+                        }
+                    )
+
 
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
@@ -357,9 +377,11 @@ class MainActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
             // handle callback
             if (result.resultCode != RESULT_OK) {
-                Log.d("Tag", "Update flow failed! Result code:" + result.resultCode)
+                Log.d("Tag", "Update flow failed! Result code: $result" + result.resultCode)
                 // If the update is canceled or fails,
                 // you can request to start the update again.
+                shouldShowUpdateDeclinedDialog = true
+
             }
         }
 
@@ -378,7 +400,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun checkForUpdate() {
+    private fun checkForUpdates() {
         appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
             val isUpdateAvailable =
                 appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
@@ -397,6 +419,9 @@ class MainActivity : ComponentActivity() {
             }
 
         }
+            .addOnFailureListener { e ->
+                e.printStackTrace()
+            }
     }
 
 

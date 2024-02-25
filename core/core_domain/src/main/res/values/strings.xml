@@ -68,4 +68,8 @@
 
     <string name="cannot_navigate_beyond_this">Cannot navigate beyond this</string>
     <string name="pick_image">Pick image from gallery</string>
+    <string name="update_now">Update now</string>
+    <string name="made_updates">We\'ve made new updates!</string>
+    <string name="made_updates_description"> To continue using this app and its new
+    features, please update  your app.</string>
 </resources>

@@ -115,7 +115,7 @@ fun SignInScreen(
             }
         } else if (result.resultCode == Activity.RESULT_CANCELED) {
             // Sign-in was canceled
-            viewModel.onEvent(SignInEvent.SignInUnsuccessful("Sign-in canceled"))
+            viewModel.onEvent(SignInEvent.SignInUnsuccessful("Sign-in cancelled"))
             // Sign-in was canceled
         } else {
             // Handle other result codes or errors, if needed
