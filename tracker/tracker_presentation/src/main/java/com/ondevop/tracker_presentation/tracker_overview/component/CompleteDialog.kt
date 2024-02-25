@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -34,6 +35,17 @@ import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.core_domain.R
 
 
+
+@Preview(backgroundColor = 0xFFFFFFFF, showBackground = true)
+@Composable
+fun previewCompleteDialog(){
+  CompleteDialog(
+      isDialogShowing =  true,
+      onRestart = { /*TODO*/ },
+      onMoveForward = { /*TODO*/ }) {
+      
+  }
+}
 @Composable
 fun CompleteDialog(
     modifier: Modifier = Modifier,
@@ -104,7 +116,7 @@ fun CompleteDialog(
                                 .clip(RoundedCornerShape(10.dp))
                                 .background(MaterialTheme.colorScheme.primary)
                                 .clickable {
-                                   onRestart()
+                                    onRestart()
                                 }
                                 .padding(vertical = 10.dp, horizontal = 18.dp),
                         ) {
@@ -112,7 +124,7 @@ fun CompleteDialog(
                                 text = "Restart",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimary,
                             )
                         }
 
@@ -126,10 +138,10 @@ fun CompleteDialog(
                                 .padding(vertical = 10.dp, horizontal = 18.dp),
                         ) {
                             Text(
-                                text = "move forward",
+                                text = "Move forward",
                                 fontSize = 14.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = Color.White,
+                                color = MaterialTheme.colorScheme.onPrimary,
                             )
                         }
 

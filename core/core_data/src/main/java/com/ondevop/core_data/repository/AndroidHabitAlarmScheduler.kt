@@ -26,7 +26,7 @@ class AndroidHabitAlarmScheduler(
     override fun schedule(habitReminder: HabitReminder): Result<Unit> {
 
 
-        val reminderTime = LocalTime.of(22,0)
+        val reminderTime = LocalTime.of(22,52)
         var scheduledTime = LocalDateTime.of(LocalDate.now(), reminderTime)
 
         if (scheduledTime.isBefore(LocalDateTime.now())) {
@@ -44,7 +44,7 @@ class AndroidHabitAlarmScheduler(
             alarmManager.setInexactRepeating(
                 AlarmManager.RTC_WAKEUP,
                 scheduledTime.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
-                AlarmManager.INTERVAL_DAY,
+                24 * 60 * 60 * 1000,
                 PendingIntent.getBroadcast(
                     context,
                     habitReminder.hashCode(),

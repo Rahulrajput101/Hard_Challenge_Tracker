@@ -55,8 +55,21 @@
     <string name="back">Back</string>
     <string name="allow_notification">Allow Notification</string>
     <string name="notification">NOTIFICATION</string>
+    <string name="camera">CAMERA</string>
     <string name="notification_description"> We need your permission to send you notification to notify about your tasks if it is completed or not. Without this permission we won\'t be able to inform you.</string>
+    <string name="camera_description"> This app needs access to your camera so that you can click your picture for tracking your progress. Without this permission you won\'t be able to click picture right away from this app.</string>
     <string name="log_out">Log Out</string>
     <string name="delete_my_account">Delete My Account</string>
     <string name="notification_reason">You agree to receive notifications so, that you can meet your daily goals</string>
+
+    <string name="today">Today</string>
+    <string name="previous_day">Previous day</string>
+    <string name="next_day">Next day</string>
+
+    <string name="cannot_navigate_beyond_this">Cannot navigate beyond this</string>
+    <string name="pick_image">Pick image from gallery</string>
+    <string name="update_now">Update now</string>
+    <string name="made_updates">We\'ve made new updates!</string>
+    <string name="made_updates_description"> To continue using this app and its new
+    features, please update  your app.</string>
 </resources>

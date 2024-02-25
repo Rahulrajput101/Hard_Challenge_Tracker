@@ -13,7 +13,9 @@ import com.ondevop.login_domain.use_case.SignInWithGoogle
 import com.ondevop.login_domain.use_case.ValidateEmail
 import com.ondevop.login_domain.use_case.ValidatePassword
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -26,8 +28,6 @@ class SignInViewModel @Inject constructor(
     val validateEmail: ValidateEmail,
     val validatePassword: ValidatePassword,
     private val preferences: Preferences,
-    private val googleSignInClient: GoogleSignInClient,
-    private val isSignedIn: IsSignedIn,
     private val signInWithGoogle: SignInWithGoogle,
 ) : ViewModel() {
 
@@ -76,6 +76,7 @@ class SignInViewModel @Inject constructor(
                           preferences.saveUserName(it.userName)
                           val profileUri = it.profileUri.toString()
                           preferences.saveProfileUri(profileUri)
+                          _state.value = _state.value.copy(isLoading = false)
                           _uiEvent.send(UiEvent.Success)
                       }.onFailure {
                           _state.value = _state.value.copy(isLoading = false)

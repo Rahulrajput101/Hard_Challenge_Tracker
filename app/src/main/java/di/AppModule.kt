@@ -4,6 +4,8 @@ import android.app.Application
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateManagerFactory
 import com.ondevop.a75hard.EmailValidatorImp
 import com.ondevop.core_data.prefrences.DefaultPreferences
 import com.ondevop.core_data.prefrences.dataStore
@@ -52,5 +54,11 @@ object AppModule {
                 .requestEmail()
                 .build()
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideAppUpdateManager(application: Application): AppUpdateManager {
+        return AppUpdateManagerFactory.create(application)
     }
 }

@@ -12,6 +12,8 @@ interface TrackerRepository {
 
     fun getAllTrackedChallenge() : Flow<List<TrackedChallenge>>
 
+    fun getTrackedChallengeCount(): Flow<Int>
+
     suspend fun clearAllTrackedChallenge()
 
 }

@@ -9,7 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Home
@@ -50,6 +53,8 @@ import com.ondevop.core_domain.R
 import com.ondevop.core_ui.LocalSpacing
 import com.ondevop.core_ui.composables.AnimatedBorder
 import com.ondevop.core_ui.composables.SmallCircleImage
+import java.util.UUID
+import kotlin.random.Random
 
 @Composable
 fun DrawerHeader(
@@ -157,46 +162,53 @@ fun DrawerBody(
             selectedIcon = Icons.Filled.PrivacyTip,
             unSelectedIcon = Icons.Outlined.PrivacyTip,
             contentDescription = Constant.PRIVACY_POLICY
-        ),
+        )
     )
 
     ModalDrawerSheet {
         Spacer(modifier = modifier.height(spacing.spaceMedium))
-        items.forEachIndexed { index, item ->
-            Spacer(modifier = modifier.height(spacing.spaceExtraSmall))
-            NavigationDrawerItem(
-                label = {
-                    Text(
-                        text = item.title,
-                        fontFamily = FontFamily(
-                            Font(
-                                R.font.rubik_medium,
-                                FontWeight.Bold
+        LazyColumn {
+            items.forEachIndexed { index, item ->
+                item(
+                    key = item.id
+                ) {
+                    Spacer(modifier = modifier.height(spacing.spaceExtraSmall))
+                    NavigationDrawerItem(
+                        label = {
+                            Text(
+                                text = item.title,
+                                fontFamily = FontFamily(
+                                    Font(
+                                        R.font.rubik_medium,
+                                        FontWeight.Bold
+                                    )
+                                )
                             )
-                        )
+                        },
+                        selected = index == selectedItemIndex,
+                        onClick = {
+                            onItemClick(item)
+                            selectedItemIndex = index
+                        },
+                        icon = {
+                            Icon(
+                                imageVector = if (index == selectedItemIndex) {
+                                    item.selectedIcon
+                                } else item.unSelectedIcon,
+                                contentDescription = item.title
+                            )
+                        },
+                        badge = {
+                            item.badgeCount?.let {
+                                Text(text = item.badgeCount.toString())
+                            }
+                        },
+                        modifier = Modifier
+                            .padding(NavigationDrawerItemDefaults.ItemPadding)
+
                     )
-                },
-                selected = index == selectedItemIndex,
-                onClick = {
-                    onItemClick(item)
-                    selectedItemIndex = index
-                },
-                icon = {
-                    Icon(
-                        imageVector = if (index == selectedItemIndex) {
-                            item.selectedIcon
-                        } else item.unSelectedIcon,
-                        contentDescription = item.title
-                    )
-                },
-                badge = {
-                    item.badgeCount?.let {
-                        Text(text = item.badgeCount.toString())
-                    }
-                },
-                modifier = Modifier
-                    .padding(NavigationDrawerItemDefaults.ItemPadding)
-            )
+                }
+            }
         }
     }
 }

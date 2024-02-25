@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,7 +54,7 @@ fun PictureCardView(
     onTakePictureClick:() ->Boolean,
     modifier: Modifier = Modifier
 ){
-    val buttonClicked = remember { mutableStateOf(false) }
+    val buttonClicked = rememberSaveable { mutableStateOf(false) }
     val spacing = LocalSpacing.current
     Box(
         modifier = modifier
@@ -156,7 +157,6 @@ fun PictureCardView(
                                 modifier = Modifier
                                     .padding(vertical = 8.dp, horizontal = 18.dp),
                             ) {
-                                Log.d("pcv"," in pcv ${state.imageUri }")
                                 CircularImage(
                                     size = 50.dp,
                                     imageUri = state.imageUri.toUri()

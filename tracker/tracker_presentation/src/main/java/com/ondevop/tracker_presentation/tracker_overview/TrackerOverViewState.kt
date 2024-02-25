@@ -10,5 +10,4 @@ data class TrackerOverViewState(
     val workoutGoal: Int = 2,
     val read: Boolean = false,
     val imageUri: String? = null,
-    val localDate: LocalDate = LocalDate.now(),
 )

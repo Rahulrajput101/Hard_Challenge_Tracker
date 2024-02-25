@@ -68,7 +68,6 @@ fun SignInScreen(
     googleSignInClient: GoogleSignInClient
 ) {
 
-
     val spacing = LocalSpacing.current
     val context = LocalContext.current
     val state by viewModel.state.collectAsState()
@@ -83,7 +82,6 @@ fun SignInScreen(
                 }
 
                 UiEvent.Success -> {
-                   // viewModel.onEvent(SignInEvent.UpdateLoadingState(false))
                     navigateToTrackerHome()
                 }
             }
@@ -117,7 +115,7 @@ fun SignInScreen(
             }
         } else if (result.resultCode == Activity.RESULT_CANCELED) {
             // Sign-in was canceled
-            viewModel.onEvent(SignInEvent.SignInUnsuccessful("Sign-in canceled"))
+            viewModel.onEvent(SignInEvent.SignInUnsuccessful("Sign-in cancelled"))
             // Sign-in was canceled
         } else {
             // Handle other result codes or errors, if needed

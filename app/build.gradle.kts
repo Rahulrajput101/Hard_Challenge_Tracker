@@ -109,5 +109,8 @@ dependencies {
 
    implementation(libs.google.play.integrity)
 
+    implementation(libs.google.play.app.update)
+    implementation(libs.google.play.app.update.ktx)
+
 
 }

@@ -7,9 +7,11 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DrawerValue
@@ -22,8 +24,10 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.core.net.toUri
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -33,6 +37,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.compose.rememberNavController
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.play.core.appupdate.AppUpdateManager
+import com.google.android.play.core.appupdate.AppUpdateOptions
+import com.google.android.play.core.install.model.AppUpdateType
+import com.google.android.play.core.install.model.UpdateAvailability
+import com.google.android.play.core.ktx.isFlexibleUpdateAllowed
+import com.google.android.play.core.ktx.isImmediateUpdateAllowed
 import com.ondevop.a75hard.navigation.Route
 import com.ondevop.a75hard.ui.presentation.component.DrawerBody
 import com.ondevop.a75hard.ui.presentation.component.DrawerHeader
@@ -44,8 +54,10 @@ import com.ondevop.core_domain.uitl.Constant.SETTING
 import com.ondevop.core_domain.uitl.Constant.TRACKER_HOME
 import com.ondevop.core_domain.use_cases.SchedulingHabitAlarm
 import com.ondevop.core_domain.use_cases.ToShowNotification
+import com.ondevop.core_ui.composables.UpdateDeclinedDialog
 import com.ondevop.login_presentation.sign_in.SignInScreen
 import com.ondevop.login_presentation.sign_up.SignUpScreen
+import com.ondevop.onboarding_presentation.camera_allow.CameraAllowScreen
 import com.ondevop.onboarding_presentation.notification_allow.NotificationAllowScreen
 import com.ondevop.onboarding_presentation.welcome.WelcomeScreen
 import com.ondevop.settings_presentation.settings.SettingScreen
@@ -72,6 +84,13 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var toShowNotification: ToShowNotification
 
+    @Inject
+    lateinit var appUpdateManager: AppUpdateManager
+
+    private var updateType = AppUpdateType.IMMEDIATE
+    private var shouldShowUpdateDeclinedDialog by mutableStateOf(false)
+
+
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,20 +115,36 @@ class MainActivity : ComponentActivity() {
             val isLoggedIn = isLoggedInDeferred.await()
 
             if (!isAlarmScheduled) {
+                Log.d("Tag", "alarm scheduled  $isAlarmScheduled")
                 schedulingHabitAlarm()
             }
 
+            checkForUpdates()
 
             setContent {
                 _75HardTheme {
                     val navController = rememberNavController()
                     val snackbarHostState = remember { SnackbarHostState() }
-
                     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
                     val scope = rememberCoroutineScope()
-
+                    val dialogState = remember { mutableStateOf(false) }
                     val profileUri by preferences.getProfileUri().collectAsState(initial = "")
                     val name by preferences.getUserName().collectAsState(initial = "")
+
+
+                    // Show the dialog when needed
+                    UpdateDeclinedDialog(
+                        modifier = Modifier,
+                        isDialogShowing = shouldShowUpdateDeclinedDialog,
+                        onUpdate = {
+                            checkForUpdates()
+                            shouldShowUpdateDeclinedDialog = false
+                        },
+                        onDismiss = {
+                            shouldShowUpdateDeclinedDialog = false
+                        }
+                    )
+
 
                     Scaffold(
                         modifier = Modifier.fillMaxSize(),
@@ -122,7 +157,7 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = if (!isOnboardingCompleted) {
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                    Route.NotificationAllow.route
+                                    Route.GraphOnBoarding.route
                                 } else {
                                     Route.GraphAuth.route
                                 }
@@ -135,27 +170,46 @@ class MainActivity : ComponentActivity() {
                             composable(Route.Welcome.route) {
 
                                 WelcomeScreen {
-                                    navController.navigate(Route.NotificationAllow.route)
+                                    navController.navigate(Route.CameraAllow.route)
                                 }
                             }
 
-                            composable(Route.NotificationAllow.route) {
-                                NotificationAllowScreen(
-                                    snackbarHostState = snackbarHostState,
-                                    onSkipClick = {
-                                        scope.launch {
-                                            preferences.saveIsOnboardingCompleted(true)
+                            navigation(
+                                startDestination = Route.CameraAllow.route,
+                                route = Route.GraphOnBoarding.route
+                            ) {
+
+                                composable(Route.CameraAllow.route) {
+                                    CameraAllowScreen(
+                                        snackbarHostState = snackbarHostState,
+                                        onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale,
+                                        openAppSetting = ::openAppSettings,
+                                        onSkipClick = {
+                                            navController.navigate(Route.NotificationAllow.route)
                                         }
-                                        navController.navigate(Route.SignIn.route) {
-                                            popUpTo(Route.NotificationAllow.route) {
-                                                inclusive = true
+                                    )
+                                }
+
+                                composable(Route.NotificationAllow.route) {
+                                    NotificationAllowScreen(
+                                        snackbarHostState = snackbarHostState,
+                                        onSkipClick = {
+                                            scope.launch {
+                                                preferences.saveIsOnboardingCompleted(true)
                                             }
-                                        }
-                                    },
-                                    openAppSetting = ::openAppSettings,
-                                    onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale
-                                )
+                                            navController.navigate(Route.SignIn.route) {
+                                                popUpTo(Route.GraphOnBoarding.route) {
+                                                    inclusive = true
+                                                }
+                                            }
+                                        },
+                                        openAppSetting = ::openAppSettings,
+                                        onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale
+                                    )
+                                }
                             }
+
+
 
                             navigation(
                                 startDestination = Route.SignIn.route,
@@ -232,7 +286,8 @@ class MainActivity : ComponentActivity() {
                                                                 try {
                                                                     val openurl =
                                                                         Intent(Intent.ACTION_VIEW)
-                                                                    openurl.data = Uri.parse("https://www.freeprivacypolicy.com/live/dc396031-6b14-45f8-bec2-e03a64b5f720")
+                                                                    openurl.data =
+                                                                        Uri.parse("https://www.freeprivacypolicy.com/live/dc396031-6b14-45f8-bec2-e03a64b5f720")
                                                                     startActivity(openurl)
                                                                 } catch (e: ActivityNotFoundException) {
                                                                     Toast.makeText(
@@ -279,8 +334,9 @@ class MainActivity : ComponentActivity() {
                                                 scope.launch {
                                                     if (drawerState.isClosed) drawerState.open() else drawerState.close()
                                                 }
-                                            }
-
+                                            },
+                                            onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale,
+                                            openAppSetting = ::openAppSettings,
                                         )
                                     }
                                 }
@@ -317,6 +373,57 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val activityResultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result ->
+            // handle callback
+            if (result.resultCode != RESULT_OK) {
+                Log.d("Tag", "Update flow failed! Result code: $result" + result.resultCode)
+                // If the update is canceled or fails,
+                // you can request to start the update again.
+                shouldShowUpdateDeclinedDialog = true
+
+            }
+        }
+
+    override fun onResume() {
+        super.onResume()
+        if (updateType == AppUpdateType.IMMEDIATE) {
+            appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+                if (appUpdateInfo.updateAvailability() == UpdateAvailability.DEVELOPER_TRIGGERED_UPDATE_IN_PROGRESS) {
+                    appUpdateManager.startUpdateFlowForResult(
+                        appUpdateInfo,
+                        activityResultLauncher,
+                        AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
+                    )
+                }
+            }
+        }
+    }
+
+    private fun checkForUpdates() {
+        appUpdateManager.appUpdateInfo.addOnSuccessListener { appUpdateInfo ->
+            val isUpdateAvailable =
+                appUpdateInfo.updateAvailability() == UpdateAvailability.UPDATE_AVAILABLE
+            val isUpdateAllowed = when (updateType) {
+                AppUpdateType.FLEXIBLE -> appUpdateInfo.isFlexibleUpdateAllowed
+                AppUpdateType.IMMEDIATE -> appUpdateInfo.isImmediateUpdateAllowed
+                else -> false
+            }
+
+            if (isUpdateAvailable && isUpdateAllowed) {
+                appUpdateManager.startUpdateFlowForResult(
+                    appUpdateInfo,
+                    activityResultLauncher,
+                    AppUpdateOptions.newBuilder(AppUpdateType.IMMEDIATE).build()
+                )
+            }
+
+        }
+            .addOnFailureListener { e ->
+                e.printStackTrace()
+            }
+    }
+
 
 }
 
@@ -328,6 +435,3 @@ private fun Activity.openAppSettings() {
     ).also(::startActivity)
 }
 
-private fun sendEmail() {
-
-}

@@ -1,10 +1,15 @@
 package com.ondevop.tracker_domain.di
 
 import com.ondevop.core_domain.repository.TrackerRepository
+import com.ondevop.tracker_domain.use_cases.CheckTheDateIsInRange
+import com.ondevop.tracker_domain.use_cases.CheckUserEnteredAnyData
 import com.ondevop.tracker_domain.use_cases.ClearAllTrackedData
 import com.ondevop.tracker_domain.use_cases.FilterADayChallenge
 import com.ondevop.tracker_domain.use_cases.GetAllTrackedChallenge
+import com.ondevop.tracker_domain.use_cases.GetTrackedChallengeCount
 import com.ondevop.tracker_domain.use_cases.GetTrackedDataForDate
+import com.ondevop.tracker_domain.use_cases.HasUserLostTheChallenge
+import com.ondevop.tracker_domain.use_cases.IsYesterdayChallengeNotTracked
 import com.ondevop.tracker_domain.use_cases.TrackChallenge
 import com.ondevop.tracker_domain.use_cases.TrackerUseCases
 import dagger.Module
@@ -27,8 +32,13 @@ object TrackerDomainModule {
             trackChallenge = TrackChallenge(repository),
             getTrackedDataForDate = GetTrackedDataForDate(repository),
             getAllTrackedChallenge = GetAllTrackedChallenge(repository),
+            getTrackedChallengeCount = GetTrackedChallengeCount(repository),
             filterADayChallenge = FilterADayChallenge(),
-            clearAllTrackedData = ClearAllTrackedData(repository)
+            clearAllTrackedData = ClearAllTrackedData(repository),
+            checkTheDateIsInRange = CheckTheDateIsInRange(),
+            isYesterdayChallengeNotTracked = IsYesterdayChallengeNotTracked(repository),
+            hasUserLostTheChallenge = HasUserLostTheChallenge(repository),
+            checkUserEnteredAnyData = CheckUserEnteredAnyData(repository)
         )
     }
 }

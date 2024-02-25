@@ -302,8 +302,5 @@ fun SettingScreen(
                 },
             )
         }
-
-
     }
-
 }
