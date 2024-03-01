@@ -152,7 +152,10 @@ fun TrackerOverViewScreen(
                 state = state,
                 challengeGoal = challengeGoal,
                 totalDays = totalDays,
-                onMenuItemClick = onMenuItemClick
+                onMenuItemClick = onMenuItemClick,
+                onPremiumClick = {
+
+                }
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             DaySelector(

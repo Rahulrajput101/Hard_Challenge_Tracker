@@ -381,7 +381,6 @@ class MainActivity : ComponentActivity() {
                 // If the update is canceled or fails,
                 // you can request to start the update again.
                 shouldShowUpdateDeclinedDialog = true
-
             }
         }
 
