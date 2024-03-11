@@ -30,6 +30,8 @@ lottieVersion = "6.0.0"
 splashApi = "1.0.1"
 playIntegerity = "1.3.0"
 playUpdate= "2.1.0"
+playBilling = "6.1.0"
+firebaseCrashlyticsBuildtools = "2.9.9"
 
 
 [libraries]
@@ -77,12 +79,14 @@ google-play-integrity = {group = "com.google.android.play", name = "integrity", 
 
 google-play-app-update = {group ="com.google.android.play", name ="app-update",version.ref = "playUpdate"}
 google-play-app-update-ktx = {group ="com.google.android.play", name ="app-update-ktx",version.ref =  "playUpdate"}
+google-play-billing = { group = "com.android.billingclient",name="billing",version.ref ="playBilling" }
 
 
 androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore" }
 coil-compose= {group = "io.coil-kt", name ="coil-compose", version.ref = "coilKtCompose"}
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 lottie = {group = "com.airbnb.android",name = "lottie-compose",version.ref ="lottieVersion"}
+firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 
 [bundles]
 compose = [

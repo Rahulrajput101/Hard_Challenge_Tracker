@@ -13,5 +13,7 @@ dependencies {
     implementation(project(Modules.coreDomain))
     implementation(project(Modules.coreUi))
     implementation(project(Modules.trackerDomain))
+    implementation(libs.google.play.billing)
+    implementation(libs.firebase.crashlytics.buildtools)
 
 }

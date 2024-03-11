@@ -19,5 +19,11 @@ object Constant {
     const val RATE_US= "Rate us"
     const val FEEDBACK= "Feedback"
 
+    const val PRODUCT_ID = "tracker_pro"
+
+    const val WEEKLY_BASE_PLAN = "tracker-pro"
+    const val MONTHLY_BASE_PLAN = "tracker-pro-month"
+    const val YEARLY_BASE_PLAN = "tracker-pro-year"
+
 
 }
