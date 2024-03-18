@@ -20,6 +20,7 @@ private val isLoggedInKey = booleanPreferencesKey(Preferences.Key_IS_LOG_IN)
 private val nameKey = stringPreferencesKey(Preferences.Key_NAME)
 private val profileUriKey =stringPreferencesKey(Preferences.Key_PROFILE_URI)
 private val goalKey = intPreferencesKey(Preferences.KEY_GOAL)
+private val proVersionKey = booleanPreferencesKey(Preferences.KEY_PRO_VERSION)
 private val isOnboardingCompletedKey = booleanPreferencesKey(Preferences.KEY_IS_ONBOARDING_COMPLETED)
 private val isAlarmScheduledKey = booleanPreferencesKey(Preferences.KEY_IS_ALARM_SCHEDULED)
 
@@ -60,6 +61,16 @@ class DefaultPreferences(private val dataStore: DataStore<androidx.datastore.pre
             perference[isAlarmScheduledKey] = isSchedule
 
         }
+    }
+
+    override suspend fun saveIsProVersion(isProVersion: Boolean) {
+        dataStore.edit { preference ->
+            preference[proVersionKey] = isProVersion
+        }
+    }
+
+    override fun getIsProVersion(): Flow<Boolean> = dataStore.data.map { preference ->
+        preference[proVersionKey] ?: Constant.DEFAULT_IS_PRO_VERSION
     }
 
     override fun getLoggedInfo(): Flow<Boolean> = dataStore.data.map { preference ->

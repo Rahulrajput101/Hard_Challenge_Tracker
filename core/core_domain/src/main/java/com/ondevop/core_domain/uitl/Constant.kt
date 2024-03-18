@@ -4,6 +4,7 @@ import android.support.v4.os.IResultReceiver.Default
 
 object Constant {
     const val DEFAULT_IS_LOGGED_IN = false
+    const val DEFAULT_IS_PRO_VERSION = false
     const val DEFAULT_NAME = ""
     const val DEFAULT_PROFILE_URI =""
     const val DEFAULT_WATER_GOAL = 4

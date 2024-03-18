@@ -12,8 +12,10 @@ interface Preferences {
     suspend fun saveIsOnboardingCompleted(completed: Boolean)
 
     suspend fun saveAlarmSchedule(isSchedule : Boolean)
+    suspend fun saveIsProVersion(isProVersion: Boolean)
+    fun getIsProVersion(): Flow<Boolean>
 
-     fun getLoggedInfo() : Flow<Boolean>
+    fun getLoggedInfo() : Flow<Boolean>
      fun getUserName(): Flow<String>
      fun getProfileUri(): Flow<String>
      fun getGoal(): Flow<Int>
@@ -30,5 +32,6 @@ interface Preferences {
          const val KEY_GOAL = "goal"
          const val KEY_IS_ONBOARDING_COMPLETED = "is_onboarding_completed"
          const val KEY_IS_ALARM_SCHEDULED = "is_alarm_scheduled"
+         const val KEY_PRO_VERSION = "proVersion"
      }
 }

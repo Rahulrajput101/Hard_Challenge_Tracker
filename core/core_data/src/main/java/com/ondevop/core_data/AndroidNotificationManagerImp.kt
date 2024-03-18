@@ -51,9 +51,6 @@ class AndroidNotificationManagerImp(
 
                 myNotificationManager.createNotificationChannel(notificationChannel)
             }
-
         }
-
-
     }
 }

@@ -62,6 +62,7 @@ import com.ondevop.onboarding_presentation.notification_allow.NotificationAllowS
 import com.ondevop.onboarding_presentation.welcome.WelcomeScreen
 import com.ondevop.settings_presentation.settings.SettingScreen
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewScreen
+import com.ondevop.tracker_presentation.upgrade.PurchaseHelper
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -130,7 +131,8 @@ class MainActivity : ComponentActivity() {
                     val dialogState = remember { mutableStateOf(false) }
                     val profileUri by preferences.getProfileUri().collectAsState(initial = "")
                     val name by preferences.getUserName().collectAsState(initial = "")
-
+                    val purchaseHelper = PurchaseHelper(this@MainActivity)
+                    purchaseHelper.initializeBillingClient()
 
                     // Show the dialog when needed
                     UpdateDeclinedDialog(
