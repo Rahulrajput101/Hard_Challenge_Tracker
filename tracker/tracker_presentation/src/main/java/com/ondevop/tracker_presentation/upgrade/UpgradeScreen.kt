@@ -62,7 +62,6 @@ fun UpgradeScreen(
     LaunchedEffect(purchased)
     {
         if (purchased) {
-            
             viewModel.setProVersion(true)
             Toast.makeText(
                 context,
@@ -73,7 +72,6 @@ fun UpgradeScreen(
             
             navigateToBack()
         }
-        
     }
     
     

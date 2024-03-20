@@ -63,6 +63,7 @@ import com.ondevop.onboarding_presentation.welcome.WelcomeScreen
 import com.ondevop.settings_presentation.settings.SettingScreen
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewScreen
 import com.ondevop.tracker_presentation.upgrade.PurchaseHelper
+import com.ondevop.tracker_presentation.upgrade.UpgradeScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -339,8 +340,20 @@ class MainActivity : ComponentActivity() {
                                             },
                                             onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale,
                                             openAppSetting = ::openAppSettings,
+                                            onPremiumClick = {
+                                                navController.navigate(Route.Upgrade.route)
+                                            }
                                         )
                                     }
+                                }
+
+                                composable(Route.Upgrade.route){
+                                    UpgradeScreen(
+                                        purchaseHelper = purchaseHelper,
+                                        navigateToBack = {
+                                            navController.navigateUp()
+                                        }
+                                    )
                                 }
 
                                 composable(Route.Setting.route) {

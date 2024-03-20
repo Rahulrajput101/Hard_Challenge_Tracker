@@ -73,7 +73,6 @@ fun WaterCardView(
                     color = Color.White,
                 )
             }
-
         }
 
 
