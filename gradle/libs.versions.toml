@@ -33,6 +33,7 @@ playIntegerity = "1.3.0"
 playUpdate= "2.1.0"
 playBilling = "6.1.0"
 firebaseCrashlyticsBuildtools = "2.9.9"
+uiTooling = "1.6.3"
 
 
 [libraries]
@@ -88,6 +89,7 @@ coil-compose= {group = "io.coil-kt", name ="coil-compose", version.ref = "coilKt
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 lottie = {group = "com.airbnb.android",name = "lottie-compose",version.ref ="lottieVersion"}
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "uiTooling" }
 
 
 [bundles]

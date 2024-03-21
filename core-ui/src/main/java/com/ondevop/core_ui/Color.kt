@@ -17,10 +17,11 @@ val ReadTeal = Color(0xFF43B8B1)
 val foodGreen = Color(0xFF5EA83B)
 val pictureViolet = Color(0xFFB867F8)
 
-val White = Color(0xFFFFFFFF)
+
+val MonthlyCardColor = Color(0xFFFF8F00)
 val Background = Color(0xFFFFFFFF)
 val StrokeColor = Color(0xFFEFEFEF)
-val Green = Color(0xFF19c37d)
+val Green = Color(0xFF38A33C)
 val TextColor = Color(0xFF212121)
 val GreenShadow = Color(0x3319c37d)
 val GrayShadow = Color(0x33969696)

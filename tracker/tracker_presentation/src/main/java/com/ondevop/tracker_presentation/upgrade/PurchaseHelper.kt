@@ -33,7 +33,7 @@ import java.util.Date
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-data class PurchaseHelper(val context: Context) {
+data class PurchaseHelper(val activity: Activity) {
 
     private lateinit var billingClient: BillingClient
     private lateinit var productDetails: ProductDetails
@@ -58,7 +58,7 @@ data class PurchaseHelper(val context: Context) {
     val buyEnabled = _buyEnabled.asStateFlow()
 
     fun initializeBillingClient() {
-        billingClient = BillingClient.newBuilder(context)
+        billingClient = BillingClient.newBuilder(activity)
             .setListener(purchasesUpdatedListener)
             .enablePendingPurchases()
             .build()
@@ -131,7 +131,15 @@ data class PurchaseHelper(val context: Context) {
                     if (yearlyPricing != null) {
                         _proYearlyPrice.value = yearlyPricing
                     }
-
+                    if (weeklyPricing != null) {
+                        Log.d("SubscriptionPricing", "Weekly Pricing: $weeklyPricing")
+                    }
+                    if (monthlyPricing != null) {
+                        Log.d("SubscriptionPricing", "Monthly Pricing: $monthlyPricing")
+                    }
+                    if (yearlyPricing != null) {
+                        Log.d("SubscriptionPricing", "Yearly Pricing: $yearlyPricing")
+                    }
                 } else {
                     _statusText.value = "No Matching Products Found"
                     _buyEnabled.value = false
@@ -280,7 +288,7 @@ data class PurchaseHelper(val context: Context) {
             /** Verify the signature of the purchase data to
              * ensure its authenticity **/
             if(!verifyValidSignature(purchase.originalJson,purchase.signature)){
-                Toast.makeText(context,"Error: Invalid purchase",Toast.LENGTH_SHORT).show()
+                Toast.makeText(this.activity,"Error: Invalid purchase",Toast.LENGTH_SHORT).show()
                 return
             }
 
@@ -299,10 +307,10 @@ data class PurchaseHelper(val context: Context) {
         // Inside acknowledgePurchaseResponseListener
         Log.d("MyTag", "Acknowledgment response: $billingResult")
         if (billingResult.responseCode == BillingClient.BillingResponseCode.OK) {
-            Toast.makeText(context, "Subscription acknowledged successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(activity, "Subscription acknowledged successfully", Toast.LENGTH_SHORT).show()
 
         } else {
-            Toast.makeText(context, "Error acknowledging purchase: ${billingResult.responseCode}", Toast.LENGTH_SHORT).show()
+        //    Toast.makeText(context, "Error acknowledging purchase: ${billingResult.responseCode}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -329,6 +337,17 @@ data class PurchaseHelper(val context: Context) {
                     params.putString("purchase_token", purchaseToken as String?)
                     params.putString("product", product)
 
+
+                    Log.d("param"," p = $params ")
+                    // Log the details stored in the params bundle
+                    Log.d("PurchaseDetails", "Order ID: ${params.getString("order_id")}")
+                    Log.d("PurchaseDetails", "Purchase Time: ${params.getString("purchase_time")}")
+                    Log.d("PurchaseDetails", "Purchase Token: ${params.getString("purchase_token")}")
+                    Log.d("PurchaseDetails", "Product ID: ${params.getString("product_id")}")
+                    Log.d("PurchaseDetails", "Product Name: ${params.getString("product_name")}")
+                    Log.d("PurchaseDetails", "Product Price: ${params.getString("product_price")}")
+// Add more logs for additional properties if needed
+
                 }catch (e:Exception){
                     e.printStackTrace()
                 }
@@ -339,7 +358,7 @@ data class PurchaseHelper(val context: Context) {
 
     private fun verifyValidSignature(signedData: String,signature: String) : Boolean{
         return try {
-            val base64Key =""
+            val base64Key ="MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAgJhUN6cNOOXlBbgXpQLNfY/Fdm8y6a1wwxVLX3QRFY1i8uEu19e8tbNYSREVOq9bL/sKVnzi0Arl0SavwxAM27JxNluMBfWXfF8uAcK1VUCiL/4Y1R2G3amSMN6P6rN2oMwLkkApPO5CQgH5XFeKpFxAy7xH0dQ/AAjEmtcc9JiBM0SrZ2qNA4zAZ/bktKgZFNc5hBH8r+2CrRXKwc1M8fQ7+KRheN+C0vKvxtblLxQcFQAfGnetlKUbWuUG3aIIhWWHLJDQls/RXM5asWVvnTyewBneZ88NiRFRNSNQRSjv/rOnoESjAkK++QE5rKTzeDGO5fPoyY7HX/dVtJ0B3wIDAQAB"
             val security = Security()
             security.verifyPurchases(base64Key,signedData,signature)
         }catch (e : IOException){
@@ -367,7 +386,7 @@ data class PurchaseHelper(val context: Context) {
             )
             .build()
 
-        billingClient.launchBillingFlow(context as Activity , billingFlowParams)
+        billingClient.launchBillingFlow(activity , billingFlowParams)
     }
 
     fun restorePurchase(callback: (Boolean) -> Unit) {
