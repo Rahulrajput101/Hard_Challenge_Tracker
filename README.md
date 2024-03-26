@@ -11,11 +11,14 @@ Its purpose being, to quickly demonstrate Android, Kotlin and software developme
 - Navigation Graphs,
 - Light/ Dark theme,
 - Best practices,
+- In app purchases,
+- In app updates,
 - All those other must know goodies.
 
 # Screenshots
 
-![showcase](https://github.com/Rahulrajput101/Hard_Challenge_Tracker/assets/88555033/235cf8c3-e972-4353-a413-29e5db0d8b69)
+![Showcase (2)](https://github.com/Rahulrajput101/Hard_Challenge_Tracker/assets/88555033/9e371a63-64a0-4c35-8e81-18ecc927a638)
+
 
 ## Below is a list of goodies that are being showcased:
 
