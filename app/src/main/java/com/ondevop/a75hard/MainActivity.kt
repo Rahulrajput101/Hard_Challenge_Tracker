@@ -110,17 +110,21 @@ class MainActivity : ComponentActivity() {
             val isOnboardingCompletedDeferred =
                 async { preferences.getIsOnboardingCompleted().first() }
             val isLoggedInDeferred = async { preferences.getLoggedInfo().first() }
+            val isPremiumDeferred = async { preferences.getIsProVersion() }
 
             // Wait for the results
             val isAlarmScheduled = isAlarmScheduledDeferred.await()
             val isOnboardingCompleted = isOnboardingCompletedDeferred.await()
             val isLoggedIn = isLoggedInDeferred.await()
+            val isPremiumUser = isPremiumDeferred.await()
+
+
 
             if (!isAlarmScheduled) {
                 Log.d("Tag", "alarm scheduled  $isAlarmScheduled")
                 schedulingHabitAlarm()
             }
-
+            Log.d("Tag", "isPremium :  $isPremiumUser")
             checkForUpdates()
 
             setContent {
