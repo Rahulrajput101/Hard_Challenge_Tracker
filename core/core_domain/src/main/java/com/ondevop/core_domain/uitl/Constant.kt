@@ -4,6 +4,7 @@ import android.support.v4.os.IResultReceiver.Default
 
 object Constant {
     const val DEFAULT_IS_LOGGED_IN = false
+    const val DEFAULT_IS_PRO_VERSION = false
     const val DEFAULT_NAME = ""
     const val DEFAULT_PROFILE_URI =""
     const val DEFAULT_WATER_GOAL = 4
@@ -18,6 +19,12 @@ object Constant {
     const val PRIVACY_POLICY = "Privacy policy"
     const val RATE_US= "Rate us"
     const val FEEDBACK= "Feedback"
+
+    const val PRODUCT_ID = "tracker_pro"
+
+    const val WEEKLY_BASE_PLAN = "tracker-pro"
+    const val MONTHLY_BASE_PLAN = "tracker-pro-month"
+    const val YEARLY_BASE_PLAN = "tracker-pro-year"
 
 
 }

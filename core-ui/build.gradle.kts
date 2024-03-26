@@ -12,4 +12,5 @@ android {
 dependencies {
     implementation(project(Modules.coreDomain))
     implementation(libs.coil.compose)
+    debugImplementation(libs.ui.tooling)
 }

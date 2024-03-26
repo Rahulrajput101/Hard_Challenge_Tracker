@@ -72,4 +72,26 @@
     <string name="made_updates">We\'ve made new updates!</string>
     <string name="made_updates_description"> To continue using this app and its new
     features, please update  your app.</string>
+
+    <string name="welcome_to_pro_version">Welcome to Pro Version!</string>
+    <string name="pro_version_not_purchased">Pro Version Not Purchased</string>
+    <string name="restore_purchase">Restore Purchase</string>
+    <string name="purchase">Purchase</string>
+    <string name="pro">PRO</string>
+    <string name="powered_by_chat_gpt">Powered by ChatGPT 4</string>
+    <string name="coming_soon">Coming soon.....</string>
+    <string name="remove_ads">Remove Ads</string>
+    <string name="unlimited_messages">Unlimited Messages</string>
+    <string name="cancel_anytime">Cancel Anytime</string>
+    <string name="restore">Restore</string>
+    <string name="weekly">Weekly</string>
+    <string name="monthly">Monthly</string>
+    <string name="yearly">Yearly</string>
+    <string name="per_week">Per Week</string>
+    <string name="per_month">Per Month</string>
+    <string name="per_year">Per Year</string>
+    <string name="save72">Save 72%</string>
+    <string name="secured_by_google_play">Secured by Google Play. Cancel Anytime</string>
+    <string name="unlock_scan"><![CDATA[Unlock Scan Text Camera & Gallery]]></string>
+    <string name="unlock_url">Unlock Summarize URL\'s</string>
 </resources>

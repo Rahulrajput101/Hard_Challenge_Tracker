@@ -62,6 +62,8 @@ import com.ondevop.onboarding_presentation.notification_allow.NotificationAllowS
 import com.ondevop.onboarding_presentation.welcome.WelcomeScreen
 import com.ondevop.settings_presentation.settings.SettingScreen
 import com.ondevop.tracker_presentation.tracker_overview.TrackerOverViewScreen
+import com.ondevop.tracker_presentation.upgrade.PurchaseHelper
+import com.ondevop.tracker_presentation.upgrade.UpgradeScreen
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -108,17 +110,21 @@ class MainActivity : ComponentActivity() {
             val isOnboardingCompletedDeferred =
                 async { preferences.getIsOnboardingCompleted().first() }
             val isLoggedInDeferred = async { preferences.getLoggedInfo().first() }
+            val isPremiumDeferred = async { preferences.getIsProVersion() }
 
             // Wait for the results
             val isAlarmScheduled = isAlarmScheduledDeferred.await()
             val isOnboardingCompleted = isOnboardingCompletedDeferred.await()
             val isLoggedIn = isLoggedInDeferred.await()
+            val isPremiumUser = isPremiumDeferred.await()
+
+
 
             if (!isAlarmScheduled) {
                 Log.d("Tag", "alarm scheduled  $isAlarmScheduled")
                 schedulingHabitAlarm()
             }
-
+            Log.d("Tag", "isPremium :  $isPremiumUser")
             checkForUpdates()
 
             setContent {
@@ -130,7 +136,8 @@ class MainActivity : ComponentActivity() {
                     val dialogState = remember { mutableStateOf(false) }
                     val profileUri by preferences.getProfileUri().collectAsState(initial = "")
                     val name by preferences.getUserName().collectAsState(initial = "")
-
+                    val purchaseHelper = PurchaseHelper(this@MainActivity)
+                    purchaseHelper.initializeBillingClient()
 
                     // Show the dialog when needed
                     UpdateDeclinedDialog(
@@ -337,8 +344,20 @@ class MainActivity : ComponentActivity() {
                                             },
                                             onShouldShowPermissionRationale = ::shouldShowRequestPermissionRationale,
                                             openAppSetting = ::openAppSettings,
+                                            onPremiumClick = {
+                                                navController.navigate(Route.Upgrade.route)
+                                            }
                                         )
                                     }
+                                }
+
+                                composable(Route.Upgrade.route){
+                                    UpgradeScreen(
+                                        purchaseHelper = purchaseHelper,
+                                        navigateToBack = {
+                                            navController.navigateUp()
+                                        }
+                                    )
                                 }
 
                                 composable(Route.Setting.route) {
@@ -381,7 +400,6 @@ class MainActivity : ComponentActivity() {
                 // If the update is canceled or fails,
                 // you can request to start the update again.
                 shouldShowUpdateDeclinedDialog = true
-
             }
         }
 

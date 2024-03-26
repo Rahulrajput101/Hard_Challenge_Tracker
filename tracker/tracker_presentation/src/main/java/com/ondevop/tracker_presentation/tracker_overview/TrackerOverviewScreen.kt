@@ -49,6 +49,7 @@ fun TrackerOverViewScreen(
     onMenuItemClick: () -> Unit,
     onShouldShowPermissionRationale: (String) -> Boolean,
     openAppSetting: () -> Unit,
+    onPremiumClick: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     val dialogQueue = viewModel.visiblePermissionDialogQueue
@@ -152,7 +153,8 @@ fun TrackerOverViewScreen(
                 state = state,
                 challengeGoal = challengeGoal,
                 totalDays = totalDays,
-                onMenuItemClick = onMenuItemClick
+                onMenuItemClick = onMenuItemClick,
+                onPremiumClick = onPremiumClick
             )
             Spacer(modifier = Modifier.height(spacing.spaceMedium))
             DaySelector(
