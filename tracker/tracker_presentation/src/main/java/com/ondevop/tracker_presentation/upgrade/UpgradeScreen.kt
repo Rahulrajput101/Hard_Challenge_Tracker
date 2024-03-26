@@ -601,7 +601,6 @@ fun UpgradeScreen(
                     ) {
                         Text(
                             text = stringResource(R.string.monthly),
-                            color = MaterialTheme.colorScheme.primary,
                             style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.W600,
